@@ -1,7 +1,24 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\services\\customuserclaimsprincipalfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\services\\customuserclaimsprincipalfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +26,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CustomUserClaimsPrincipalFactory.cs",
+              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Services\\CustomUserClaimsPrincipalFactory.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAUwBUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-04T19:54:34.549Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAswBsAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-04T19:49:30.814Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-04T19:27:14.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Program.cs",
+              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-04T19:26:33.154Z",
+              "EditorCaption": ""
             }
           ]
         }
