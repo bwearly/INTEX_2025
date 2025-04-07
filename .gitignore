@@ -1,27 +1,52 @@
 ﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+# Git Ignore for INTEX_2025 Project - Root Level
 ################################################################################
 
-/.vs/INTEX_2025/FileContentIndex/68413afd-bb1d-4485-9254-ca1bfa7cc1f6.vsidx
-/.vs/INTEX_2025/FileContentIndex/e69ec606-c780-455a-8951-5be2a771f23b.vsidx
-/.vs/INTEX_2025/FileContentIndex/f51743c9-44a1-475b-aca6-5fc27e30a033.vsidx
+# Ignore local Visual Studio + VS Code settings and caches
+.vscode/
+.vs/
+.vs/**
 
+# Ignore Visual Studio FileContentIndex and other temp files
+.vs/INTEX_2025/FileContentIndex/
+.vs/INTEX_2025/v17/
+*.suo
+*.user
 
-# Ignore Visual Studio and build artifacts
-**/obj/
+# Build artifacts
 **/bin/
+**/obj/
+**/project.assets.json
+**/project.nuget.cache
+**/*.dll
+**/*.pdb
 **/*.cache
+**/*.GeneratedMSBuildEditorConfig.editorconfig
 **/*.csproj.nuget.dgspec.json
 **/*.csproj.nuget.g.props
 **/*.csproj.AssemblyReference.cache
-**/*.GeneratedMSBuildEditorConfig.editorconfig
 
-# Ignore project.assets.json
-**/project.assets.json
-**/project.nuget.cache
-backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
-backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
-/.vs/INTEX_2025/FileContentIndex
-/.vs/INTEX_2025/v17
+# Node-related
+node_modules/
+**/node_modules/
 package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Vite / Frontend specific
+**/dist/
+**/.vite/
 frontend/vite.config.js
+*.tsbuildinfo
+
+# Logs and runtime files
+*.log
+*.tmp
+
+# Environment / secrets
+.env
+.env.*
+
+# OS generated
+.DS_Store
+Thumbs.db
