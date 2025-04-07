@@ -52,3 +52,9 @@ appsettings.Local.json
 secrets.json
 .env
 .env.*
+
+
+# Ignore poster images, but keep the folder
+wwwroot/posters/*
+!wwwroot/posters/.gitkeep
+

@@ -13,6 +13,3 @@ namespace INTEX_2025.API.Data
         }
     }
 }
-
-// dotnet ef migrations add "Initial" --context ApplicationDbContext
-// dotnet ef database update --context ApplicationDbContext
