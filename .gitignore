@@ -23,3 +23,5 @@ backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
 backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
 /.vs/INTEX_2025/FileContentIndex
 /.vs/INTEX_2025/v17
+package-lock.json
+frontend/vite.config.js
