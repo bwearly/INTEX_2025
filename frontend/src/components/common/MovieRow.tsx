@@ -4,21 +4,21 @@ import MovieCard from './MovieCard';
 interface Movie {
   id: number;
   title: string;
-  posterUrl: string;
+  poster: string;
 }
 
-interface MovieRowProps {
+interface Props {
   title: string;
   movies: Movie[];
 }
 
-const MovieRow: React.FC<MovieRowProps> = ({ title, movies }) => {
+const MovieRow: React.FC<Props> = ({ title, movies }) => {
   return (
-    <div className="mb-5 px-4">
-      <h4 className="mb-3 text-white">{title}</h4>
-      <div className="d-flex movie-row">
+    <div className="mb-5">
+      <h4 className="text-white mb-3">{title}</h4>
+      <div className="d-flex overflow-auto gap-3 px-2">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} title={movie.title} posterUrl={movie.posterUrl} />
+          <MovieCard key={movie.id} title={movie.title} poster={movie.poster} />
         ))}
       </div>
     </div>

@@ -3,7 +3,7 @@ import Carousel from 'react-bootstrap/Carousel';
 
 const HeroCarousel = () => {
   return (
-    <div className="mb-4">
+    <div className="mb-5 px-2" style={{ paddingTop: '2rem' }}> {/* spacing added */}
       <Carousel>
         <Carousel.Item>
           <div className="d-flex justify-content-center">
