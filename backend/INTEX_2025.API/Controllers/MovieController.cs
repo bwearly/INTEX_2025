@@ -10,6 +10,17 @@ namespace INTEX_2025.API.Controllers
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
+        private string GeneratePosterFileName(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                return "default.jpg";
+
+            var cleaned = title.ToLower().Trim();
+            cleaned = System.Text.RegularExpressions.Regex.Replace(cleaned, @"[^a-z0-9\s]", ""); // remove special chars
+            cleaned = System.Text.RegularExpressions.Regex.Replace(cleaned, @"\s+", "_"); // replace spaces with underscores
+            return cleaned;
+        }
+
         public MovieController(MoviesDbContext temp)
         {
             _context = temp;
@@ -35,7 +46,7 @@ namespace INTEX_2025.API.Controllers
                     m.Rating,
                     m.Description,
                     m.Type,
-                    PosterUrl = $"/posters/{Uri.EscapeDataString(m.Title)}.jpg"
+                    PosterUrl = $"/posters/{GeneratePosterFileName(m.Title)}.jpg"
                 })
                 .ToList();
 

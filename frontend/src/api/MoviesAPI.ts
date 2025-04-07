@@ -4,7 +4,7 @@ interface fetchMovieResponse {
   movies: Movie[];
 }
 
-const API_URL = 'https://localhost:3000/Movie';
+const API_URL = 'https://localhost:5000/Movie';
 
 // Fetch movies with pagination and optional genres
 export const fetchMovies = async (
