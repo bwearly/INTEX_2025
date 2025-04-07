@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("INTEX_2025.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a82f0bb5c08c1389e7f3b849c32863c89aad54e1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d486a1adde23090df91eb634118a938336db287d")]
 [assembly: System.Reflection.AssemblyProductAttribute("INTEX_2025.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("INTEX_2025.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

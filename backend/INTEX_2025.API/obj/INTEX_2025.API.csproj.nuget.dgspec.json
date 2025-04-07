@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jacobhouston/INTEX_2025/INTEX_2025/backend/INTEX_2025.API/INTEX_2025.API.csproj": {}
+    "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj": {}
   },
   "projects": {
-    "/Users/jacobhouston/INTEX_2025/INTEX_2025/backend/INTEX_2025.API/INTEX_2025.API.csproj": {
+    "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jacobhouston/INTEX_2025/INTEX_2025/backend/INTEX_2025.API/INTEX_2025.API.csproj",
+        "projectUniqueName": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
         "projectName": "INTEX_2025.API",
-        "projectPath": "/Users/jacobhouston/INTEX_2025/INTEX_2025/backend/INTEX_2025.API/INTEX_2025.API.csproj",
-        "packagesPath": "/Users/jacobhouston/.nuget/packages/",
-        "outputPath": "/Users/jacobhouston/INTEX_2025/INTEX_2025/backend/INTEX_2025.API/obj/",
+        "projectPath": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
+        "packagesPath": "C:\\Users\\early\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/jacobhouston/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\early\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -90,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
