@@ -1,19 +1,9 @@
-import { useState } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import * as React from "react";
+import "./App.css";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<></>}></Route>
-        </Routes>
-      </Router>
-    </>
-  );
+  return <AppRoutes />;
 }
 
 export default App;
