@@ -1,20 +1,19 @@
 import React from 'react';
+import { Movie } from '../../types/Movie';
 
-interface Props {
-  title: string;
-  poster: string;
+interface MovieCardProps {
+  movie: Movie;
 }
 
-const MovieCard: React.FC<Props> = ({ title, poster }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   return (
-    <div style={{ width: '150px' }}>
+    <div className="text-center text-white" style={{ width: '150px' }}>
       <img
-        src={poster}
-        alt={title}
-        className="img-fluid rounded"
-        style={{ height: '225px', objectFit: 'cover', width: '100%' }}
+        src={movie.posterUrl}
+        alt={movie.title}
+        style={{ width: '100%', borderRadius: '8px' }}
       />
-      <p className="text-white text-center mt-2">{title}</p>
+      <p className="mt-1 text-sm">{movie.title}</p>
     </div>
   );
 };

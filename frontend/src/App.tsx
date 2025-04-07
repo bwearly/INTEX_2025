@@ -1,9 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home/Home';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/common/Navbar';
 import Home from './pages/Home/Home';
+import Navbar from './components/common/Navbar';
 
 function App() {
   return (
@@ -14,6 +12,7 @@ function App() {
       </Routes>
     </>
   );
-};
+}
 
 export default App;
+
