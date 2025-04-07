@@ -1,37 +1,20 @@
+import React, { useEffect, useState } from 'react';
 import { fetchMovies } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-import HeroCarousel from '../../components/common/HeroCarousel';
-import MovieRow from '../../components/common/MovieRow';
 import Navbar from '../../components/common/Navbar';
-import React, { useEffect, useState } from 'react';
-
-const genres = [
-  'Action',
-  'Adventure',
-  'Comedies',
-  'Dramas',
-  'Thrillers',
-  'FamilyMovies',
-  'HorrorMovies',
-];
+import HeroCarousel from '../../components/common/HeroCarousel';
 
 const Home: React.FC = () => {
-  const [moviesByGenre, setMoviesByGenre] = useState<Record<string, Movie[]>>({});
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadMovies = async () => {
     try {
       setLoading(true);
       const response = await fetchMovies(200, 1, []);
-      const genreMap: Record<string, Movie[]> = {};
-
-      genres.forEach((genre) => {
-        genreMap[genre] = response.movies.filter((movie) => movie[genre as keyof Movie] === 1);
-      });
-
-      setMoviesByGenre(genreMap);
+      setMovies(response.movies);
     } catch (err) {
-      console.error('Failed to fetch and sort movies:', err);
+      console.error('Failed to fetch movies:', err);
     } finally {
       setLoading(false);
     }
@@ -44,17 +27,25 @@ const Home: React.FC = () => {
   return (
     <div className="bg-dark text-white min-vh-100">
       <Navbar />
-      <HeroCarousel />
-      {loading ? (
-        <p className="text-center mt-5">Loading movies...</p>
-      ) : (
-        genres.map((genre) => (
-          <MovieRow key={genre} title={genre} movies={moviesByGenre[genre] || []} />
-        ))
-      )}
+
+      <div className="container-fluid px-4">
+        {loading ? (
+          <p className="text-center mt-4">Loading movies...</p>
+        ) : (
+          <HeroCarousel movies={movies} />
+        )}
+      </div>
+
+      <div className="container mt-5">
+        <h2>All Movie Titles</h2>
+        <ul>
+          {movies.map((movie) => (
+            <li key={movie.showId}>{movie.title}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
 
 export default Home;
-
