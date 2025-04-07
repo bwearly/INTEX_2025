@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Movie } from '../../types/Movie';
+import React, { useEffect, useState } from "react";
+import { Movie } from "../../types/Movie";
 import {
   fetchMovies,
   addMovie,
   updateMovie,
   deleteMovie,
-} from '../../api/MoviesAPI';
-import MoviesList from '../../components/common/MoviesList';
+} from "../../api/MoviesAPI";
+import MovieRow from "../../components/common/MovieRow";
 
 const PAGE_SIZE = 100;
 
@@ -15,15 +15,13 @@ const ManageMoviesPage = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const adminName = 'Jack';
-
   const loadMovies = async () => {
     setLoading(true);
     try {
       const response = await fetchMovies(PAGE_SIZE, 1, []);
       setMovies(response.movies);
     } catch (error) {
-      console.error('Failed to load movies:', error);
+      console.error("Failed to load movies:", error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +42,7 @@ const ManageMoviesPage = () => {
       await loadMovies();
       setSelectedMovie(null);
     } catch (error) {
-      alert('Error saving movie.');
+      alert("Error saving movie.");
     }
   };
 
@@ -55,28 +53,45 @@ const ManageMoviesPage = () => {
       await loadMovies();
       setSelectedMovie(null);
     } catch (error) {
-      alert('Error deleting movie.');
+      alert("Error deleting movie.");
     }
   };
 
-  return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Welcome back, {adminName}!</h1>
+  const extractGenres = (movie: Movie): string[] => {
+    return Object.keys(movie).filter(
+      (key) =>
+        typeof (movie as any)[key] === "number" &&
+        (movie as any)[key] === 1 &&
+        key !== "ReleaseYear"
+    );
+  };
 
-      <div className="mb-6">
+  const genreMap: Record<string, Movie[]> = {};
+  movies.forEach((movie) => {
+    const genres = extractGenres(movie);
+    genres.forEach((genre) => {
+      if (!genreMap[genre]) genreMap[genre] = [];
+      genreMap[genre].push(movie);
+    });
+  });
+
+  return (
+    <div className="bg-dark text-light min-h-screen">
+      <div className="px-5 pt-5 flex justify-between items-center">
+        <h1 className="text-3xl font-bold mb-4">Manage Movies</h1>
         <button
           onClick={() =>
             setSelectedMovie({
-              ShowId: '',
-              Title: '',
-              Type: '',
-              Director: '',
-              Cast: '',
-              Country: '',
+              ShowId: "",
+              Title: "",
+              Type: "",
+              Director: "",
+              Cast: "",
+              Country: "",
               ReleaseYear: new Date().getFullYear(),
-              Rating: '',
-              Duration: '',
-              Description: '',
+              Rating: "",
+              Duration: "",
+              Description: "",
               Action: 0,
               Adventure: 0,
               AnimeSeriesInternationalTvShows: 0,
@@ -117,17 +132,30 @@ const ManageMoviesPage = () => {
         </button>
       </div>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <MoviesList movies={movies} onMovieClick={setSelectedMovie} />
-      )}
+      <div className="container-fluid px-5">
+        {Object.entries(genreMap)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([genre, genreMovies]) => (
+            <MovieRow
+              key={genre}
+              title={genre}
+              movies={genreMovies.map((m) => ({
+                id: Number(m.ShowId),
+                title: m.Title,
+                poster: "/posters/sample.jpg", // Placeholder poster
+              }))}
+              onClick={(movie: { id: { toString: () => string; }; }) =>
+                setSelectedMovie(movies.find((m) => m.ShowId === movie.id.toString()) || null)
+              }
+            />
+          ))}
+      </div>
 
       {selectedMovie && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded w-96">
+          <div className="bg-white text-black p-6 rounded w-96">
             <h2 className="text-xl font-semibold mb-4">
-              {selectedMovie.ShowId ? 'Edit Movie' : 'Add Movie'}
+              {selectedMovie.ShowId ? "Edit Movie" : "Add Movie"}
             </h2>
 
             <label className="block mb-2">
@@ -156,11 +184,9 @@ const ManageMoviesPage = () => {
               />
             </label>
 
-            {/* Add more fields here as needed, e.g. Rating, Type, ReleaseYear, etc. */}
-
             <div className="flex justify-between mt-4">
               <button
-                className="bg-gray-300 text-black px-4 py-2 rounded"
+                className="bg-gray-300 px-4 py-2 rounded"
                 onClick={() => setSelectedMovie(null)}
               >
                 Cancel
