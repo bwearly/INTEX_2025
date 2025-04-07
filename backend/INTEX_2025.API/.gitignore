@@ -1,0 +1,54 @@
+# Build results
+bin/
+obj/
+
+# NuGet packages (if not using package restore)
+packages/
+*.nupkg
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+
+# Ignore Visual Studio and build artifacts
+**/obj/
+**/bin/
+**/*.cache
+**/*.csproj.nuget.dgspec.json
+**/*.csproj.nuget.g.props
+**/*.csproj.AssemblyReference.cache
+**/*.GeneratedMSBuildEditorConfig.editorconfig
+
+# Ignore project.assets.json
+**/project.assets.json
+**/project.nuget.cache
+
+# Visual Studio
+.vs/
+.vscode/
+*.code-workspace
+
+# JetBrains Rider
+.idea/
+
+*.GeneratedMSBuildEditorConfig.editorconfig
+
+# Caches
+*.cache
+*.dbmdl
+
+# Logs
+*.log
+
+TestResults/
+coverage/
+
+# Environment-specific settings
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+.env.*

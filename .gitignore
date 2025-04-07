@@ -5,3 +5,19 @@
 /.vs/INTEX_2025/FileContentIndex/68413afd-bb1d-4485-9254-ca1bfa7cc1f6.vsidx
 /.vs/INTEX_2025/FileContentIndex/e69ec606-c780-455a-8951-5be2a771f23b.vsidx
 /.vs/INTEX_2025/FileContentIndex/f51743c9-44a1-475b-aca6-5fc27e30a033.vsidx
+
+
+# Ignore Visual Studio and build artifacts
+**/obj/
+**/bin/
+**/*.cache
+**/*.csproj.nuget.dgspec.json
+**/*.csproj.nuget.g.props
+**/*.csproj.AssemblyReference.cache
+**/*.GeneratedMSBuildEditorConfig.editorconfig
+
+# Ignore project.assets.json
+**/project.assets.json
+**/project.nuget.cache
+backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
+backend/INTEX_2025.API/obj/INTEX_2025.API.csproj.nuget.dgspec.json
