@@ -1,15 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ManageMoviesPage from './pages/admin/ManageMoviesPage';
-import './App.css';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/common/Navbar';
+import Home from './pages/Home/Home';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
+    <>
+      <Navbar />
       <Routes>
-        <Route path="/admin/movies" element={<ManageMoviesPage />} />
+        <Route path="/" element={<Home />} />
       </Routes>
-    </Router>
+    </>
   );
-}
+};
 
 export default App;

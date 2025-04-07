@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    "types": ["vite/client"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
     "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
     "target": "esnext",
-    "jsx": "react-jsx"
+    "skipLibCheck": true
   }
 }
