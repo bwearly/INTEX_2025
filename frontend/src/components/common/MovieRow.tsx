@@ -1,34 +1,19 @@
-import { useEffect, useState } from 'react';
-import { fetchMovies } from '../../api/MoviesAPI';
+import React from 'react';
 import { Movie } from '../../types/Movie';
 import MovieCard from './MovieCard';
 
 interface MovieRowProps {
   title: string;
+  movies: Movie[];
 }
 
-const MovieRow = ({ title }: MovieRowProps) => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-
-  useEffect(() => {
-    const loadMovies = async () => {
-      try {
-        const response = await fetchMovies(10, 1, [title]);
-        setMovies(response.movies);
-      } catch (error) {
-        console.error(`Failed to load ${title} movies:`, error);
-      }
-    };
-
-    loadMovies();
-  }, [title]);
-
+const MovieRow: React.FC<MovieRowProps> = ({ title, movies }) => {
   return (
-    <div className="mb-5">
-      <h2 className="text-2xl font-semibold mb-3">{title}</h2>
-      <div className="flex flex-wrap gap-3">
+    <div className="mb-5 px-4">
+      <h2 className="text-xl font-semibold mb-3">{title}</h2>
+      <div className="d-flex overflow-auto gap-3">
         {movies.map((movie) => (
-          <MovieCard key={movie.ShowId} movie={movie} />
+          <MovieCard key={movie.showId} movie={movie} />
         ))}
       </div>
     </div>

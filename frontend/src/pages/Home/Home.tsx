@@ -1,30 +1,37 @@
-import React, { useEffect, useState } from 'react';
 import { fetchMovies } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
 import HeroCarousel from '../../components/common/HeroCarousel';
 import MovieRow from '../../components/common/MovieRow';
 import Navbar from '../../components/common/Navbar';
+import React, { useEffect, useState } from 'react';
 
-const genres = ['Action', 'Adventure', 'Comedy', 'Dramas', 'Thrillers', 'Family'];
+const genres = [
+  'Action',
+  'Adventure',
+  'Comedies',
+  'Dramas',
+  'Thrillers',
+  'FamilyMovies',
+  'HorrorMovies',
+];
 
 const Home: React.FC = () => {
   const [moviesByGenre, setMoviesByGenre] = useState<Record<string, Movie[]>>({});
   const [loading, setLoading] = useState(true);
 
   const loadMovies = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const response = await fetchMovies(200, 1, []);
       const genreMap: Record<string, Movie[]> = {};
 
       genres.forEach((genre) => {
-        const genreKey = genre.replace(/\s/g, '');
-        genreMap[genre] = response.movies.filter((movie) => movie[genreKey as keyof Movie] === 1);
+        genreMap[genre] = response.movies.filter((movie) => movie[genre as keyof Movie] === 1);
       });
 
       setMoviesByGenre(genreMap);
-    } catch (error) {
-      console.error('Failed to load movies:', error);
+    } catch (err) {
+      console.error('Failed to fetch and sort movies:', err);
     } finally {
       setLoading(false);
     }
@@ -39,7 +46,7 @@ const Home: React.FC = () => {
       <Navbar />
       <HeroCarousel />
       {loading ? (
-        <p className="text-center mt-4">Loading movies...</p>
+        <p className="text-center mt-5">Loading movies...</p>
       ) : (
         genres.map((genre) => (
           <MovieRow key={genre} title={genre} movies={moviesByGenre[genre] || []} />
@@ -50,3 +57,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
