@@ -10,16 +10,6 @@ namespace INTEX_2025.API.Controllers
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
-        private string GeneratePosterFileName(string title)
-        {
-            if (string.IsNullOrWhiteSpace(title))
-                return "default.jpg";
-
-            var cleaned = title.ToLower().Trim();
-            cleaned = System.Text.RegularExpressions.Regex.Replace(cleaned, @"[^a-z0-9\s]", ""); // remove special chars
-            cleaned = System.Text.RegularExpressions.Regex.Replace(cleaned, @"\s+", "_"); // replace spaces with underscores
-            return cleaned;
-        }
 
         public MovieController(MoviesDbContext temp)
         {
@@ -33,7 +23,7 @@ namespace INTEX_2025.API.Controllers
                 return BadRequest("Page and pageSize must be greater than 0.");
 
             var movies = _context.MoviesTitles
-                .OrderBy(m => m.ShowId) // or any consistent order
+                .OrderBy(m => m.ShowId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .Select(m => new
@@ -46,7 +36,7 @@ namespace INTEX_2025.API.Controllers
                     m.Rating,
                     m.Description,
                     m.Type,
-                    PosterUrl = $"/posters/{GeneratePosterFileName(m.Title)}.jpg"
+                    PosterUrl = $"/posters/{Uri.EscapeDataString(m.Title)}.jpg"
                 })
                 .ToList();
 
@@ -61,7 +51,6 @@ namespace INTEX_2025.API.Controllers
             });
         }
 
-
         [HttpGet("GetEntertainmentType")]
         public IActionResult GetEntertainmentType()
         {
@@ -69,25 +58,6 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(entertainmentType);
         }
-
-        //[HttpGet("MoviesByGenre")]
-        //public IActionResult GetMoviesByGenre()
-        //{
-        //    var genres = new[] { "Action", "Adventure", "Anime Series International TV Shows", "British TV Shows Docuseries International TV Shows", "Children", "Comedies", "Comedies Dramas International Movies", "Comedies International Movies", "Comedies Romantic Movies", "Crime TV Shows Docuseries", "Documentaries", "Domcumentaries International Movies", "Docuseries", "Dramas", "Dramas International Movies", "Dramas Romantic Movies", "Family Movies", "Fantasy", "Horror Movies", "International Movies Thriller", "International TV Shows Romantic TV Shows TV Dramas", "Kids' TV", "Language TV Shows", "Musicals", "Nature TV", "Reality TV", "Spirituality", "TV Action", "TV Comedies", "TV Dramas", "Talk Shows TV Comedies", "Thrillers" };
-        //    var result = new Dictionary<string, List<string>>();
-
-        //    foreach (var genre in genres)
-        //    {
-        //        var movies = _context.MoviesTitles
-        //            .Where(m => EF.Property<int>(m, genre) == 1)
-        //            .Select(m => m.Title)
-        //            .ToList();
-
-        //        result[genre] = movies;
-        //    }
-
-        //    return Ok(result);
-        //}
 
         [HttpPost("AddMovie")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
@@ -98,7 +68,6 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpPost("UpdatedMovie/{ShowId}")]
-
         public IActionResult UpdateMovie(int ShowId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == updatedMovie.ShowId);
@@ -108,7 +77,6 @@ namespace INTEX_2025.API.Controllers
                 return NotFound();
             }
 
-            // Basic info
             existingMovie.Title = updatedMovie.Title;
             existingMovie.Director = updatedMovie.Director;
             existingMovie.Cast = updatedMovie.Cast;
@@ -119,18 +87,17 @@ namespace INTEX_2025.API.Controllers
             existingMovie.Type = updatedMovie.Type;
 
             var genreNames = new[]
-                {
-                    "Action", "Adventure", "Anime Series International TV Shows", "British TV Shows Docuseries International TV Shows", "Children",
-                    "Comedies", "Comedies Dramas International Movies", "Comedies International Movies", "Comedies Romantic Movies", "Crime TV Shows Docuseries",
-                    "Documentaries", "Domcumentaries International Movies", "Docuseries", "Dramas", "Dramas International Movies", "Dramas Romantic Movies",
-                    "Family Movies", "Fantasy", "Horror Movies", "International Movies Thriller", "International TV Shows Romantic TV Shows TV Dramas",
-                    "Kids' TV", "Language TV Shows", "Musicals", "Nature TV", "Reality TV", "Spirituality", "TV Action", "TV Comedies", "TV Dramas",
-                    "Talk Shows TV Comedies", "Thrillers"
-                };
+            {
+                "Action", "Adventure", "Anime Series International TV Shows", "British TV Shows Docuseries International TV Shows", "Children",
+                "Comedies", "Comedies Dramas International Movies", "Comedies International Movies", "Comedies Romantic Movies", "Crime TV Shows Docuseries",
+                "Documentaries", "Domcumentaries International Movies", "Docuseries", "Dramas", "Dramas International Movies", "Dramas Romantic Movies",
+                "Family Movies", "Fantasy", "Horror Movies", "International Movies Thriller", "International TV Shows Romantic TV Shows TV Dramas",
+                "Kids' TV", "Language TV Shows", "Musicals", "Nature TV", "Reality TV", "Spirituality", "TV Action", "TV Comedies", "TV Dramas",
+                "Talk Shows TV Comedies", "Thrillers"
+            };
 
             foreach (var genre in genreNames)
             {
-                // Get the property info from the EF model (via metadata or reflection)
                 var propInfo = typeof(MoviesTitle).GetProperties()
                     .FirstOrDefault(p => p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute), false)
                         is System.ComponentModel.DataAnnotations.Schema.ColumnAttribute[] attrs && attrs.Any(a => a.Name == genre));
@@ -153,7 +120,7 @@ namespace INTEX_2025.API.Controllers
         {
             var movie = _context.MoviesTitles.Find(showId);
 
-            if (movie != null)
+            if (movie == null)
             {
                 return NotFound(new { message = "Movie not found" });
             }
