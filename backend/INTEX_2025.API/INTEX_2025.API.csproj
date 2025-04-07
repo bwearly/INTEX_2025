@@ -21,4 +21,12 @@
     <Folder Include="wwwroot\posters\" />
   </ItemGroup>
 
+    <Target Name="ExcludePostersFromPublish" BeforeTargets="PrepareForPublish">
+	    <ItemGroup>
+		    <Content Update="wwwroot\posters\**\*">
+			    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		    </Content>
+	    </ItemGroup>
+    </Target>
+
 </Project>

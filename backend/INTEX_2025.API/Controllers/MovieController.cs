@@ -16,17 +16,40 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("AllMovies")]
-        public IActionResult GetMovies()
+        public IActionResult GetMovies([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
         {
-            var movies = _context.MoviesTitles.AsQueryable();
-            var totalMovies = _context.MoviesTitles;
+            if (page < 1 || pageSize < 1)
+                return BadRequest("Page and pageSize must be greater than 0.");
 
-            var movieObject = new
+            var movies = _context.MoviesTitles
+                .OrderBy(m => m.ShowId) // or any consistent order
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(m => new
+                {
+                    m.ShowId,
+                    m.Title,
+                    m.Director,
+                    m.Cast,
+                    m.ReleaseYear,
+                    m.Rating,
+                    m.Description,
+                    m.Type,
+                    PosterUrl = $"/posters/{Uri.EscapeDataString(m.Title)}.jpg"
+                })
+                .ToList();
+
+            var totalCount = _context.MoviesTitles.Count();
+
+            return Ok(new
             {
-                Movies = movies,
-            };
-            return Ok(movieObject);
+                TotalCount = totalCount,
+                CurrentPage = page,
+                PageSize = pageSize,
+                Movies = movies
+            });
         }
+
 
         [HttpGet("GetEntertainmentType")]
         public IActionResult GetEntertainmentType()
