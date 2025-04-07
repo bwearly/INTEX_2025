@@ -1,11 +1,18 @@
+import { useState } from 'react';
 import './App.css';
-import AppRoutes from './routes/AppRoutes';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
+  const [count, setCount] = useState(0);
+
   return (
-    <div className="App">
-      <AppRoutes />
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<></>}></Route>
+        </Routes>
+      </Router>
+    </>
   );
 }
 

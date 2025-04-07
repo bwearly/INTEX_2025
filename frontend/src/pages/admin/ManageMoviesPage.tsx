@@ -1,50 +1,56 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-// 🔧 Dummy type for now (replace with your actual interface later)
+// Dummy type (until you hook it up to your actual type files)
 type Movie = {
   id: number;
   title: string;
   genres: string[];
+  posterFile: string; // relative path to poster
 };
 
 const ManageMoviesPage = () => {
   const [groupedMovies, setGroupedMovies] = useState<Record<string, Movie[]>>({});
 
-  // Hardcoded admin name
+  // Fake admin name
   const adminName = "Casey";
 
   useEffect(() => {
-    // 🎬 Hardcoded movie data
+    // 🔧 Hardcoded movie data
     const mockMovies: Movie[] = [
       {
         id: 1,
         title: "The Grand Budapest Hotel",
         genres: ["Comedy", "Drama"],
+        posterFile: "The Grand Budapest Hotel.jpg",
       },
       {
         id: 2,
         title: "Inception",
         genres: ["Action", "Adventure"],
+        posterFile: "Inception.jpg",
       },
       {
         id: 3,
         title: "Spirited Away",
         genres: ["Adventure", "Fantasy"],
+        posterFile: "Spirited Away.jpg",
       },
       {
         id: 4,
         title: "Parasite",
         genres: ["Drama", "Thriller"],
+        posterFile: "Parasite.jpg",
       },
       {
         id: 5,
         title: "The Lego Movie",
         genres: ["Comedy", "Action"],
+        posterFile: "The Lego Movie.jpg",
       },
     ];
 
-    // Group movies by genre
+    // Group by genre
     const grouped: Record<string, Movie[]> = {};
     mockMovies.forEach((movie) => {
       movie.genres.forEach((genre) => {
@@ -67,12 +73,14 @@ const ManageMoviesPage = () => {
             {movies.map((movie) => (
               <div
                 key={movie.id}
-                className="relative bg-gray-200 border rounded-md flex flex-col justify-between h-64 hover:shadow-lg transition"
+                className="border rounded overflow-hidden shadow hover:shadow-lg transition relative"
               >
-                {/* Dummy Poster */}
-                <div className="flex-grow flex items-center justify-center text-center px-2">
-                  <span className="text-sm font-medium">{movie.title}</span>
-                </div>
+                <img
+                  src={`/posters/${movie.posterFile}`}
+                  alt={movie.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-2 text-center text-sm">{movie.title}</div>
 
                 {/* Hover actions */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition">
