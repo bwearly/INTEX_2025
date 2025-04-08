@@ -20,11 +20,10 @@ function LoginPage() {
   };
 
   const handleRegisterClick = () => {
-    navigate('/register');
+    navigate('/registerPage');
   };
 
-  // TEMP login for testing
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
@@ -33,10 +32,32 @@ function LoginPage() {
       return;
     }
 
-    if (email === '1' && password === '2') {
+    const loginUrl = rememberme
+      ? 'https://localhost:5000/login?useCookies=true'
+      : 'https://localhost:5000/login?useSessionCookies=true';
+
+    try {
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      let data = null;
+      const contentLength = response.headers.get('content-length');
+      if (contentLength && parseInt(contentLength, 10) > 0) {
+        data = await response.json();
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Invalid email or password.');
+      }
+
       navigate('/home');
-    } else {
-      setError('Invalid login. Use email: 1 and password: 2');
+    } catch (error: any) {
+      setError(error.message || 'Error logging in.');
+      console.error('Fetch attempt failed:', error);
     }
   };
 
@@ -77,6 +98,7 @@ function LoginPage() {
       border: '1px solid #555',
       color: 'white',
       fontSize: '0.9rem',
+      marginTop: '0.5rem',
     },
     error: {
       color: 'red',
@@ -91,6 +113,13 @@ function LoginPage() {
     inputGroup: {
       marginBottom: '1rem',
     },
+    socialLink: {
+      textAlign: 'center',
+      color: '#aaa',
+      fontSize: '0.85rem',
+      marginTop: '0.75rem',
+      cursor: 'pointer',
+    },
   };
 
   return (
@@ -102,8 +131,8 @@ function LoginPage() {
             <input
               className="form-control"
               style={styles.input}
-              type="text"
-              placeholder="Email or phone number"
+              type="email"
+              placeholder="Email"
               name="email"
               value={email}
               onChange={handleChange}
@@ -121,7 +150,7 @@ function LoginPage() {
             />
           </div>
 
-          <div className="form-check mb-2">
+          <div className="form-check mb-3">
             <input
               className="form-check-input"
               type="checkbox"
@@ -130,49 +159,32 @@ function LoginPage() {
               checked={rememberme}
               onChange={handleChange}
             />
-            <label className="form-check-label ms-1" htmlFor="rememberme">
-              Remember me
+            <label className="form-check-label" htmlFor="rememberme">
+              Remember password
             </label>
           </div>
 
-          <button
-            className="btn w-100 text-white"
-            type="submit"
-            style={styles.button}
-          >
-            Sign In
-          </button>
-
-          <button
-            className="btn w-100 mt-2"
-            onClick={handleRegisterClick}
-            style={styles.linkButton}
-            type="button"
-          >
-            Register
-          </button>
-
-          <div className="d-grid mt-4">
+          <div className="d-grid mb-2">
             <button
-              className="btn mb-2"
-              type="button"
-              style={styles.linkButton}
+              className="btn btn-primary btn-login text-uppercase fw-bold"
+              type="submit"
             >
-              <i className="fa-brands fa-google me-2"></i>
-              Sign in with Google
-            </button>
-            <button className="btn" type="button" style={styles.linkButton}>
-              <i className="fa-brands fa-facebook-f me-2"></i>
-              Sign in with Facebook
+              Sign in
             </button>
           </div>
 
-          {error && <div style={styles.error}>{error}</div>}
-
-          <div style={styles.smallText}>
-            New to CineNiche?{' '}
-            <span style={{ color: '#fff' }}>Sign up now.</span>
+          <div className="d-grid mb-2">
+            <button
+              type="button"
+              className="btn btn-primary btn-login text-uppercase fw-bold"
+              onClick={handleRegisterClick}
+            >
+              Register
+            </button>
           </div>
+
+          <hr className="my-4" />
+          {error && <p style={styles.error}>{error}</p>}
         </form>
       </div>
     </div>

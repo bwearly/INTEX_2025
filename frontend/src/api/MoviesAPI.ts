@@ -7,7 +7,8 @@ interface FetchMoviesResponse {
 
 const API_URL = 'https://localhost:5000/Movie';
 
-// Fetch
+const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
@@ -19,11 +20,24 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`
+      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`,
+      {
+        credentials: 'include',
+      }
     );
 
-    if (!response.ok) throw new Error('Failed to fetch movies');
-    return await response.json();
+    if (!response.ok) {
+      throw new Error('Failed to fetch movies');
+    }
+
+    const data = await response.json();
+
+    const moviesWithPosters = data.movies.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return { movies: moviesWithPosters };
   } catch (error) {
     console.error('Error fetching movies:', error);
     throw error;
@@ -35,8 +49,10 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(movie),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMovie),
     });
 
     if (!response.ok) throw new Error('Failed to add movie');
@@ -85,7 +101,10 @@ export const deleteMovie = async (showId: number): Promise<void> => {
 export const searchMovies = async (query: string) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`
+      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      {
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {

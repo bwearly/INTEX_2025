@@ -1,34 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\",
+  "WorkspaceRootPath": "C:\\Users\\early\\source\\repos\\INTEX_2025\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\intex_2025.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\intex_2025.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\intex_2025.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\intex_2025.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\controllers\\moviecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\controllers\\moviecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\data\\moviestitle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\data\\moviestitle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\onedrive\\desktop\\intex_2025\\backend\\intex_2025.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\source\\repos\\intex_2025\\backend\\intex_2025.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\source\\repos\\intex_2025\\backend\\intex_2025.api\\services\\dummyemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\services\\dummyemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\source\\repos\\intex_2025\\backend\\intex_2025.api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\controllers\\rolecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|c:\\users\\early\\source\\repos\\intex_2025\\backend\\intex_2025.api\\controllers\\moviecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B846DC78-453F-ABB0-D197-D03F1265D854}|backend\\INTEX_2025.API\\INTEX_2025.API.csproj|solutionrelative:backend\\intex_2025.api\\controllers\\moviecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,99 +26,63 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DummyEmailSender.cs",
+              "DocumentMoniker": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Services\\DummyEmailSender.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Services\\DummyEmailSender.cs",
+              "ToolTip": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Services\\DummyEmailSender.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Services\\DummyEmailSender.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T18:08:36.596Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "INTEX_2025.API",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
-              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
-              "RelativeToolTip": "backend\\INTEX_2025.API\\INTEX_2025.API.csproj",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-07T20:11:07.808Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "INTEX_2025.API.http",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.http",
-              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\INTEX_2025.API.http",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\INTEX_2025.API.http",
-              "RelativeToolTip": "backend\\INTEX_2025.API\\INTEX_2025.API.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2025-04-07T20:07:45.881Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\.gitignore",
-              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\.gitignore",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\.gitignore",
-              "RelativeToolTip": "backend\\INTEX_2025.API\\.gitignore",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAADoAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-04-07T19:56:45.953Z",
+              "Title": "RoleController.cs",
+              "DocumentMoniker": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\RoleController.cs",
+              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Controllers\\RoleController.cs",
+              "ToolTip": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\RoleController.cs",
+              "RelativeToolTip": "backend\\INTEX_2025.API\\Controllers\\RoleController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-08T17:09:17.074Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "MoviesTitle.cs",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\MoviesTitle.cs",
-              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Data\\MoviesTitle.cs",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\MoviesTitle.cs",
-              "RelativeToolTip": "backend\\INTEX_2025.API\\Data\\MoviesTitle.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T18:00:47.628Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "backend\\INTEX_2025.API\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T17:51:03.087Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "MovieController.cs",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
+              "DocumentMoniker": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
               "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
+              "ToolTip": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
               "RelativeToolTip": "backend\\INTEX_2025.API\\Controllers\\MovieController.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAswJIAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-07T17:07:43.755Z",
+              "WhenOpened": "2025-04-08T17:05:55.334Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
               "RelativeDocumentMoniker": "backend\\INTEX_2025.API\\Program.cs",
-              "ToolTip": "C:\\Users\\early\\OneDrive\\Desktop\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
+              "ToolTip": "C:\\Users\\early\\source\\repos\\INTEX_2025\\backend\\INTEX_2025.API\\Program.cs",
               "RelativeToolTip": "backend\\INTEX_2025.API\\Program.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAD4AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAsAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-04T19:26:33.154Z"
+              "WhenOpened": "2025-04-08T15:49:45.598Z",
+              "EditorCaption": ""
             }
           ]
         }

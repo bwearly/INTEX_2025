@@ -1,4 +1,5 @@
 ﻿using INTEX_2025.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ namespace INTEX_2025.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
@@ -61,6 +63,7 @@ namespace INTEX_2025.API.Controllers
 
         // POST: /Movie/AddMovie
         [HttpPost("AddMovie")]
+        [Authorize(Roles ="Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
             _context.MoviesTitles.Add(newMovie);
@@ -70,6 +73,8 @@ namespace INTEX_2025.API.Controllers
 
 
         [HttpPut("UpdateMovie/{showId}")]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
@@ -107,6 +112,8 @@ namespace INTEX_2025.API.Controllers
 
         // DELETE: /Movie/DeleteMovie/{showId}
         [HttpDelete("DeleteMovie/{showId}")]
+        [Authorize(Roles = "Admin")]
+
         public IActionResult DeleteMovie(int showId)
         {
             var movie = _context.MoviesTitles.Find(showId);
