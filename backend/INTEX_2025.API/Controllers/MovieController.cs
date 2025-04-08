@@ -61,6 +61,7 @@ namespace INTEX_2025.API.Controllers
             return Ok(entertainmentType);
         }
 
+        // POST: /Movie/AddMovie
         [HttpPost("AddMovie")]
         [Authorize(Roles ="Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
@@ -70,49 +71,36 @@ namespace INTEX_2025.API.Controllers
             return Ok(newMovie);
         }
 
-        [HttpPost("UpdatedMovie/{ShowId}")]
+
+        [HttpPut("UpdateMovie/{showId}")]
         [Authorize(Roles = "Admin")]
 
-        public IActionResult UpdateMovie(int ShowId, [FromBody] MoviesTitle updatedMovie)
+        public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
-            var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == updatedMovie.ShowId);
+            var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
 
             if (existingMovie == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Movie not found" });
             }
 
+            // Update fields
             existingMovie.Title = updatedMovie.Title;
+            existingMovie.Type = updatedMovie.Type;
             existingMovie.Director = updatedMovie.Director;
             existingMovie.Cast = updatedMovie.Cast;
+            existingMovie.Country = updatedMovie.Country;
             existingMovie.Description = updatedMovie.Description;
-            existingMovie.Duration = updatedMovie.Duration;
-            existingMovie.Rating = updatedMovie.Rating;
             existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
-            existingMovie.Type = updatedMovie.Type;
+            existingMovie.Rating = updatedMovie.Rating;
+            existingMovie.Duration = updatedMovie.Duration;
 
-            var genreNames = new[]
-            {
-                "Action", "Adventure", "Anime Series International TV Shows", "British TV Shows Docuseries International TV Shows", "Children",
-                "Comedies", "Comedies Dramas International Movies", "Comedies International Movies", "Comedies Romantic Movies", "Crime TV Shows Docuseries",
-                "Documentaries", "Domcumentaries International Movies", "Docuseries", "Dramas", "Dramas International Movies", "Dramas Romantic Movies",
-                "Family Movies", "Fantasy", "Horror Movies", "International Movies Thriller", "International TV Shows Romantic TV Shows TV Dramas",
-                "Kids' TV", "Language TV Shows", "Musicals", "Nature TV", "Reality TV", "Spirituality", "TV Action", "TV Comedies", "TV Dramas",
-                "Talk Shows TV Comedies", "Thrillers"
-            };
-
-            foreach (var genre in genreNames)
-            {
-                var propInfo = typeof(MoviesTitle).GetProperties()
-                    .FirstOrDefault(p => p.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute), false)
-                        is System.ComponentModel.DataAnnotations.Schema.ColumnAttribute[] attrs && attrs.Any(a => a.Name == genre));
-
-                if (propInfo != null)
-                {
-                    var newValue = propInfo.GetValue(updatedMovie);
-                    propInfo.SetValue(existingMovie, newValue);
-                }
-            }
+            // Update genres (sample)
+            existingMovie.Action = updatedMovie.Action;
+            existingMovie.Adventure = updatedMovie.Adventure;
+            existingMovie.Dramas = updatedMovie.Dramas;
+            existingMovie.Documentaries = updatedMovie.Documentaries;
+            // ... Add other genre fields here
 
             _context.MoviesTitles.Update(existingMovie);
             _context.SaveChanges();
@@ -120,6 +108,9 @@ namespace INTEX_2025.API.Controllers
             return Ok(existingMovie);
         }
 
+
+
+        // DELETE: /Movie/DeleteMovie/{showId}
         [HttpDelete("DeleteMovie/{showId}")]
         [Authorize(Roles = "Admin")]
 

@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-import AddMovie from '../../components/common/AddMovie';
-import EditMovie from '../../components/common/EditMovie';
-import AuthorizeView from '../../components/auth/AuthorizeView';
+import NewMovieForm from '../../components/common/NewMovieForm';
+import EditMovieForm from '../../components/common/EditMovieForm';
 
 const ManageMoviesPage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState<Movie | 'NEW' | null>(
-    null
-  );
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const loadMovies = async () => {
     setLoading(true);
     try {
-      const response = await fetchMovies(200, 1, []);
-      const movieList = Array.isArray(response) ? response : response.movies;
-      setMovies(movieList);
+      const res = await fetchMovies(200, 1, []);
+      setMovies(res.movies);
     } catch (err) {
-      console.error('Failed to load movies:', err);
+      console.error('Failed to fetch movies:', err);
+      setError('Failed to load movies.');
     } finally {
       setLoading(false);
     }
@@ -30,100 +29,99 @@ const ManageMoviesPage: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this movie?')) return;
     try {
       await deleteMovie(Number(id));
       await loadMovies();
-    } catch (error) {
-      console.error('Error deleting movie:', error);
+    } catch (err) {
+      alert('Failed to delete movie. Please try again.');
     }
   };
 
   return (
-    <AuthorizeView>
-      <div className="bg-dark text-white min-vh-100 px-5 py-5">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Movie Collection</h1>
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            onClick={() => setSelectedMovie('NEW')}
-          >
-            + Add Movie
-          </button>
-        </div>
+    <div className="bg-dark text-white min-h-screen px-5 py-5">
+      <h1 className="text-2xl font-bold mb-4">Admin - Movies</h1>
 
-        {loading ? (
-          <p>Loading movies...</p>
-        ) : movies.length === 0 ? (
-          <p>No movies found. Try adding one!</p>
-        ) : (
-          <div className="flex flex-wrap gap-6">
-            {movies.map((movie) => {
-              const encodedTitle = encodeURIComponent(movie.title);
-              const posterUrl = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
-              return (
-                <div key={movie.showId} className="w-[150px] text-center">
-                  <img
-                    src={posterUrl}
-                    alt={movie.title}
-                    className="w-full rounded cursor-pointer"
-                    onClick={() => setSelectedMovie(movie)}
-                    onError={(e) =>
-                      ((e.target as HTMLImageElement).src =
-                        'https://via.placeholder.com/150x220?text=No+Image')
-                    }
-                  />
-                  <p className="font-bold mt-2">{movie.title}</p>
-                  <p className="text-sm text-gray-400">{movie.releaseYear}</p>
-                  <div className="flex gap-2 justify-center mt-2">
+      <button
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4"
+        onClick={() => {
+          setShowAddForm(true);
+          setSelectedMovie(null);
+        }}
+      >
+        + Add Movie
+      </button>
+
+      {showAddForm && (
+        <NewMovieForm
+          onSuccess={() => {
+            setShowAddForm(false);
+            loadMovies();
+          }}
+          onCancel={() => setShowAddForm(false)}
+        />
+      )}
+
+      {selectedMovie && (
+        <EditMovieForm
+          movie={selectedMovie}
+          onSuccess={() => {
+            setSelectedMovie(null);
+            loadMovies();
+          }}
+          onCancel={() => setSelectedMovie(null)}
+        />
+      )}
+
+      {loading ? (
+        <p>Loading movies...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-gray-600">
+            <thead className="bg-gray-800 text-white">
+              <tr>
+                <th className="px-4 py-2 border">Title</th>
+                <th className="px-4 py-2 border">Year</th>
+                <th className="px-4 py-2 border">Director</th>
+                <th className="px-4 py-2 border">Type</th>
+                <th className="px-4 py-2 border">Rating</th>
+                <th className="px-4 py-2 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {movies.map((movie) => (
+                <tr key={movie.showId} className="hover:bg-gray-700">
+                  <td className="px-4 py-2 border">{movie.title}</td>
+                  <td className="px-4 py-2 border">{movie.releaseYear}</td>
+                  <td className="px-4 py-2 border">{movie.director}</td>
+                  <td className="px-4 py-2 border">{movie.type}</td>
+                  <td className="px-4 py-2 border">{movie.rating}</td>
+                  <td className="px-4 py-2 border">
                     <button
-                      className="bg-yellow-500 text-black px-2 py-1 rounded"
-                      onClick={() => setSelectedMovie(movie)}
+                      className="bg-yellow-500 text-black px-3 py-1 rounded mr-2"
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        setShowAddForm(false);
+                      }}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-red-600 text-white px-2 py-1 rounded"
+                      className="bg-red-600 text-white px-3 py-1 rounded"
                       onClick={() => handleDelete(movie.showId)}
                     >
                       Delete
                     </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {selectedMovie === 'NEW' && (
-          <AddMovie
-            onSuccess={() => {
-              loadMovies();
-              setSelectedMovie(null);
-            }}
-            onCancel={() => setSelectedMovie(null)}
-          />
-        )}
-
-        {selectedMovie && selectedMovie !== 'NEW' && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
-            <EditMovie
-              movie={selectedMovie}
-              onSuccess={() => {
-                loadMovies();
-                setSelectedMovie(null);
-              }}
-              onCancel={() => setSelectedMovie(null)}
-              onDelete={() => {
-                if (selectedMovie?.showId) {
-                  handleDelete(selectedMovie.showId);
-                  setSelectedMovie(null);
-                }
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </AuthorizeView>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 };
 
