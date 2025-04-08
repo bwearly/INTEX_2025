@@ -94,3 +94,21 @@ export const deleteMovie = async (movieID: number): Promise<void> => {
     throw error;
   }
 };
+
+// Search bar
+export const searchMovies = async (query: string) => {
+  try {
+    const response = await fetch(`http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`);
+    
+    if (!response.ok) {
+      throw new Error(`Search failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    throw error;
+  }
+};
+
