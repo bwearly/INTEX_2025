@@ -25,64 +25,62 @@ const EditMovie: React.FC<EditMovieProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateMovie(Number(formData.showId), formData);
-    onSuccess();
+    try {
+      await updateMovie(Number(formData.showId), formData);
+      onSuccess();
+    } catch (err) {
+      console.error('Error updating movie:', err);
+    }
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      {/* Movie Poster */}
-      <div className="md:w-1/2">
-        <img
-          src={`http://localhost:5000/posters/${movie.posterUrl || 'default.jpg'}`}
-          alt={movie.title}
-          className="rounded w-full h-auto object-cover shadow-lg"
-        />
-      </div>
+    <div className="bg-white text-black rounded p-6 w-[500px] shadow-xl relative">
+      <button className="absolute top-2 right-2 text-black" onClick={onCancel}>
+        ✖
+      </button>
 
-      {/* Form Section */}
-      <form onSubmit={handleSubmit} className="md:w-1/2 space-y-4 text-white">
-        <h2 className="text-2xl font-bold">Edit Movie</h2>
+      <h2 className="text-xl font-bold mb-4">Edit Movie</h2>
 
-        <div>
-          <label className="block font-medium mb-1">Title:</label>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label className="block font-semibold mb-1">Title:</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
+            className="border p-2 w-full rounded"
           />
         </div>
 
-        <div>
-          <label className="block font-medium mb-1">Description:</label>
+        <div className="mb-3">
+          <label className="block font-semibold mb-1">Description:</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-2 rounded bg-gray-800 border border-gray-600 h-32"
+            className="border p-2 w-full rounded"
           />
         </div>
 
-        <div className="flex flex-wrap gap-4 pt-4">
+        <div className="flex justify-between">
           <button
             type="button"
-            className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600"
+            className="bg-gray-300 px-4 py-2 rounded"
             onClick={onCancel}
           >
             Cancel
           </button>
           <button
             type="button"
-            className="bg-red-600 px-4 py-2 rounded text-white hover:bg-red-700"
+            className="bg-red-500 text-white px-4 py-2 rounded"
             onClick={onDelete}
           >
             Delete
           </button>
           <button
             type="submit"
-            className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             Save
           </button>

@@ -2,12 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
-  // state variables for email and passwords
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberme, setRememberme] = useState<boolean>(false);
-
-  // state variable for error messages
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
@@ -24,7 +21,7 @@ function LoginPage() {
   };
 
   const handleRegisterClick = () => {
-    navigate('/register');
+    navigate('admin');
   };
 
   // handle submit event for the form
@@ -66,38 +63,96 @@ function LoginPage() {
       console.error('Fetch attempt failed:', error);
     }
   };
+  */
+
+  const styles: { [key: string]: React.CSSProperties } = {
+    wrapper: {
+      backgroundImage: `url('/login-bg.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      padding: '3rem',
+      borderRadius: '8px',
+      width: '100%',
+      maxWidth: '350px',
+      color: 'white',
+    },
+    input: {
+      backgroundColor: '#333',
+      color: 'white',
+      border: 'none',
+      fontSize: '0.9rem',
+    },
+    button: {
+      backgroundColor: '#e50914',
+      border: 'none',
+      fontWeight: 'bold',
+      fontSize: '1rem',
+      marginTop: '1rem',
+    },
+    linkButton: {
+      backgroundColor: '#333',
+      border: '1px solid #555',
+      color: 'white',
+      fontSize: '0.9rem',
+      marginTop: '0.5rem',
+    },
+    error: {
+      color: 'red',
+      fontSize: '0.85rem',
+      marginTop: '1rem',
+    },
+    smallText: {
+      color: '#aaa',
+      fontSize: '0.8rem',
+      marginTop: '1rem',
+    },
+    inputGroup: {
+      marginBottom: '1rem',
+    },
+    socialLink: {
+      textAlign: 'center',
+      color: '#aaa',
+      fontSize: '0.85rem',
+      marginTop: '0.75rem',
+      cursor: 'pointer',
+    },
+  };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="card border-0 shadow rounded-3 ">
-          <div className="card-body p-4 p-sm-5">
-            <h5 className="card-title text-center mb-5 fw-light fs-5">
-              Sign In
-            </h5>
-            <form onSubmit={handleSubmit}>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={email}
-                  onChange={handleChange}
-                />
-                <label htmlFor="email">Email address</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                />
-                <label htmlFor="password">Password</label>
-              </div>
+    <div style={styles.wrapper}>
+      <div style={styles.overlay}>
+        <h3 className="mb-4">Sign In</h3>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.inputGroup}>
+            <input
+              className="form-control"
+              style={styles.input}
+              type="email"
+              placeholder="Email"
+              name="email"
+              value={email}
+              onChange={handleChange}
+            />
+          </div>
+          <div style={styles.inputGroup}>
+            <input
+              className="form-control"
+              style={styles.input}
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+            />
+          </div>
 
               <div className="form-check mb-3">
                 <input
@@ -130,28 +185,11 @@ function LoginPage() {
                 </button>
               </div>
               <hr className="my-4" />
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-google btn-login text-uppercase fw-bold"
-                  type="button"
-                >
-                  <i className="fa-brands fa-google me-2"></i> Sign in with
-                  Google
-                </button>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-facebook btn-login text-uppercase fw-bold"
-                  type="button"
-                >
-                  <i className="fa-brands fa-facebook-f me-2"></i> Sign in with
-                  Facebook
-                </button>
-              </div>
+
             </form>
             {error && <p className="error">{error}</p>}
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
