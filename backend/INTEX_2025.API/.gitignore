@@ -1,0 +1,13 @@
+# Ignore published poster files but keep folder for structure
+
+
+# Local environment and config files
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+.env.*
+
+# Ignore test result folders and coverage reports
+TestResults/
+coverage/
