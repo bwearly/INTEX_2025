@@ -20,7 +20,7 @@ function LoginPage() {
   };
 
   const handleRegisterClick = () => {
-    navigate('admin');
+    navigate('/registerPage');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
