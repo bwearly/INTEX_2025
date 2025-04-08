@@ -4,6 +4,7 @@ import { FaSearch, FaUserCircle } from 'react-icons/fa';
 import logo from '/logo.png';
 import Logout from './Logout';
 import AuthorizeView from '../auth/AuthorizeView';
+import ProfileDropdown from './ProfileDropDown';
 
 const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const navigate = useNavigate();
@@ -98,9 +99,7 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
         {!minimal && (
           <div className="d-flex align-items-center gap-3 ms-auto">
             <FaSearch style={{ color: 'white', cursor: 'pointer' }} />
-            <FaUserCircle
-              style={{ color: 'white', fontSize: '24px', cursor: 'pointer' }}
-            />
+            <ProfileDropdown isAdmin={true} />
           </div>
         )}
 
