@@ -32,11 +32,40 @@ const Home: React.FC = () => {
         {loading ? (
           <p>Loading movies...</p>
         ) : (
-          <ul>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
             {allMovies.map((movie) => (
-              <li key={movie.showId}>{movie.title}</li>
+              <div
+                key={movie.showId}
+                style={{
+                  width: '150px',
+                  textAlign: 'center',
+                  color: 'white',
+                }}
+              >
+                <img
+                  src={`http://localhost:5000/posters/${movie.posterUrl || 'default.jpg'}`}
+                  alt={movie.title}
+                  style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                  // onError={(e) =>
+                  //   ((e.target as HTMLImageElement).src =
+                  //     'https://via.placeholder.com/150x220?text=No+Image')
+                  // }
+                />
+                <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
+                  {movie.title}
+                </p>
+                <p
+                  style={{
+                    marginTop: '-8px',
+                    fontSize: '0.9em',
+                    color: '#bbb',
+                  }}
+                >
+                  {movie.releaseYear}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
