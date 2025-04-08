@@ -1,34 +1,65 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Movie } from '../../types/Movie';
 
 interface HeroCarouselProps {
   movies: Movie[];
 }
 
-const HeroCarousel: React.FC<HeroCarouselProps> = ({ movies }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const HeroCarousel = ({ movies }: HeroCarouselProps) => {
+  const [index, setIndex] = useState(0);
 
+  // Rotate every 5 seconds
   useEffect(() => {
-    if (movies.length === 0) return;
-
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
-    }, 3000); // auto-rotate every 3 seconds
-
+      setIndex((prev) => (prev + 1) % movies.length);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [movies]);
+  }, [movies.length]);
 
-  const currentMovie = movies[currentIndex];
+  if (movies.length === 0) return null;
+
+  const featured = movies[index];
+  const encodedTitle = encodeURIComponent(featured.title);
+  const bgImage = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
 
   return (
-    <div className="text-white py-4">
-      {currentMovie && (
-        <div className="d-flex flex-column align-items-center justify-content-center text-center bg-secondary rounded p-4 mx-auto" style={{ maxWidth: '600px' }}>
-          <h3>{currentMovie.title}</h3>
-          <p className="mb-1">{currentMovie.releaseYear}</p>
-          <p className="text-light">{currentMovie.description}</p>
-        </div>
-      )}
+    <div
+    style={{
+      backgroundImage: `url(${bgImage})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center top',
+      backgroundSize: 'contain', // <— key line to shrink
+      height: '70vh',
+      width: '100%',
+      backgroundColor: '#000', // fallback for letterboxing
+      position: 'relative',
+      padding: '2rem',
+      display: 'flex',
+      alignItems: 'flex-end',
+    }}
+    
+    >
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '2rem',
+          left: '2rem',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          padding: '1rem',
+          borderRadius: '8px',
+          maxWidth: '90%',
+        }}
+      >
+        <h1 style={{ fontWeight: 'bold', fontSize: '2rem' }}>
+          {featured.title}
+        </h1>
+        <p>{featured.description}</p>
+        <p style={{ color: '#aaa', fontSize: '0.9rem' }}>
+          {featured.releaseYear} | Rating: {featured.rating}
+        </p>
+        <button className="btn btn-light btn-sm me-2">▶ Play</button>
+        <button className="btn btn-outline-light btn-sm">More Info</button>
+      </div>
     </div>
   );
 };
