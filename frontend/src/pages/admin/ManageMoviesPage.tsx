@@ -31,7 +31,7 @@ const ManageMoviesPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this movie?')) return;
     try {
-      await deleteMovie(Number(id));
+      await deleteMovie(id); // <-- no longer converting to Number
       await loadMovies();
     } catch (err) {
       alert('Failed to delete movie. Please try again.');

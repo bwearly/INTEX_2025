@@ -6,9 +6,9 @@ interface FetchMoviesResponse {
 }
 
 const API_URL = 'https://localhost:5000/Movie';
-
 const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
 
+// Fetch movies with pagination and genre filtering
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
@@ -20,7 +20,9 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`,
+      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${
+        selectedGenres.length ? `&${genreParams}` : ''
+      }`,
       {
         credentials: 'include',
       }
@@ -37,14 +39,17 @@ export const fetchMovies = async (
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
     }));
 
-    return { movies: moviesWithPosters };
+    return {
+      movies: moviesWithPosters,
+      totalNumMovies: data.totalCount, // <- Make sure this matches backend response key
+    };
   } catch (error) {
     console.error('Error fetching movies:', error);
     throw error;
   }
 };
 
-// Add
+// Add a new movie
 export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
@@ -52,7 +57,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newMovie),
+      body: JSON.stringify(movie),
     });
 
     if (!response.ok) throw new Error('Failed to add movie');
@@ -63,7 +68,6 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
   }
 };
 
-// Update
 export const updateMovie = async (
   showId: string,
   updatedMovie: Movie
@@ -73,6 +77,7 @@ export const updateMovie = async (
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include', // <-- important if your backend uses auth cookies
     body: JSON.stringify(updatedMovie),
   });
 
@@ -83,8 +88,8 @@ export const updateMovie = async (
   return await response.json();
 };
 
-// Delete
-export const deleteMovie = async (showId: number): Promise<void> => {
+// Delete a movie
+export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${showId}`, {
       method: 'DELETE',
@@ -97,7 +102,7 @@ export const deleteMovie = async (showId: number): Promise<void> => {
   }
 };
 
-// Search bar
+// Search for movies by title
 export const searchMovies = async (query: string) => {
   try {
     const response = await fetch(
