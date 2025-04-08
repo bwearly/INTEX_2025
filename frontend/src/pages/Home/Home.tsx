@@ -9,19 +9,19 @@ const Home: React.FC = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadMovies = async () => {
-    try {
-      setLoading(true);
-      const response = await fetchMovies(200, 1, []);
-      setAllMovies(response.movies);
-    } catch (error) {
-      console.error('Failed to fetch movies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        setLoading(true);
+        const response = await fetchMovies(200, 1, []);
+        setAllMovies(response.movies);
+      } catch (error) {
+        console.error('Failed to fetch movies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadMovies();
   }, []);
 
@@ -39,47 +39,41 @@ const Home: React.FC = () => {
             <p>Loading movies...</p>
           ) : (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-              {allMovies.map((movie) => {
-                const encodedTitle = encodeURIComponent(movie.title);
-                const posterUrl = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
-
-                return (
-                  <div
-                    key={movie.showId}
+              {allMovies.map((movie) => (
+                <div
+                  key={movie.showId}
+                  style={{
+                    width: '150px',
+                    textAlign: 'center',
+                    color: 'white',
+                  }}
+                >
+                  <img
+                    src={movie.posterUrl}
+                    alt={movie.title}
                     style={{
-                      width: '150px',
-                      textAlign: 'center',
-                      color: 'white',
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: '8px',
+                    }}
+                    onError={(e) =>
+                      ((e.target as HTMLImageElement).src = '/images.png')
+                    }
+                  />
+                  <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
+                    {movie.title}
+                  </p>
+                  <p
+                    style={{
+                      marginTop: '-8px',
+                      fontSize: '0.9em',
+                      color: '#bbb',
                     }}
                   >
-                    <img
-                      src={posterUrl}
-                      alt={movie.title}
-                      style={{
-                        width: '100%',
-                        height: 'auto',
-                        borderRadius: '8px',
-                      }}
-                      onError={(e) =>
-                        ((e.target as HTMLImageElement).src =
-                          'https://via.placeholder.com/150x220?text=No+Image')
-                      }
-                    />
-                    <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
-                      {movie.title}
-                    </p>
-                    <p
-                      style={{
-                        marginTop: '-8px',
-                        fontSize: '0.9em',
-                        color: '#bbb',
-                      }}
-                    >
-                      {movie.releaseYear}
-                    </p>
-                  </div>
-                );
-              })}
+                    {movie.releaseYear}
+                  </p>
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -6,7 +6,8 @@ interface fetchMovieResponse {
 
 const API_URL = 'https://localhost:5000/Movie';
 
-// Fetch movies with pagination and optional genres
+const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
@@ -18,14 +19,24 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`
+      `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`,
+      {
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {
       throw new Error('Failed to fetch movies');
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    const moviesWithPosters = data.movies.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return { movies: moviesWithPosters };
   } catch (error) {
     console.error('Error fetching movies:', error);
     throw error;

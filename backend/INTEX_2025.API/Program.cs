@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
@@ -19,12 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-//builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -68,6 +65,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles(); //Allows the posters to be implimented
 
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
