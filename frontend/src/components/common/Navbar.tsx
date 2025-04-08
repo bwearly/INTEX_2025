@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FaSearch, FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../public/logo.png';
+import Logout from './Logout';
+import AuthorizeView from '../auth/AuthorizeView';
 
 const Navbar: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -76,6 +78,11 @@ const Navbar: React.FC = () => {
             />
           </form>
         )}
+        <span>
+          <AuthorizeView>
+            <Logout>Logout</Logout>
+          </AuthorizeView>
+        </span>
       </div>
     </nav>
   );

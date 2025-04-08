@@ -41,6 +41,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newMovie),
+      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -98,8 +99,13 @@ export const deleteMovie = async (movieID: number): Promise<void> => {
 // Search bar
 export const searchMovies = async (query: string) => {
   try {
-    const response = await fetch(`http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`);
-    
+    const response = await fetch(
+      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      {
+        credentials: 'include',
+      }
+    );
+
     if (!response.ok) {
       throw new Error(`Search failed: ${response.statusText}`);
     }
@@ -111,4 +117,3 @@ export const searchMovies = async (query: string) => {
     throw error;
   }
 };
-

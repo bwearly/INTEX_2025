@@ -3,6 +3,7 @@ import { fetchMovies } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
 import Navbar from '../../components/common/Navbar';
 import HeroCarousel from '../../components/common/HeroCarousel';
+import AuthorizeView from '../../components/auth/AuthorizeView';
 
 const Home: React.FC = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
@@ -25,63 +26,65 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div
-      className="bg-dark text-white min-vh-100"
-      style={{ paddingTop: '80px' }}
-    >
-      <Navbar />
-      <HeroCarousel movies={allMovies} />
-      <div className="container mt-5">
-        <h2 className="text-white mb-3">All Movie Titles</h2>
-        {loading ? (
-          <p>Loading movies...</p>
-        ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-            {allMovies.map((movie) => {
-              const encodedTitle = encodeURIComponent(movie.title);
-              const posterUrl = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
+    <AuthorizeView>
+      <div
+        className="bg-dark text-white min-vh-100"
+        style={{ paddingTop: '80px' }}
+      >
+        <Navbar />
+        <HeroCarousel movies={allMovies} />
+        <div className="container mt-5">
+          <h2 className="text-white mb-3">All Movie Titles</h2>
+          {loading ? (
+            <p>Loading movies...</p>
+          ) : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+              {allMovies.map((movie) => {
+                const encodedTitle = encodeURIComponent(movie.title);
+                const posterUrl = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
 
-              return (
-                <div
-                  key={movie.showId}
-                  style={{
-                    width: '150px',
-                    textAlign: 'center',
-                    color: 'white',
-                  }}
-                >
-                  <img
-                    src={posterUrl}
-                    alt={movie.title}
+                return (
+                  <div
+                    key={movie.showId}
                     style={{
-                      width: '100%',
-                      height: 'auto',
-                      borderRadius: '8px',
-                    }}
-                    onError={(e) =>
-                      ((e.target as HTMLImageElement).src =
-                        'https://via.placeholder.com/150x220?text=No+Image')
-                    }
-                  />
-                  <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
-                    {movie.title}
-                  </p>
-                  <p
-                    style={{
-                      marginTop: '-8px',
-                      fontSize: '0.9em',
-                      color: '#bbb',
+                      width: '150px',
+                      textAlign: 'center',
+                      color: 'white',
                     }}
                   >
-                    {movie.releaseYear}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                    <img
+                      src={posterUrl}
+                      alt={movie.title}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        borderRadius: '8px',
+                      }}
+                      onError={(e) =>
+                        ((e.target as HTMLImageElement).src =
+                          'https://via.placeholder.com/150x220?text=No+Image')
+                      }
+                    />
+                    <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
+                      {movie.title}
+                    </p>
+                    <p
+                      style={{
+                        marginTop: '-8px',
+                        fontSize: '0.9em',
+                        color: '#bbb',
+                      }}
+                    >
+                      {movie.releaseYear}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </AuthorizeView>
   );
 };
 
