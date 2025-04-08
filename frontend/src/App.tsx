@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Navbar from './components/common/Navbar';
-
 function App() {
   return (
     <>
@@ -13,6 +12,4 @@ function App() {
     </>
   );
 }
-
 export default App;
-
