@@ -8,30 +8,44 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, onDelete }) => {
+  const encodedPoster = encodeURIComponent(movie.posterUrl || 'default.jpg');
+
   return (
     <div
-      className="text-center text-white position-relative"
+      className="text-center text-white cursor-pointer"
       style={{ width: '150px' }}
+      onClick={() => onClick?.(movie)} // <- MAIN CLICK HANDLER!
     >
       <img
-        src={movie.posterUrl}
+        src={`http://localhost:5000/posters/${encodedPoster}`}
         alt={movie.title}
-        style={{ width: '100%', borderRadius: '8px' }}
-        onClick={() => onClick?.(movie)}
+        style={{
+          width: '100%',
+          height: '220px',
+          objectFit: 'cover',
+          borderRadius: '8px',
+        }}
       />
-      <p className="mt-1 text-sm">{movie.title}</p>
+      <p className="mt-2 font-semibold text-white text-sm">{movie.title}</p>
+      <p className="text-xs text-gray-400 -mt-1">{movie.releaseYear}</p>
 
       {onClick && onDelete && (
-        <div className="d-flex justify-content-center gap-2 mt-2">
+        <div className="flex justify-center gap-2 mt-2 z-10 relative">
           <button
-            className="btn btn-sm btn-outline-warning"
-            onClick={() => onClick(movie)}
+            className="bg-yellow-600 px-2 py-1 text-sm rounded hover:bg-yellow-700"
+            onClick={(e) => {
+              e.stopPropagation(); // prevents card click
+              onClick(movie);
+            }}
           >
             Edit
           </button>
           <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={() => onDelete(movie.showId)}
+            className="bg-red-600 px-2 py-1 text-sm rounded hover:bg-red-700"
+            onClick={(e) => {
+              e.stopPropagation(); // prevents card click
+              onDelete(movie.showId);
+            }}
           >
             Delete
           </button>

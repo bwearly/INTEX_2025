@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-import MovieRow from '../../components/common/MovieRow';
+import MovieCard from '../../components/common/MovieCard';
 import AddMovie from '../../components/common/AddMovie';
 import EditMovie from '../../components/common/EditMovie';
 
@@ -17,7 +17,6 @@ const ManageMoviesPage: React.FC = () => {
     try {
       const response = await fetchMovies(200, 1, []);
       const movieList = Array.isArray(response) ? response : response.movies;
-      console.log('Fetched movies:', movieList);
       setMovies(movieList);
     } catch (err) {
       console.error('Failed to load movies:', err);
@@ -110,7 +109,7 @@ const ManageMoviesPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="container-fluid px-5">
+      <div className="container mt-4">
         {loading ? (
           <p>Loading movies...</p>
         ) : movies.length === 0 ? (
@@ -119,17 +118,27 @@ const ManageMoviesPage: React.FC = () => {
           Object.entries(genreMap)
             .sort(([a], [b]) => a.localeCompare(b))
             .map(([genre, genreMovies]) => (
-              <MovieRow
-                key={genre}
-                title={genre}
-                movies={genreMovies}
-                onClick={(movie) => setSelectedMovie(movie)}
-                onDelete={(id) => handleDelete(id)}
-              />
+              <div key={genre} className="mb-8">
+                <h3 className="text-lg font-semibold mb-3">{genre}</h3>
+                <div className="flex flex-wrap gap-5">
+                  {genreMovies.map((movie) => (
+                    <MovieCard
+                      key={movie.showId}
+                      movie={movie}
+                      onClick={(m) => {
+                        console.log('Clicked movie:', m);
+                        setSelectedMovie(m);
+                      }}
+                      onDelete={(id) => handleDelete(id)}
+                    />
+                  ))}
+                </div>
+              </div>
             ))
         )}
       </div>
 
+      {/* Add Movie Modal */}
       {selectedMovie === 'NEW' && (
         <AddMovie
           onSuccess={() => {
@@ -140,21 +149,44 @@ const ManageMoviesPage: React.FC = () => {
         />
       )}
 
+      {/* Fullscreen Edit Modal */}
       {selectedMovie && selectedMovie !== 'NEW' && (
-        <EditMovie
-          movie={selectedMovie}
-          onSuccess={() => {
-            loadMovies();
-            setSelectedMovie(null);
-          }}
-          onCancel={() => setSelectedMovie(null)}
-          onDelete={() => {
-            if (selectedMovie?.showId) {
-              handleDelete(selectedMovie.showId);
-              setSelectedMovie(null);
-            }
-          }}
-        />
+        <div
+          className="fixed inset-0 z-50 bg-black bg-opacity-80 backdrop-blur-sm flex justify-center items-center overflow-y-auto"
+          style={{ animation: 'fadeIn 0.3s ease-in-out' }}
+        >
+          <div
+            className="relative w-full max-w-5xl bg-gray-900 text-white rounded-lg shadow-xl transform transition-all overflow-hidden"
+            style={{
+              top: '50%',
+              transform: 'translateY(-50%) scale(1)',
+              padding: '2rem',
+              margin: '2rem',
+              boxShadow: '0 0 40px rgba(0,0,0,0.75)',
+            }}
+          >
+            <button
+              className="absolute top-4 right-4 text-3xl text-white hover:text-gray-400"
+              onClick={() => setSelectedMovie(null)}
+            >
+              &times;
+            </button>
+            <EditMovie
+              movie={selectedMovie}
+              onSuccess={() => {
+                loadMovies();
+                setSelectedMovie(null);
+              }}
+              onCancel={() => setSelectedMovie(null)}
+              onDelete={() => {
+                if (selectedMovie?.showId) {
+                  handleDelete(selectedMovie.showId);
+                  setSelectedMovie(null);
+                }
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

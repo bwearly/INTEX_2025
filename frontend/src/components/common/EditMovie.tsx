@@ -30,56 +30,65 @@ const EditMovie: React.FC<EditMovieProps> = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white text-black p-6 rounded w-96"
-    >
-      <h2 className="text-xl font-semibold mb-4">Edit Movie</h2>
-
-      <label className="block mb-2">
-        Title:
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          className="border p-2 w-full mt-1"
+    <div className="flex flex-col md:flex-row gap-6">
+      {/* Movie Poster */}
+      <div className="md:w-1/2">
+        <img
+          src={`http://localhost:5000/posters/${movie.posterUrl || 'default.jpg'}`}
+          alt={movie.title}
+          className="rounded w-full h-auto object-cover shadow-lg"
         />
-      </label>
-
-      <label className="block mb-2">
-        Description:
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          className="border p-2 w-full mt-1"
-        />
-      </label>
-
-      <div className="flex justify-between mt-4">
-        <button
-          type="button"
-          className="bg-gray-300 px-4 py-2 rounded"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          className="bg-red-500 text-white px-4 py-2 rounded"
-          onClick={onDelete}
-        >
-          Delete
-        </button>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Save
-        </button>
       </div>
-    </form>
+
+      {/* Form Section */}
+      <form onSubmit={handleSubmit} className="md:w-1/2 space-y-4 text-white">
+        <h2 className="text-2xl font-bold">Edit Movie</h2>
+
+        <div>
+          <label className="block font-medium mb-1">Title:</label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full p-2 rounded bg-gray-800 border border-gray-600"
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Description:</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full p-2 rounded bg-gray-800 border border-gray-600 h-32"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-4 pt-4">
+          <button
+            type="button"
+            className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="bg-red-600 px-4 py-2 rounded text-white hover:bg-red-700"
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+          <button
+            type="submit"
+            className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
