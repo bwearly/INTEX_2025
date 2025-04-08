@@ -16,7 +16,7 @@ function App() {
       {!hideNavbar && <Navbar />}
 
       <Routes>
-        <Route path="/" element={<LoginPage />} /> {/* ✅ Show login first */}
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
