@@ -7,10 +7,13 @@ using INTEX_2025.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var apiKey = builder.Configuration["YouTube:ApiKey"];
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
@@ -25,6 +28,16 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 15;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredUniqueChars = 5;
+    options.User.RequireUniqueEmail = true;
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email;
 });
