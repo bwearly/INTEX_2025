@@ -37,7 +37,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
       method: 'POST',
-      headers: {w
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newMovie),
