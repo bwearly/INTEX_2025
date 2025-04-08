@@ -3,11 +3,16 @@ import { Movie } from '../../types/Movie';
 
 interface MovieCardProps {
   movie: Movie;
+  onClick?: (movie: Movie) => void;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
   return (
-    <div className="text-center text-white" style={{ width: '150px' }}>
+    <div
+      className="text-center text-white cursor-pointer"
+      style={{ width: '150px' }}
+      onClick={() => onClick?.(movie)}
+    >
       <img
         src={movie.posterUrl}
         alt={movie.title}

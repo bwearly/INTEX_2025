@@ -14,9 +14,7 @@ const MovieRow: React.FC<MovieRowProps> = ({ title, movies, onClick }) => {
       <h2 className="text-xl font-semibold mb-3">{title}</h2>
       <div className="d-flex overflow-auto gap-3">
         {movies.map((movie) => (
-          <div key={movie.showId} onClick={() => onClick?.(movie)}>
-            <MovieCard movie={movie} />
-          </div>
+          <MovieCard key={movie.showId} movie={movie} onClick={onClick} />
         ))}
       </div>
     </div>

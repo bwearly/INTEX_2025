@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { fetchMovies, deleteMovie } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-import {
-  fetchMovies,
-  addMovie,
-  updateMovie,
-  deleteMovie,
-} from '../../api/MoviesAPI';
+import Navbar from '../../components/common/Navbar';
 import MovieRow from '../../components/common/MovieRow';
 import AddMovie from '../../components/common/AddMovie';
 import EditMovie from '../../components/common/EditMovie';
-
-const PAGE_SIZE = 200;
 
 const ManageMoviesPage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -22,7 +16,7 @@ const ManageMoviesPage: React.FC = () => {
   const loadMovies = async () => {
     try {
       setLoading(true);
-      const response = await fetchMovies(PAGE_SIZE, 1, []);
+      const response = await fetchMovies(200, 1, []);
       setMovies(response.movies);
     } catch (err) {
       console.error('Failed to fetch movies:', err);
@@ -37,22 +31,8 @@ const ManageMoviesPage: React.FC = () => {
 
   const extractGenres = (movie: Movie): string[] => {
     return Object.entries(movie)
-      .filter(
-        ([key, value]) =>
-          typeof value === 'number' &&
-          value === 1 &&
-          !['releaseYear'].includes(key)
-      )
+      .filter(([_, value]) => typeof value === 'number' && value === 1)
       .map(([key]) => key);
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteMovie(Number(id));
-      await loadMovies();
-    } catch (error) {
-      console.error('Error deleting movie:', error);
-    }
   };
 
   const genreMap: Record<string, Movie[]> = {};
@@ -64,19 +44,29 @@ const ManageMoviesPage: React.FC = () => {
     });
   });
 
-  return (
-    <div className="bg-dark text-light min-vh-100">
-      <div className="px-5 pt-5 flex justify-between items-center">
-        <h1 className="text-3xl font-bold mb-4">Manage Movies</h1>
-        <button
-          onClick={() => setSelectedMovie('NEW')}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          + Add Movie
-        </button>
-      </div>
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteMovie(Number(id));
+      await loadMovies();
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
+  };
 
-      <div className="container-fluid px-5">
+  return (
+    <div className="bg-dark text-white min-vh-100">
+      <Navbar />
+      <div className="container py-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1>Manage Movies</h1>
+          <button
+            onClick={() => setSelectedMovie('NEW')}
+            className="btn btn-success"
+          >
+            + Add Movie
+          </button>
+        </div>
+
         {loading ? (
           <p>Loading movies...</p>
         ) : (
@@ -91,34 +81,34 @@ const ManageMoviesPage: React.FC = () => {
               />
             ))
         )}
-      </div>
 
-      {selectedMovie === 'NEW' && (
-        <AddMovie
-          onSuccess={() => {
-            loadMovies();
-            setSelectedMovie(null);
-          }}
-          onCancel={() => setSelectedMovie(null)}
-        />
-      )}
-
-      {selectedMovie && selectedMovie !== 'NEW' && (
-        <EditMovie
-          movie={selectedMovie}
-          onSuccess={() => {
-            loadMovies();
-            setSelectedMovie(null);
-          }}
-          onCancel={() => setSelectedMovie(null)}
-          onDelete={() => {
-            if (selectedMovie?.showId) {
-              handleDelete(selectedMovie.showId);
+        {selectedMovie === 'NEW' && (
+          <AddMovie
+            onSuccess={() => {
+              loadMovies();
               setSelectedMovie(null);
-            }
-          }}
-        />
-      )}
+            }}
+            onCancel={() => setSelectedMovie(null)}
+          />
+        )}
+
+        {selectedMovie && selectedMovie !== 'NEW' && (
+          <EditMovie
+            movie={selectedMovie}
+            onSuccess={() => {
+              loadMovies();
+              setSelectedMovie(null);
+            }}
+            onCancel={() => setSelectedMovie(null)}
+            onDelete={() => {
+              if (selectedMovie?.showId) {
+                handleDelete(selectedMovie.showId);
+                setSelectedMovie(null);
+              }
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };
