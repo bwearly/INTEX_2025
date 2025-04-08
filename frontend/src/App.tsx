@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Home from './pages/Home/Home';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/LoginPage'; // Adjust if inside /auth/LoginPage.tsx
 import ManageMoviesPage from './pages/admin/ManageMoviesPage';
 import CustomNavbar from './components/common/Navbar';
 
