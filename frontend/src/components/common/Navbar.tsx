@@ -1,10 +1,14 @@
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { Navbar as BootstrapNavbar, Container } from 'react-bootstrap';
 import { FaSearch, FaUserCircle } from 'react-icons/fa';
 import logo from '/logo.png';
 import Logout from './Logout';
 import AuthorizeView from '../auth/AuthorizeView';
 import ProfileDropdown from './ProfileDropDown';
+=======
+import logo from '../../../public/logo.png';
+>>>>>>> parent of e049087 (added a ton of security and cookies)
 
 const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const navigate = useNavigate();
@@ -94,6 +98,7 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             </span>
           </div>
         )}
+<<<<<<< HEAD
 
         {/* Icons */}
         {!minimal && (
@@ -115,3 +120,11 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
 };
 
 export default CustomNavbar;
+=======
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+>>>>>>> parent of e049087 (added a ton of security and cookies)

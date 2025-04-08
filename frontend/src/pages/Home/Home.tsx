@@ -3,7 +3,6 @@ import { fetchMovies } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
 import Navbar from '../../components/common/Navbar';
 import HeroCarousel from '../../components/common/HeroCarousel';
-import AuthorizeView from '../../components/auth/AuthorizeView';
 
 const Home: React.FC = () => {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
@@ -26,6 +25,7 @@ const Home: React.FC = () => {
   }, []);
 
   return (
+<<<<<<< HEAD
     <AuthorizeView>
       <div
         className="bg-dark text-white min-vh-100"
@@ -40,6 +40,25 @@ const Home: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {allMovies.map((movie) => (
+=======
+    <div
+      className="bg-dark text-white min-vh-100"
+      style={{ paddingTop: '80px' }}
+    >
+      <Navbar />
+      <HeroCarousel movies={allMovies} />
+      <div className="container mt-5">
+        <h2 className="text-white mb-3">All Movie Titles</h2>
+        {loading ? (
+          <p>Loading movies...</p>
+        ) : (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+            {allMovies.map((movie) => {
+              const encodedTitle = encodeURIComponent(movie.title);
+              const posterUrl = `https://cinanicheposters.blob.core.windows.net/posters/${encodedTitle}.jpg`;
+
+              return (
+>>>>>>> parent of e049087 (added a ton of security and cookies)
                 <div
                   key={movie.showId}
                   style={{
@@ -49,7 +68,11 @@ const Home: React.FC = () => {
                   }}
                 >
                   <img
+<<<<<<< HEAD
                     src={movie.posterUrl}
+=======
+                    src={posterUrl}
+>>>>>>> parent of e049087 (added a ton of security and cookies)
                     alt={movie.title}
                     style={{
                       width: '100%',
@@ -57,7 +80,12 @@ const Home: React.FC = () => {
                       borderRadius: '8px',
                     }}
                     onError={(e) =>
+<<<<<<< HEAD
                       ((e.target as HTMLImageElement).src = '/images.png')
+=======
+                      ((e.target as HTMLImageElement).src =
+                        'https://via.placeholder.com/150x220?text=No+Image')
+>>>>>>> parent of e049087 (added a ton of security and cookies)
                     }
                   />
                   <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
@@ -73,12 +101,19 @@ const Home: React.FC = () => {
                     {movie.releaseYear}
                   </p>
                 </div>
+<<<<<<< HEAD
               ))}
             </div>
           )}
         </div>
+=======
+              );
+            })}
+          </div>
+        )}
+>>>>>>> parent of e049087 (added a ton of security and cookies)
       </div>
-    </AuthorizeView>
+    </div>
   );
 };
 

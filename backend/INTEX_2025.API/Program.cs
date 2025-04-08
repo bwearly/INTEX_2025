@@ -13,7 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+<<<<<<< HEAD
 builder.Services.AddHttpClient();
+=======
+
+>>>>>>> parent of e049087 (added a ton of security and cookies)
 
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
@@ -59,7 +63,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:3000") // Replace with your frontend URL
-                .AllowCredentials()
+                //.AllowCredentials()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });

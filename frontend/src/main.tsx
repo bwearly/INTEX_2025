@@ -17,6 +17,3 @@ root.render(
     </BrowserRouter>
   </StrictMode>
 );
-
-
-
