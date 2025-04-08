@@ -8,7 +8,6 @@ function LoginPage() {
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
-  // handle change events for input fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     if (type === 'checkbox') {
@@ -24,10 +23,9 @@ function LoginPage() {
     navigate('admin');
   };
 
-  // handle submit event for the form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); // Clear any previous errors
+    setError('');
 
     if (!email || !password) {
       setError('Please fill in all fields.');
@@ -41,12 +39,11 @@ function LoginPage() {
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
-        credentials: 'include', // ✅ Ensures cookies are sent & received
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      // Ensure we only parse JSON if there is content
       let data = null;
       const contentLength = response.headers.get('content-length');
       if (contentLength && parseInt(contentLength, 10) > 0) {
@@ -63,7 +60,6 @@ function LoginPage() {
       console.error('Fetch attempt failed:', error);
     }
   };
-  */
 
   const styles: { [key: string]: React.CSSProperties } = {
     wrapper: {
@@ -154,41 +150,41 @@ function LoginPage() {
             />
           </div>
 
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="rememberme"
-                  name="rememberme"
-                  checked={rememberme}
-                  onChange={handleChange}
-                />
-                <label className="form-check-label" htmlFor="rememberme">
-                  Remember password
-                </label>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  type="submit"
-                >
-                  Sign in
-                </button>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  onClick={handleRegisterClick}
-                >
-                  Register
-                </button>
-              </div>
-              <hr className="my-4" />
-
-            </form>
-            {error && <p className="error">{error}</p>}
+          <div className="form-check mb-3">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="rememberme"
+              name="rememberme"
+              checked={rememberme}
+              onChange={handleChange}
+            />
+            <label className="form-check-label" htmlFor="rememberme">
+              Remember password
+            </label>
           </div>
+
+          <div className="d-grid mb-2">
+            <button
+              className="btn btn-primary btn-login text-uppercase fw-bold"
+              type="submit"
+            >
+              Sign in
+            </button>
+          </div>
+
+          <div className="d-grid mb-2">
+            <button
+              type="button"
+              className="btn btn-primary btn-login text-uppercase fw-bold"
+              onClick={handleRegisterClick}
+            >
+              Register
+            </button>
+          </div>
+
+          <hr className="my-4" />
+          {error && <p style={styles.error}>{error}</p>}
         </form>
       </div>
     </div>

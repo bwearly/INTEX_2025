@@ -103,13 +103,15 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             />
           </div>
         )}
+
+        {/* Logout / Auth View */}
         <span>
           <AuthorizeView>
             <Logout>Logout</Logout>
           </AuthorizeView>
         </span>
-      </div>
-    </nav>
+      </Container>
+    </BootstrapNavbar>
   );
 };
 
