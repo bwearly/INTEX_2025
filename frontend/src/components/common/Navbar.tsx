@@ -1,14 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { Navbar as BootstrapNavbar, Container } from 'react-bootstrap';
-import { FaSearch, FaUserCircle } from 'react-icons/fa';
-import logo from '/logo.png';
-import Logout from './Logout';
-import AuthorizeView from '../auth/AuthorizeView';
-import ProfileDropdown from './ProfileDropDown';
-=======
+import { FaSearch } from 'react-icons/fa';
 import logo from '../../../public/logo.png';
->>>>>>> parent of e049087 (added a ton of security and cookies)
+import ProfileDropdown from './ProfileDropdown'; // adjust path if needed
+import { AuthorizeView, Logout } from 'react-auth-kit'; // adjust if using Auth0 or similar
 
 const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const navigate = useNavigate();
@@ -98,13 +93,12 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             </span>
           </div>
         )}
-<<<<<<< HEAD
 
         {/* Icons */}
         {!minimal && (
           <div className="d-flex align-items-center gap-3 ms-auto">
             <FaSearch style={{ color: 'white', cursor: 'pointer' }} />
-            <ProfileDropdown isAdmin={true} />
+            {/* <ProfileDropdown isAdmin={true} /> */}
           </div>
         )}
 
@@ -120,11 +114,3 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
 };
 
 export default CustomNavbar;
-=======
-      </div>
-    </nav>
-  );
-};
-
-export default Navbar;
->>>>>>> parent of e049087 (added a ton of security and cookies)

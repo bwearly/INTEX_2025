@@ -41,7 +41,7 @@ export const fetchMovies = async (
 
     return {
       movies: moviesWithPosters,
-      totalNumMovies: data.totalCount, // <- Make sure this matches backend response key
+      totalNumMovies: data.totalCount,
     };
   } catch (error) {
     console.error('Error fetching movies:', error);
@@ -56,8 +56,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(movie), // <-- was `newMovie` before
-      body: JSON.stringify(movie),
+      body: JSON.stringify(movie), // ✅ fixed: only one `body`
     });
 
     if (!response.ok) throw new Error('Failed to add movie');
@@ -77,7 +76,7 @@ export const updateMovie = async (
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include', // <-- important if your backend uses auth cookies
+    credentials: 'include',
     body: JSON.stringify(updatedMovie),
   });
 
