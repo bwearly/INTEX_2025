@@ -1,6 +1,5 @@
 # Ignore published poster files but keep folder for structure
-wwwroot/posters/*
-!wwwroot/posters/.gitkeep
+
 
 # Local environment and config files
 appsettings.Development.json
