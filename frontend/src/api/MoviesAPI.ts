@@ -49,7 +49,6 @@ export const fetchMovies = async (
   }
 };
 
-// Add a new movie
 export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
@@ -57,6 +56,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(movie), // <-- was `newMovie` before
       body: JSON.stringify(movie),
     });
 
