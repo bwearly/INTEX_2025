@@ -28,20 +28,21 @@ public partial class MoviesDbContext : DbContext
     {
         modelBuilder.Entity<MoviesRating>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_ratings");
+            entity.ToTable("movies_ratings"); // <- This goes on the entity, not on HasKey
+
+            entity.HasKey(e => new { e.ShowId, e.UserId }); // <- Composite key if needed
 
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.ShowId).HasColumnName("show_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
+
         modelBuilder.Entity<MoviesTitle>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_titles");
+            
+                entity.HasKey(e => e.ShowId);
+                entity.ToTable("movies_titles");
 
             entity.Property(e => e.AnimeSeriesInternationalTvShows).HasColumnName("Anime Series International TV Shows");
             entity.Property(e => e.BritishTvShowsDocuseriesInternationalTvShows).HasColumnName("British TV Shows Docuseries International TV Shows");

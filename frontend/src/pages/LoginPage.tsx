@@ -170,7 +170,8 @@ function LoginPage() {
           {error && <div style={styles.error}>{error}</div>}
 
           <div style={styles.smallText}>
-            New to CineNiche? <span style={{ color: '#fff' }}>Sign up now.</span>
+            New to CineNiche?{' '}
+            <span style={{ color: '#fff' }}>Sign up now.</span>
           </div>
         </form>
       </div>

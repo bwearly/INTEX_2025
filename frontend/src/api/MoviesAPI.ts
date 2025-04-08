@@ -1,30 +1,28 @@
 import { Movie } from '../types/Movie';
 
-interface fetchMovieResponse {
+interface FetchMoviesResponse {
   movies: Movie[];
+  totalNumMovies: number;
 }
 
 const API_URL = 'https://localhost:5000/Movie';
 
-// Fetch movies with pagination and optional genres
+// Fetch
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
   selectedGenres: string[]
-): Promise<fetchMovieResponse> => {
+): Promise<FetchMoviesResponse> => {
   try {
     const genreParams = selectedGenres
-      .map((genre) => `genres=${encodeURIComponent(genre)}`)
+      .map((g) => `genres=${encodeURIComponent(g)}`)
       .join('&');
 
     const response = await fetch(
       `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${selectedGenres.length ? `&${genreParams}` : ''}`
     );
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch movies');
-    }
-
+    if (!response.ok) throw new Error('Failed to fetch movies');
     return await response.json();
   } catch (error) {
     console.error('Error fetching movies:', error);
@@ -32,21 +30,16 @@ export const fetchMovies = async (
   }
 };
 
-// Add a new movie
-export const addMovie = async (newMovie: Movie): Promise<Movie> => {
+// Add
+export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newMovie),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(movie),
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to add movie');
-    }
-
+    if (!response.ok) throw new Error('Failed to add movie');
     return await response.json();
   } catch (error) {
     console.error('Error adding movie:', error);
@@ -54,41 +47,34 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   }
 };
 
-// Update an existing movie
+// Update
 export const updateMovie = async (
-  movieID: number,
+  showId: string,
   updatedMovie: Movie
 ): Promise<Movie> => {
-  try {
-    const response = await fetch(`${API_URL}/UpdateMovie/${movieID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedMovie),
-    });
+  const response = await fetch(`${API_URL}/UpdateMovie/${showId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedMovie),
+  });
 
-    if (!response.ok) {
-      throw new Error('Failed to update movie');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error updating movie:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Failed to update movie`);
   }
+
+  return await response.json();
 };
 
-// Delete a movie
-export const deleteMovie = async (movieID: number): Promise<void> => {
+// Delete
+export const deleteMovie = async (showId: number): Promise<void> => {
   try {
-    const response = await fetch(`${API_URL}/DeleteMovie/${movieID}`, {
+    const response = await fetch(`${API_URL}/DeleteMovie/${showId}`, {
       method: 'DELETE',
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to delete movie');
-    }
+    if (!response.ok) throw new Error('Failed to delete movie');
   } catch (error) {
     console.error('Error deleting movie:', error);
     throw error;
@@ -98,8 +84,10 @@ export const deleteMovie = async (movieID: number): Promise<void> => {
 // Search bar
 export const searchMovies = async (query: string) => {
   try {
-    const response = await fetch(`http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`);
-    
+    const response = await fetch(
+      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`
+    );
+
     if (!response.ok) {
       throw new Error(`Search failed: ${response.statusText}`);
     }
@@ -111,4 +99,3 @@ export const searchMovies = async (query: string) => {
     throw error;
   }
 };
-
