@@ -57,7 +57,11 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+<<<<<<< HEAD
       body: JSON.stringify(movie),
+=======
+      body: JSON.stringify(newMovie),
+>>>>>>> parent of e049087 (added a ton of security and cookies)
     });
 
     if (!response.ok) throw new Error('Failed to add movie');
@@ -105,13 +109,8 @@ export const deleteMovie = async (showId: string): Promise<void> => {
 // Search for movies by title
 export const searchMovies = async (query: string) => {
   try {
-    const response = await fetch(
-      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
-      {
-        credentials: 'include',
-      }
-    );
-
+    const response = await fetch(`http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`);
+    
     if (!response.ok) {
       throw new Error(`Search failed: ${response.statusText}`);
     }
@@ -123,3 +122,4 @@ export const searchMovies = async (query: string) => {
     throw error;
   }
 };
+

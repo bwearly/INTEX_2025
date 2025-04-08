@@ -9,6 +9,7 @@ namespace INTEX_2025.API.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
     }
 }
