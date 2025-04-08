@@ -60,14 +60,90 @@ function LoginPage() {
       console.error('Fetch attempt failed:', error);
     }
   };
+  */
+
+<<<<<<< HEAD
+  const styles: { [key: string]: React.CSSProperties } = {
+    wrapper: {
+      backgroundImage: `url('/login-bg.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      padding: '3rem',
+      borderRadius: '8px',
+      width: '100%',
+      maxWidth: '350px',
+      color: 'white',
+    },
+    input: {
+      backgroundColor: '#333',
+      color: 'white',
+      border: 'none',
+      fontSize: '0.9rem',
+    },
+    button: {
+      backgroundColor: '#e50914',
+      border: 'none',
+      fontWeight: 'bold',
+      fontSize: '1rem',
+      marginTop: '1rem',
+    },
+    linkButton: {
+      backgroundColor: '#333',
+      border: '1px solid #555',
+      color: 'white',
+      fontSize: '0.9rem',
+      marginTop: '0.5rem',
+    },
+    error: {
+      color: 'red',
+      fontSize: '0.85rem',
+      marginTop: '1rem',
+    },
+    smallText: {
+      color: '#aaa',
+      fontSize: '0.8rem',
+      marginTop: '1rem',
+    },
+    inputGroup: {
+      marginBottom: '1rem',
+    },
+    socialLink: {
+      textAlign: 'center',
+      color: '#aaa',
+      fontSize: '0.85rem',
+      marginTop: '0.75rem',
+      cursor: 'pointer',
+    },
+  };
 
   return (
+    <div style={styles.wrapper}>
+      <div style={styles.overlay}>
+        <h3 className="mb-4">Sign In</h3>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.inputGroup}>
+            <input
+              className="form-control"
+              style={styles.input}
+              type="email"
+              placeholder="Email"
+              name="email"
+              value={email}
+              onChange={handleChange}
+            />
+=======
+  return (
     <div className="container">
-      <div className="row justify-content-center">
-        <div
-          className="card border-0 shadow rounded-3 mt-5"
-          style={{ maxWidth: 500 }}
-        >
+      <div className="row">
+        <div className="card border-0 shadow rounded-3">
           <div className="card-body p-4 p-sm-5">
             <h5 className="card-title text-center mb-5 fw-light fs-5">
               Sign In
@@ -76,7 +152,7 @@ function LoginPage() {
               <div className="form-floating mb-3">
                 <input
                   className="form-control"
-                  type="email"
+                  type="string"
                   id="email"
                   name="email"
                   value={email}
@@ -118,11 +194,9 @@ function LoginPage() {
                   Sign in
                 </button>
               </div>
-
               <div className="d-grid mb-2">
                 <button
-                  type="button"
-                  className="btn btn-secondary text-uppercase fw-bold"
+                  className="btn btn-primary btn-login text-uppercase fw-bold"
                   onClick={handleRegisterClick}
                 >
                   Register
@@ -130,7 +204,6 @@ function LoginPage() {
               </div>
 
               <hr className="my-4" />
-
               <div className="d-grid mb-2">
                 <button
                   className="btn btn-google btn-login text-uppercase fw-bold"
@@ -149,9 +222,43 @@ function LoginPage() {
                   Facebook
                 </button>
               </div>
-
-              {error && <p className="text-danger mt-3">{error}</p>}
             </form>
+            {error && <p className="error text-danger mt-3">{error}</p>}
+>>>>>>> parent of e049087 (added a ton of security and cookies)
+          </div>
+          <div style={styles.inputGroup}>
+            <input
+              className="form-control"
+              style={styles.input}
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-check mb-3">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="rememberme"
+              name="rememberme"
+              checked={rememberme}
+              onChange={handleChange}
+            />
+            <label className="form-check-label" htmlFor="rememberme">
+              Remember password
+            </label>
+          </div>
+
+          <div className="d-grid mb-2">
+            <button
+              className="btn btn-primary btn-login text-uppercase fw-bold"
+              type="submit"
+            >
+              Sign in
+            </button>
           </div>
         </div>
       </div>

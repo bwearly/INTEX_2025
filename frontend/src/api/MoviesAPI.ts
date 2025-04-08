@@ -56,7 +56,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(movie), // ✅ fixed: only one `body`
+      body: JSON.stringify(movie), // <-- was `newMovie` before
     });
 
     if (!response.ok) throw new Error('Failed to add movie');

@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Navbar as BootstrapNavbar, Container } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
-import logo from '../../../public/logo.png';
-import ProfileDropdown from './ProfileDropdown'; // adjust path if needed
-import { AuthorizeView, Logout } from 'react-auth-kit'; // adjust if using Auth0 or similar
+import { FaSearch, FaUserCircle } from 'react-icons/fa';
+import logo from '/logo.png';
+import Logout from './Logout';
+import AuthorizeView from '../auth/AuthorizeView';
+import ProfileDropdown from './ProfileDropDown';
 
 const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const navigate = useNavigate();
