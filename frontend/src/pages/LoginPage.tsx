@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-function LoginPage() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [rememberme, setRememberme] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const navigate = useNavigate();
+function LoginPage({ goTo }: { goTo: (page: 'login' | 'home' | 'admin') => void }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberme, setRememberme] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
@@ -20,10 +18,10 @@ function LoginPage() {
   };
 
   const handleRegisterClick = () => {
-    navigate('/register');
+    goTo('admin');
   };
 
-  // TEMP login for testing
+  // ✅ TEMPORARY: Hardcoded login for testing
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -34,11 +32,52 @@ function LoginPage() {
     }
 
     if (email === '1' && password === '2') {
-      navigate('/home');
+      goTo('home');
     } else {
       setError('Invalid login. Use email: 1 and password: 2');
     }
   };
+
+  /*
+  // 🔒 ORIGINAL: Backend login with fetch
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+
+    if (!email || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    const loginUrl = rememberme
+      ? 'https://localhost:5000/login?useCookies=true'
+      : 'https://localhost:5000/login?useSessionCookies=true';
+
+    try {
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      let data = null;
+      const contentLength = response.headers.get('content-length');
+      if (contentLength && parseInt(contentLength, 10) > 0) {
+        data = await response.json();
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'Invalid email or password.');
+      }
+
+      goTo('home');
+    } catch (error: any) {
+      setError(error.message || 'Error logging in.');
+      console.error('Fetch attempt failed:', error);
+    }
+  };
+  */
 
   const styles: { [key: string]: React.CSSProperties } = {
     wrapper: {
@@ -77,6 +116,7 @@ function LoginPage() {
       border: '1px solid #555',
       color: 'white',
       fontSize: '0.9rem',
+      marginTop: '0.5rem',
     },
     error: {
       color: 'red',
@@ -90,6 +130,13 @@ function LoginPage() {
     },
     inputGroup: {
       marginBottom: '1rem',
+    },
+    socialLink: {
+      textAlign: 'center',
+      color: '#aaa',
+      fontSize: '0.85rem',
+      marginTop: '0.75rem',
+      cursor: 'pointer',
     },
   };
 
@@ -144,7 +191,7 @@ function LoginPage() {
           </button>
 
           <button
-            className="btn w-100 mt-2"
+            className="btn w-100"
             onClick={handleRegisterClick}
             style={styles.linkButton}
             type="button"
@@ -152,19 +199,13 @@ function LoginPage() {
             Register
           </button>
 
-          <div className="d-grid mt-4">
-            <button
-              className="btn mb-2"
-              type="button"
-              style={styles.linkButton}
-            >
-              <i className="fa-brands fa-google me-2"></i>
-              Sign in with Google
-            </button>
-            <button className="btn" type="button" style={styles.linkButton}>
-              <i className="fa-brands fa-facebook-f me-2"></i>
-              Sign in with Facebook
-            </button>
+          <div style={styles.socialLink}>
+            <i className="fa-brands fa-google me-2" />
+            Sign in with Google
+          </div>
+          <div style={styles.socialLink}>
+            <i className="fa-brands fa-facebook-f me-2" />
+            Sign in with Facebook
           </div>
 
           {error && <div style={styles.error}>{error}</div>}
