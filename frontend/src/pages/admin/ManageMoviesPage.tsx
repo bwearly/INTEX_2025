@@ -124,6 +124,7 @@ const ManageMoviesPage: React.FC = () => {
                 title={genre}
                 movies={genreMovies}
                 onClick={(movie) => setSelectedMovie(movie)}
+                onDelete={(id) => handleDelete(id)}
               />
             ))
         )}
