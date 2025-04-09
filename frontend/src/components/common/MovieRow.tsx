@@ -16,16 +16,20 @@ const MovieRow: React.FC<MovieRowProps> = ({
   onClick,
   onDelete,
 }) => {
-  return (
-    <div className="mb-8 px-4">
-      <h2 className="text-xl font-bold text-white mb-3">{title}</h2>
+  if (!movies || movies.length === 0) return null;
 
-      <div className="flex overflow-x-auto gap-4 pb-2 scroll-smooth snap-x">
-        {movies.map((movie) => (
-          <div key={movie.showId} className="snap-start">
-            <MovieCard movie={movie} onClick={onClick} onDelete={onDelete} />
-          </div>
-        ))}
+  return (
+    <div className="mb-8 w-full">
+      <h2 className="text-2xl font-semibold text-white mb-3 px-4">{title}</h2>
+
+      <div className="overflow-x-auto scrollbar-hide w-screen -ml-4 px-4">
+        <div className="flex flex-nowrap gap-4 pb-2 scroll-smooth snap-x snap-mandatory">
+          {movies.map((movie) => (
+            <div key={movie.showId} className="snap-start">
+              <MovieCard movie={movie} onClick={onClick} onDelete={onDelete} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

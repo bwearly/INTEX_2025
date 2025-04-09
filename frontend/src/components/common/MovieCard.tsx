@@ -9,11 +9,9 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, onDelete }) => {
-  const encodedPoster = encodeURIComponent(movie.posterUrl || 'default.jpg');
-
   return (
     <div
-      className="text-center text-white cursor-pointer"
+      className="text-center text-white cursor-pointer transition-transform duration-200 hover:scale-105"
       style={{ width: '150px', flex: '0 0 auto' }}
       onClick={() => onClick?.(movie)}
     >
@@ -25,6 +23,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, onDelete }) => {
           height: '220px',
           objectFit: 'cover',
           borderRadius: '8px',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
         }}
         onError={(e) => ((e.target as HTMLImageElement).src = '/images.png')}
       />

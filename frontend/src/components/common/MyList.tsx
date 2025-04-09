@@ -3,7 +3,6 @@ import React from 'react';
 import { Movie } from '../../types/Movie';
 import MovieRow from './MovieRow';
 
-// Props
 interface MoviesListProps {
   allMovies: Movie[];
   selectedGenres: string[];
@@ -11,7 +10,6 @@ interface MoviesListProps {
   onDelete?: (id: string) => void;
 }
 
-// Genre title display map
 const genreDisplayMap: Record<string, string> = {
   action: 'Action',
   adventure: 'Adventure',
@@ -25,7 +23,6 @@ const genreDisplayMap: Record<string, string> = {
   thrillers: 'Thrillers',
 };
 
-// Helper functions
 const normalizeKey = (key: string) =>
   key
     .replace(/\s+/g, '')
@@ -41,10 +38,10 @@ const extractGenres = (movie: Movie): string[] => {
     .map((key) => normalizeKey(key));
 };
 
-// Dummy movie list
-const dummyMovie: Movie = {
-  showId: 'dummy-1',
-  title: 'Placeholder Movie',
+// Dummy movies
+const dummyMovie = (id: string, title: string): Movie => ({
+  showId: id,
+  title,
   releaseYear: 2023,
   posterUrl: '/images.png',
   action: 1,
@@ -86,7 +83,19 @@ const dummyMovie: Movie = {
   tvDramas: 0,
   talkShowsTvComedies: 0,
   thrillers: 0,
-};
+});
+
+const myList: Movie[] = [
+  dummyMovie('my1', 'My Movie 1'),
+  dummyMovie('my2', 'My Movie 2'),
+  dummyMovie('my3', 'My Movie 3'),
+];
+
+const recommended: Movie[] = [
+  dummyMovie('rec1', 'Recommended 1'),
+  dummyMovie('rec2', 'Recommended 2'),
+  dummyMovie('rec3', 'Recommended 3'),
+];
 
 const MoviesList: React.FC<MoviesListProps> = ({
   allMovies,
@@ -94,32 +103,20 @@ const MoviesList: React.FC<MoviesListProps> = ({
   onClick,
   onDelete,
 }) => {
-  // Dummy custom rows
-  const myList: Movie[] = [
-    { ...dummyMovie, showId: 'my1', title: 'My Movie 1' },
-    { ...dummyMovie, showId: 'my2', title: 'My Movie 2' },
-    { ...dummyMovie, showId: 'my3', title: 'My Movie 3' },
-  ];
-
-  const recommended: Movie[] = [
-    { ...dummyMovie, showId: 'rec1', title: 'Recommended 1' },
-    { ...dummyMovie, showId: 'rec2', title: 'Recommended 2' },
-    { ...dummyMovie, showId: 'rec3', title: 'Recommended 3' },
-  ];
-
-  // Group by genre
   const groupedMovies: Record<string, Movie[]> = {};
 
   allMovies.forEach((movie) => {
-    const rawGenres = extractGenres(movie);
-    const genresToUse =
+    const genres = extractGenres(movie);
+    const activeGenres =
       selectedGenres.length > 0
-        ? rawGenres.filter((g) => selectedGenres.includes(g))
-        : rawGenres;
+        ? genres.filter((g) => selectedGenres.includes(g))
+        : genres;
 
-    if (genresToUse.length === 0) genresToUse.push('uncategorized');
+    if (activeGenres.length === 0) {
+      activeGenres.push('uncategorized');
+    }
 
-    genresToUse.forEach((genre) => {
+    activeGenres.forEach((genre) => {
       if (!groupedMovies[genre]) groupedMovies[genre] = [];
       groupedMovies[genre].push(movie);
     });
@@ -129,25 +126,19 @@ const MoviesList: React.FC<MoviesListProps> = ({
 
   return (
     <div className="px-4 space-y-8">
-      {/* My List Row */}
-      {myList.length > 0 && (
-        <MovieRow
-          title="My List"
-          movies={myList}
-          onClick={onClick}
-          onDelete={onDelete}
-        />
-      )}
-
-      {/* Recommended Row */}
-      {recommended.length > 0 && (
-        <MovieRow
-          title="Recommended"
-          movies={recommended}
-          onClick={onClick}
-          onDelete={onDelete}
-        />
-      )}
+      {/* Top Rows */}
+      <MovieRow
+        title="My List"
+        movies={myList}
+        onClick={onClick}
+        onDelete={onDelete}
+      />
+      <MovieRow
+        title="Recommended"
+        movies={recommended}
+        onClick={onClick}
+        onDelete={onDelete}
+      />
 
       {/* Genre Rows */}
       {sortedGenres.map((genre) => (
