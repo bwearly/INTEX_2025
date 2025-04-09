@@ -8,6 +8,10 @@ import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult'; 
 import MyListPage from './pages/MyListPage';
+import MoviesPage from './pages/MoviesPage';
+import TvShowsPage from './pages/TvShowsPage'; 
+
+
 
 
 function App() {
@@ -25,6 +29,9 @@ function App() {
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
         <Route path="/search" element={<SearchResult />} /> 
         <Route path="/mylist" element={<MyListPage />} />
+        <Route path="/movies" element={<MoviesPage />} />
+        <Route path="/tv" element={<TvShowsPage />} />
+
 
       </Routes>
       <CookieConsent

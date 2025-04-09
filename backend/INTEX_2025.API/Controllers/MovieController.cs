@@ -191,6 +191,7 @@ namespace INTEX_2025.API.Controllers
 
 
         [HttpGet("GetGenres")]
+        [AllowAnonymous] // Optional if your site requires login
         public IActionResult GetGenres()
         {
             var genreProperties = typeof(MoviesTitle).GetProperties()
@@ -200,6 +201,30 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(genreProperties);
         }
+[HttpGet("TvShows")]
+[AllowAnonymous] // Optional if your site requires login
+public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
+{
+    if (page < 1 || pageSize < 1)
+        return BadRequest("Page and pageSize must be greater than 0.");
+
+    var shows = _context.MoviesTitles
+        .Where(m => m.Type == "TV Show")
+        .OrderBy(m => m.ShowId)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToList();
+
+    var totalCount = _context.MoviesTitles.Count(m => m.Type == "TV Show");
+
+    return Ok(new
+    {
+        TotalCount = totalCount,
+        CurrentPage = page,
+        PageSize = pageSize,
+        Movies = shows
+    });
+}
 
     }
 }
