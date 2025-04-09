@@ -7,7 +7,7 @@ interface MovieCardProps {
   onDelete?: (id: string) => void;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, onDelete }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
   return (
     <div className="movie-card" onClick={() => onClick?.(movie)}>
       <img
@@ -15,27 +15,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, onDelete }) => {
         alt={movie.title}
         onError={(e) => ((e.target as HTMLImageElement).src = '/images.png')}
       />
-
-      {onDelete && (
-        <div className="admin-controls">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick?.(movie);
-            }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(movie.showId);
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      )}
     </div>
   );
 };

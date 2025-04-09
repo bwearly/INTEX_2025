@@ -1,96 +1,120 @@
 import { useEffect, useRef, useState } from 'react';
-import { fetchGenres, fetchMovies } from '../api/MoviesAPI';
-import GenreFilter from '../components/common/GenreFilter';
+import { fetchMovies } from '../api/MoviesAPI';
 import { Movie } from '../types/Movie';
 import MovieCard from '../components/common/MovieCard';
+import '../components/common/HorizontalScroll.css';
 
 const MoviesPage = () => {
-  const [genres, setGenres] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Load genres from backend
-  useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        const genreList = await fetchGenres();
-        setGenres(genreList);
-      } catch (err) {
-        console.error('Failed to load genres:', err);
-      }
-    };
-    loadGenres();
-  }, []);
+  const formatGenre = (genre: string) =>
+    genre.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 
-  // Load all movies
-  useEffect(() => {
-    const loadMovies = async () => {
-      try {
-        const res = await fetchMovies(200, 1, []);
-        setAllMovies(res.movies);
-      } catch (err) {
-        console.error('Failed to fetch movies:', err);
-      }
-    };
-    loadMovies();
-  }, []);
-
-  // Scroll to genre section when selected
-  const handleGenreSelect = (genre: string) => {
+  const handleGenreJump = (genre: string) => {
     const section = genreRefs.current[genre];
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        const res = await fetchMovies(200, 1, []);
+        setAllMovies(res.movies);
+
+        const genreSet = new Set<string>();
+        res.movies.forEach((movie) => {
+          Object.keys(movie).forEach((key) => {
+            if ((movie as any)[key] === 1 && typeof (movie as any)[key] === 'number') {
+              genreSet.add(key);
+            }
+          });
+        });
+
+        setSelectedGenres(Array.from(genreSet));
+      } catch (err) {
+        console.error('Failed to fetch movies:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMovies();
+  }, []);
+
+  const scrollRow = (genre: string, direction: 'left' | 'right') => {
+    const section = document.getElementById(`scroll-${genre}`);
+    if (section) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      section.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="text-white" style={{ paddingTop: '100px' }}>
-      {/* Page Header */}
-      <div className="d-flex justify-content-between align-items-center px-4 mb-4">
-        <h1 className="display-5 fw-bold">Movies</h1>
-        <select
-          className="form-select w-auto bg-dark text-white"
-          onChange={(e) => handleGenreSelect(e.target.value)}
-          defaultValue=""
-        >
-          <option disabled value="">
-            Select Genre
-          </option>
-          {genres.map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Genre Filter Dropdown */}
-      <div className="px-4 mb-4">
-        <GenreFilter
-          allMovies={allMovies}
-          selectedGenres={selectedGenres}
-          setSelectedGenres={setSelectedGenres}
-        />
-      </div>
-
-      {/* Movie Rows by Genre */}
-      {selectedGenres.map((genre) => (
-        <div
-          key={genre}
-          ref={(el) => (genreRefs.current[genre] = el)}
-          className="mb-5 px-4"
-        >
-          <h3 className="mb-3">{genre}</h3>
-          <div className="d-flex flex-wrap gap-4">
-            {allMovies
-              .filter((movie) => ((movie as any)[genre.toLowerCase()] ?? 0) > 0)
-              .map((movie) => (
-                <MovieCard key={movie.showId} movie={movie} />
-              ))}
-          </div>
+      <div className="w-full max-w-screen-2xl mx-auto mt-4 px-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1 className="display-5 fw-bold">Movies</h1>
+          <select
+            className="form-select w-auto bg-dark text-white"
+            onChange={(e) => handleGenreJump(e.target.value)}
+            defaultValue=""
+          >
+            <option disabled value="">Jump to Genre</option>
+            {selectedGenres.map((g) => (
+              <option key={g} value={g}>
+                {formatGenre(g)}
+              </option>
+            ))}
+          </select>
         </div>
-      ))}
+
+        {selectedGenres.map((genre) => {
+          const moviesForGenre = allMovies.filter(
+            (movie) => (movie as any)[genre] === 1
+          );
+          if (moviesForGenre.length === 0) return null;
+
+          return (
+            <div
+              key={genre}
+              ref={(el) => (genreRefs.current[genre] = el)}
+              className="movie-row-container mb-5"
+              style={{ scrollMarginTop: '120px' }} // ✅ scroll offset fix
+            >
+              <h3 className="mb-3">{formatGenre(genre)}</h3>
+              <div className="group">
+                <button
+                  className="scroll-btn scroll-btn-left"
+                  onClick={() => scrollRow(genre, 'left')}
+                >
+                  ‹
+                </button>
+                <div
+                  id={`scroll-${genre}`}
+                  className="horizontal-scroll-container"
+                >
+                  {moviesForGenre.map((movie) => (
+                    <div key={movie.showId} className="movie-card">
+                      <MovieCard movie={movie} />
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="scroll-btn scroll-btn-right"
+                  onClick={() => scrollRow(genre, 'right')}
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

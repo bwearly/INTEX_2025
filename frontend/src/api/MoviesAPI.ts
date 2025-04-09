@@ -89,7 +89,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify(movie), // <-- was `newMovie` before
+      body: JSON.stringify(movie),
     });
 
     if (!response.ok) throw new Error('Failed to add movie');
@@ -151,8 +151,7 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 
     const data = await response.json();
 
-    const AZURE_BLOB_URL =
-      'https://cinanicheposters.blob.core.windows.net/posters';
+    const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
 
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
@@ -182,6 +181,40 @@ export const fetchGenres = async (): Promise<string[]> => {
   } catch (error) {
     console.error('Error fetching genres:', error);
     return [];
+  }
+};
+
+// ✅ Fetch TV Shows only
+export const fetchTvShows = async (
+  pageSize: number,
+  pageNum: number
+): Promise<FetchMoviesResponse> => {
+  try {
+    const response = await fetch(
+      `https://localhost:5000/Movie/TvShows?pageSize=${pageSize}&page=${pageNum}`,
+      {
+        credentials: 'include',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch TV shows');
+    }
+
+    const data = await response.json();
+
+    const showsWithPosters = data.movies.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return {
+      movies: showsWithPosters,
+      totalNumMovies: data.totalCount,
+    };
+  } catch (error) {
+    console.error('Error fetching TV shows:', error);
+    throw error;
   }
 };
 
