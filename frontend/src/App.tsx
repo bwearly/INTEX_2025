@@ -6,26 +6,31 @@ import Navbar from './components/common/Navbar';
 import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
-import SearchResult from './components/common/SearchResult'; 
+import SearchResult from './components/common/SearchResult';
 import MyListPage from './pages/MyListPage';
-
+import SettingsPage from './pages/SettingsPage';
+import PrivacyPolicy from './components/common/PrivacyPolicy';
 
 function App() {
   const location = useLocation();
-  // const hideNavbar = location.pathname === '/login';
+  const hideNavbar =
+    location.pathname === '/login' ||
+    location.pathname === '/' ||
+    location.pathname === '/register';
 
   return (
     <>
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
-        <Route path="/search" element={<SearchResult />} /> 
+        <Route path="/search" element={<SearchResult />} />
         <Route path="/mylist" element={<MyListPage />} />
-
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
       <CookieConsent
         enableDeclineButton
@@ -44,4 +49,3 @@ function App() {
 }
 
 export default App;
-
