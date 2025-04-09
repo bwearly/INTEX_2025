@@ -5,7 +5,13 @@ const PrivacyPolicy: React.FC = () => {
     <>
       <div
         className="privacy-policy"
-        style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}
+        style={{
+          padding: '2rem',
+          paddingTop: '80px',
+          color: '#fff',
+          backgroundColor: '#000',
+          minHeight: '100vh',
+        }}
       >
         <h1>Privacy Policy</h1>
         <p>Effective Date: April 2025</p>

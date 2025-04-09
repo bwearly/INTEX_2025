@@ -35,70 +35,88 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   };
 
   return (
-    <BootstrapNavbar
-      expand="lg"
-      fixed="top"
-      className="px-4 py-2"
-      style={{
-        backgroundColor: '#000',
-        borderBottom: '2px solid #111',
-        zIndex: 1000,
-      }}
-    >
-      <Container fluid className="d-flex justify-content-between align-items-center">
-  {/* Logo */}
-  <div className="d-flex align-items-center">
-    <BootstrapNavbar.Brand
-      onClick={() => navigate('/')}
-      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
-    >
-      <img
-        src={logo}
-        alt="CineNiche Logo"
-        style={{ height: '32px', width: '32px', objectFit: 'contain' }}
-      />
-      <span
+    <AuthorizeView>
+      <BootstrapNavbar
+        expand="lg"
+        fixed="top"
+        className="px-4 py-2"
         style={{
-          color: '#e50914',
-          fontWeight: 'bold',
-          fontSize: '20px',
-          letterSpacing: '1px',
+          backgroundColor: '#000',
+          borderBottom: '2px solid #111',
+          zIndex: 1000,
         }}
       >
-        CINENICHE
-      </span>
-    </BootstrapNavbar.Brand>
+        <Container
+          fluid
+          className="d-flex justify-content-between align-items-center"
+        >
+          {/* Logo */}
+          <div className="d-flex align-items-center">
+            <BootstrapNavbar.Brand
+              onClick={() => navigate('/home')}
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <img
+                src={logo}
+                alt="CineNiche Logo"
+                style={{ height: '32px', width: '32px', objectFit: 'contain' }}
+              />
+              <span
+                style={{
+                  color: '#e50914',
+                  fontWeight: 'bold',
+                  fontSize: '20px',
+                  letterSpacing: '1px',
+                }}
+              >
+                CINENICHE
+              </span>
+            </BootstrapNavbar.Brand>
 
-    {/* Nav Links */}
-    {!minimal && (
-      <div className="d-flex align-items-center ms-4 gap-4">
-        <span style={navItemStyle} onClick={() => navigate('/mylist')}>My List</span>
-        <span style={navItemStyle} onClick={() => navigate('/tv')}>TV Shows</span>
-        <span style={navItemStyle} onClick={() => navigate('/movies')}>Movies</span>
-        <span style={navItemStyle} onClick={() => navigate('/categories')}>Categories</span>
-      </div>
-    )}
-  </div>
+            {/* Nav Links */}
+            {!minimal && (
+              <div className="d-flex align-items-center ms-4 gap-4">
+                <span style={navItemStyle} onClick={() => navigate('/mylist')}>
+                  My List
+                </span>
+                <span style={navItemStyle} onClick={() => navigate('/tv')}>
+                  TV Shows
+                </span>
+                <span style={navItemStyle} onClick={() => navigate('/movies')}>
+                  Movies
+                </span>
+                <span
+                  style={navItemStyle}
+                  onClick={() => navigate('/categories')}
+                >
+                  Categories
+                </span>
+              </div>
+            )}
+          </div>
 
-  {/* Search + Logout */}
-  <div className="d-flex align-items-center gap-3" ref={searchRef}>
-    <FaSearch
-      style={{ color: 'white', cursor: 'pointer', fontSize: '1.2rem' }}
-      onClick={() => setShowSearch((prev) => !prev)}
-    />
-    {showSearch && (
-      <div style={{ width: '200px', marginLeft: '8px' }}>
-        <SearchBar />
-      </div>
-    )}
+          {/* Search + Logout */}
+          <div className="d-flex align-items-center gap-3" ref={searchRef}>
+            <FaSearch
+              style={{ color: 'white', cursor: 'pointer', fontSize: '1.2rem' }}
+              onClick={() => setShowSearch((prev) => !prev)}
+            />
+            {showSearch && (
+              <div style={{ width: '200px', marginLeft: '8px' }}>
+                <SearchBar />
+              </div>
+            )}
 
-    <AuthorizeView>
-      <Logout>Logout</Logout>
+            <ProfileDropdown />
+          </div>
+        </Container>
+      </BootstrapNavbar>
     </AuthorizeView>
-  </div>
-</Container>
-
-    </BootstrapNavbar>
   );
 };
 

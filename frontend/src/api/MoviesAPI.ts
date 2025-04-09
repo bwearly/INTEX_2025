@@ -151,6 +151,8 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 
     const data = await response.json();
 
+    const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
@@ -215,3 +217,16 @@ export const fetchTvShows = async (
     throw error;
   }
 };
+
+export async function getCurrentUser() {
+  const response = await fetch(`${API_URL}/me`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Not authenticated');
+  }
+
+  return await response.json();
+}
