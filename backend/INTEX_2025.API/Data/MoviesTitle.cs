@@ -7,7 +7,7 @@ namespace INTEX_2025.API.Data;
 public partial class MoviesTitle
 {
     [Key]
-    public string? ShowId { get; set; }
+    public string ShowId { get; set; } = Guid.NewGuid().ToString();
 
     public string? Type { get; set; }
 
