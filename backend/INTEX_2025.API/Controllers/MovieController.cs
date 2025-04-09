@@ -164,27 +164,31 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("Search")]
+        [AllowAnonymous] // Optional: allow unauthenticated access for public search
         public IActionResult SearchMovies([FromQuery] string query)
+{
+        if (string.IsNullOrWhiteSpace(query))
+        return BadRequest("Search query cannot be empty.");
+
+        var loweredQuery = query.Trim().ToLower();
+
+        var movies = _context.MoviesTitles
+        .Where(m => m.Title.ToLower().Contains(loweredQuery))
+        .Select(m => new
         {
-            if (string.IsNullOrWhiteSpace(query))
-                return BadRequest("Search query cannot be empty.");
+            m.ShowId,
+            m.Title,
+            m.Director,
+            m.Cast,
+            m.ReleaseYear,
+            m.Rating,
+            m.Description
+        })
+        .ToList();
 
-            var movies = _context.MoviesTitles
-                .Where(m => EF.Functions.Like(m.Title.ToLower(), $"%{query.ToLower()}%"))
-                .Select(m => new
-                {
-                    m.ShowId,
-                    m.Title,
-                    m.Director,
-                    m.Cast,
-                    m.ReleaseYear,
-                    m.Rating,
-                    m.Description
-                })
-                .ToList();
+    return Ok(movies);
+}
 
-            return movies.Any() ? Ok(movies) : NotFound("No movies matched your search.");
-        }
 
         [HttpGet("GetGenres")]
         public IActionResult GetGenres()

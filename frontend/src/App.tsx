@@ -6,19 +6,22 @@ import Navbar from './components/common/Navbar';
 import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
+import SearchResult from './components/common/SearchResult'; 
 
 function App() {
   const location = useLocation();
-  //const hideNavbar = location.pathname === '/login';
+  // const hideNavbar = location.pathname === '/login';
+
   return (
     <>
-      {<Navbar />}
+      <Navbar />
       <Routes>
-        <Route path="/" element={<LoginPage />} />{' '}
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
+        <Route path="/search" element={<SearchResult />} /> 
       </Routes>
       <CookieConsent
         enableDeclineButton
@@ -35,4 +38,6 @@ function App() {
     </>
   );
 }
+
 export default App;
+
