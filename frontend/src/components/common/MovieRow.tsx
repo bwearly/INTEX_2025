@@ -1,3 +1,4 @@
+// src/components/common/MovieRow.tsx
 import React from 'react';
 import { Movie } from '../../types/Movie';
 import MovieCard from './MovieCard';
@@ -16,16 +17,14 @@ const MovieRow: React.FC<MovieRowProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="mb-5 px-4">
-      <h2 className="text-xl font-semibold mb-3">{title}</h2>
-      <div className="d-flex overflow-auto gap-3">
+    <div className="mb-8 px-4">
+      <h2 className="text-xl font-bold text-white mb-3">{title}</h2>
+
+      <div className="flex overflow-x-auto gap-4 pb-2 scroll-smooth snap-x">
         {movies.map((movie) => (
-          <MovieCard
-            key={movie.showId}
-            movie={movie}
-            onClick={onClick}
-            onDelete={onDelete}
-          />
+          <div key={movie.showId} className="snap-start">
+            <MovieCard movie={movie} onClick={onClick} onDelete={onDelete} />
+          </div>
         ))}
       </div>
     </div>

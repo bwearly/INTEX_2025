@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import ManageMoviesPage from './pages/admin/ManageMoviesPage';
 import Navbar from './components/common/Navbar';
-import LoginPage from './pages/LoginPage';
 import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 

@@ -27,19 +27,7 @@ namespace INTEX_2025.API.Controllers
                 .OrderBy(m => m.ShowId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(m => new
-                {
-                    m.ShowId,
-                    m.Title,
-                    m.Director,
-                    m.Cast,
-                    m.ReleaseYear,
-                    m.Rating,
-                    m.Description,
-                    m.Type,
-                    PosterUrl = $"/posters/{Uri.EscapeDataString(m.Title)}.jpg"
-                })
-                .ToList();
+                .ToList(); // ← this will include ALL properties including genres
 
             var totalCount = _context.MoviesTitles.Count();
 
@@ -51,6 +39,7 @@ namespace INTEX_2025.API.Controllers
                 Movies = movies
             });
         }
+
 
         [HttpGet("GetEntertainmentType")]
         public IActionResult GetEntertainmentType()
@@ -165,5 +154,17 @@ namespace INTEX_2025.API.Controllers
 
             return movies.Any() ? Ok(movies) : NotFound("No movies matched your search.");
         }
+
+        [HttpGet("GetGenres")]
+        public IActionResult GetGenres()
+        {
+            var genreProperties = typeof(MoviesTitle).GetProperties()
+                .Where(prop => prop.PropertyType == typeof(int?) && prop.Name != "ReleaseYear")
+                .Select(prop => prop.Name)
+                .ToList();
+
+            return Ok(genreProperties);
+        }
+
     }
 }

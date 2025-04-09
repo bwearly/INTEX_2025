@@ -123,3 +123,22 @@ export const searchMovies = async (query: string) => {
     throw error;
   }
 };
+
+// Fetch available genres from backend
+export const fetchGenres = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${API_URL}/GetGenres`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch genres');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching genres:', error);
+    return [];
+  }
+};
