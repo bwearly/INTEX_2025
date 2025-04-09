@@ -7,6 +7,7 @@ namespace INTEX_2025.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     //[Authorize(Roles ="Admin")]
     public class RoleController : Controller
     {
