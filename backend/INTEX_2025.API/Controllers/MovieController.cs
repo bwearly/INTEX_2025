@@ -8,7 +8,7 @@ namespace INTEX_2025.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
@@ -63,7 +63,7 @@ namespace INTEX_2025.API.Controllers
 
         // POST: /Movie/AddMovie
         [HttpPost("AddMovie")]
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
             _context.MoviesTitles.Add(newMovie);
@@ -72,47 +72,58 @@ namespace INTEX_2025.API.Controllers
         }
 
 
-        [HttpPut("UpdateMovie/{showId}")]
-        [Authorize(Roles = "Admin")]
-
+       [HttpPut("UpdateMovie/{showId}")]
+        // [Authorize(Roles = "Admin")]
         public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
-            var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
-
-            if (existingMovie == null)
+            try
             {
-                return NotFound(new { message = "Movie not found" });
+                var existingMovie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
+
+                if (existingMovie == null)
+                {
+                    return NotFound(new { message = "Movie not found" });
+                }
+
+                // Update basic string and numeric fields (null-safe)
+                existingMovie.Title = updatedMovie.Title ?? existingMovie.Title;
+                existingMovie.Type = updatedMovie.Type ?? existingMovie.Type;
+                existingMovie.Director = updatedMovie.Director ?? existingMovie.Director;
+                existingMovie.Cast = updatedMovie.Cast ?? existingMovie.Cast;
+                existingMovie.Country = updatedMovie.Country ?? existingMovie.Country;
+                existingMovie.Description = updatedMovie.Description ?? existingMovie.Description;
+                existingMovie.ReleaseYear = updatedMovie.ReleaseYear ?? existingMovie.ReleaseYear;
+                existingMovie.Rating = updatedMovie.Rating ?? existingMovie.Rating;
+                existingMovie.Duration = updatedMovie.Duration ?? existingMovie.Duration;
+
+                // Safely update genres (set to 0 if null)
+                existingMovie.Action = updatedMovie.Action ?? 0;
+                existingMovie.Adventure = updatedMovie.Adventure ?? 0;
+                existingMovie.Dramas = updatedMovie.Dramas ?? 0;
+                existingMovie.Documentaries = updatedMovie.Documentaries ?? 0;
+                // Add more genres as needed...
+
+                _context.MoviesTitles.Update(existingMovie);
+                _context.SaveChanges();
+
+                return Ok(existingMovie);
             }
-
-            // Update fields
-            existingMovie.Title = updatedMovie.Title;
-            existingMovie.Type = updatedMovie.Type;
-            existingMovie.Director = updatedMovie.Director;
-            existingMovie.Cast = updatedMovie.Cast;
-            existingMovie.Country = updatedMovie.Country;
-            existingMovie.Description = updatedMovie.Description;
-            existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
-            existingMovie.Rating = updatedMovie.Rating;
-            existingMovie.Duration = updatedMovie.Duration;
-
-            // Update genres (sample)
-            existingMovie.Action = updatedMovie.Action;
-            existingMovie.Adventure = updatedMovie.Adventure;
-            existingMovie.Dramas = updatedMovie.Dramas;
-            existingMovie.Documentaries = updatedMovie.Documentaries;
-            // ... Add other genre fields here
-
-            _context.MoviesTitles.Update(existingMovie);
-            _context.SaveChanges();
-
-            return Ok(existingMovie);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = "Failed to update movie",
+                    details = ex.Message,
+                    stack = ex.StackTrace
+                });
+            }
         }
 
 
 
         // DELETE: /Movie/DeleteMovie/{showId}
         [HttpDelete("DeleteMovie/{showId}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         public IActionResult DeleteMovie(int showId)
         {
