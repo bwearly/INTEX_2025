@@ -151,7 +151,8 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 
     const data = await response.json();
 
-    const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+    const AZURE_BLOB_URL =
+      'https://cinanicheposters.blob.core.windows.net/posters';
 
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
@@ -230,3 +231,34 @@ export async function getCurrentUser() {
 
   return await response.json();
 }
+
+// Fetch recommended movies for the logged-in user
+export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
+  try {
+    const email = localStorage.getItem('userEmail'); // 👈 ensure this is set at login
+
+    const response = await fetch(
+      `https://localhost:5000/api/YourControllerName/GetUserRecommendations?email=${encodeURIComponent(email ?? '')}`,
+      {
+        credentials: 'include',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch recommended movies');
+    }
+
+    const data = await response.json();
+
+    // Optional: add poster URLs using your blob storage
+    const moviesWithPosters = data.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return moviesWithPosters;
+  } catch (error) {
+    console.error('Error fetching recommended movies:', error);
+    return [];
+  }
+};
