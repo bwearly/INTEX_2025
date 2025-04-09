@@ -136,10 +136,10 @@ export const deleteMovie = async (showId: string): Promise<void> => {
 };
 
 // Search for movies by title
-export const searchMovies = async (query: string) => {
+export const searchMovies = async (query: string): Promise<Movie[]> => {
   try {
     const response = await fetch(
-      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      `https://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
       {
         credentials: 'include',
       }
@@ -150,12 +150,21 @@ export const searchMovies = async (query: string) => {
     }
 
     const data = await response.json();
-    return data;
+
+    const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
+    const moviesWithPosters = data.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return moviesWithPosters;
   } catch (error) {
     console.error('Error searching movies:', error);
     throw error;
   }
 };
+
 
 // Fetch available genres from backend
 export const fetchGenres = async (): Promise<string[]> => {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SearchBar = () => {
+const Searchbar = () => {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -31,4 +31,4 @@ const SearchBar = () => {
   );
 };
 
-export default SearchBar;
+export default Searchbar;

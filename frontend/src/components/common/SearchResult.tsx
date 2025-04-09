@@ -1,62 +1,72 @@
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-  onPageChange: (newPage: number) => void;
-  onPageSizeChange: (newSize: number) => void;
-}
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { searchMovies } from '../../api/MoviesAPI';
+import { Movie } from '../../types/Movie';
+import MovieCard from './MovieCard';
+import Pagination from './Pagination';
 
-const Pagination = ({
-  currentPage,
-  totalPages,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
-}: PaginationProps) => {
+const SearchResult = () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
+
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [filtered, setFiltered] = useState<Movie[]>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const result = await searchMovies(query);
+        setMovies(result);
+        setPage(1); // reset to first page when query changes
+        setError('');
+      } catch (err) {
+        setError('Search failed');
+        setMovies([]);
+      }
+    };
+
+    if (query) {
+      fetchResults();
+    }
+  }, [query]);
+
+  useEffect(() => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    setFiltered(movies.slice(start, end));
+  }, [movies, page, pageSize]);
+
+  const totalPages = Math.ceil(movies.length / pageSize);
+
   return (
-    <div className="flex item-center justify-center mt-4">
-      <button
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        className="btn btn-secondary mt-1"
-      >
-        Previous
-      </button>
-      {[...Array(totalPages)].map((_, index) => (
-        <button
-          key={index + 1}
-          onClick={() => onPageChange(index + 1)}
-          disabled={currentPage === index + 1}
-          className="btn btn-secondary mt-1 me-1 ms-1"
-        >
-          {index + 1}
-        </button>
-      ))}
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        className="btn btn-secondary mt-1"
-      >
-        Next
-      </button>
-      <br />
-      <label>
-        Results per page:
-        <select
-          value={pageSize}
-          onChange={(p) => {
-            onPageSizeChange(Number(p.target.value));
-            onPageChange(1);
-          }}
-          className="form-control"
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
-      </label>
+    <div className="container mt-5 pt-4">
+      <h2 className="text-light mb-4">Search results for: <em>{query}</em></h2>
+      {error && <p className="text-danger">{error}</p>}
+      {filtered.length === 0 ? (
+        <p className="text-light">No results found.</p>
+      ) : (
+        <>
+          <div className="row mt-4">
+            {filtered.map((movie) => (
+              <div key={movie.showId} className="col-md-3 col-sm-6 mb-4">
+                <MovieCard movie={movie} />
+              </div>
+            ))}
+          </div>
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+          />
+        </>
+      )}
     </div>
   );
 };
 
-export default Pagination;
+export default SearchResult;
