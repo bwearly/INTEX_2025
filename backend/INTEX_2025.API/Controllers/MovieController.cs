@@ -226,5 +226,26 @@ public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSi
     });
 }
 
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var user = HttpContext.User;
+
+            if (!user.Identity.IsAuthenticated)
+            {
+                return Unauthorized();
+            }
+
+            var email = user.Identity.Name;
+            var role = user.IsInRole("Admin") ? "admin" : "user";
+
+            return Ok(new
+            {
+                email = email,
+                role = role
+            });
+        }
+
     }
 }
