@@ -30,7 +30,7 @@ const Home: React.FC = () => {
   return (
     <AuthorizeView>
       <div
-        className="bg-dark text-white min-vh-100"
+        className="bg-dark text-white min-vh-100 overflow-visible"
         style={{ paddingTop: '80px' }}
       >
         <Navbar />

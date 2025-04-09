@@ -19,6 +19,15 @@ const MovieRow: React.FC<MovieRowProps> = ({
 }) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const [showLeft, setShowLeft] = useState(false);
+  const [showRight, setShowRight] = useState(false);
+
+  const updateScrollButtons = () => {
+    const el = rowRef.current;
+    if (el) {
+      setShowLeft(el.scrollLeft > 0);
+      setShowRight(el.scrollLeft + el.clientWidth < el.scrollWidth);
+    }
+  };
 
   const scroll = (dir: 'left' | 'right') => {
     if (rowRef.current) {
@@ -30,49 +39,58 @@ const MovieRow: React.FC<MovieRowProps> = ({
     }
   };
 
-  const handleScroll = () => {
-    if (rowRef.current) {
-      setShowLeft(rowRef.current.scrollLeft > 0);
-    }
-  };
-
   useEffect(() => {
-    const ref = rowRef.current;
-    if (ref) {
-      ref.addEventListener('scroll', handleScroll);
-      return () => ref.removeEventListener('scroll', handleScroll);
-    }
+    const el = rowRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener('scroll', updateScrollButtons);
+    window.addEventListener('resize', updateScrollButtons);
+    return () => {
+      el.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+    };
   }, []);
 
   if (!movies || movies.length === 0) return null;
 
   return (
-    <div className="movie-row-container mb-8 px-4">
-      <h2 className="text-2xl font-semibold text-white mb-3">{title}</h2>
+    <div className="overflow-visible-wrapper">
+      <div className="movie-row-wrapper">
+        <div className="movie-row-container">
+          <h2 className="text-2xl font-semibold text-white mb-3 px-4">
+            {title}
+          </h2>
 
-      <div className="group relative">
-        {showLeft && (
-          <button
-            className="scroll-btn scroll-btn-left"
-            onClick={() => scroll('left')}
-          >
-            ‹
-          </button>
-        )}
+          <div className="group relative">
+            {showLeft && (
+              <button
+                className="scroll-btn scroll-btn-left"
+                onClick={() => scroll('left')}
+              >
+                ‹
+              </button>
+            )}
+            {showRight && (
+              <button
+                className="scroll-btn scroll-btn-right"
+                onClick={() => scroll('right')}
+              >
+                ›
+              </button>
+            )}
 
-        <button
-          className="scroll-btn scroll-btn-right"
-          onClick={() => scroll('right')}
-        >
-          ›
-        </button>
-
-        <div className="horizontal-scroll-container" ref={rowRef}>
-          {movies.map((movie) => (
-            <div key={movie.showId} className="movie-card snap-start">
-              <MovieCard movie={movie} onClick={onClick} onDelete={onDelete} />
+            <div className="horizontal-scroll-container" ref={rowRef}>
+              {movies.map((movie) => (
+                <div key={movie.showId} className="movie-card snap-start">
+                  <MovieCard
+                    movie={movie}
+                    onClick={onClick}
+                    onDelete={onDelete}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>

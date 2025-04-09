@@ -61,14 +61,18 @@ const MoviesList: React.FC<MoviesListProps> = ({
   return (
     <div className="px-4 space-y-8">
       {sortedGenres.map((genre) => (
-        <div key={genre} className="movie-row-container mb-5">
-          <h3 className="text-xl font-semibold mb-2">{formatGenre(genre)}</h3>
-          <MovieRow
-            title=""
-            movies={genreMap[genre]}
-            onClick={onClick}
-            onDelete={onDelete}
-          />
+        <div key={genre} className="overflow-visible-wrapper">
+          {' '}
+          {/* <- move this here */}
+          <div className="movie-row-container mb-5">
+            <h3 className="text-xl font-semibold mb-2">{formatGenre(genre)}</h3>
+            <MovieRow
+              title=""
+              movies={genreMap[genre]}
+              onClick={onClick}
+              onDelete={onDelete}
+            />
+          </div>
         </div>
       ))}
     </div>
