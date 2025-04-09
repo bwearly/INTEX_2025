@@ -41,7 +41,6 @@ namespace INTEX_2025.API.Controllers
             });
         }
 
-
         [HttpGet("GetEntertainmentType")]
         public IActionResult GetEntertainmentType()
         {
@@ -51,6 +50,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
             if (string.IsNullOrEmpty(newMovie.ShowId))
@@ -64,8 +64,8 @@ namespace INTEX_2025.API.Controllers
             return Ok(newMovie);
         }
 
-       [HttpPut("UpdateMovie/{showId}")]
-        // [Authorize(Roles = "Admin")]
+        [HttpPut("UpdateMovie/{showId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
             try
@@ -112,6 +112,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpDelete("DeleteMovie/{showId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteMovie(string showId)
         {
             var movie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
