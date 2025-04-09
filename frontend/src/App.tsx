@@ -7,6 +7,8 @@ import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult'; 
+import MyListPage from './pages/MyListPage';
+
 
 function App() {
   const location = useLocation();
@@ -22,6 +24,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
         <Route path="/search" element={<SearchResult />} /> 
+        <Route path="/mylist" element={<MyListPage />} />
+
       </Routes>
       <CookieConsent
         enableDeclineButton
