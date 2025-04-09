@@ -6,9 +6,9 @@ using INTEX_2025.API.Data;
 using Microsoft.Extensions.DependencyInjection;
 using RootkitAuth.API.Services;
 
-//var apiKey = builder.Configuration["YouTube:ApiKey"];
 
 var builder = WebApplication.CreateBuilder(args);
+var apiKey = builder.Configuration["YouTube:ApiKey"];
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -90,6 +90,7 @@ builder.Services.AddSession(options =>
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

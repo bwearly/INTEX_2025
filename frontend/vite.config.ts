@@ -10,10 +10,10 @@ export default defineConfig({
         default-src 'self';
         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.googleapis.com;
         style-src 'self' 'unsafe-inline';
-        img-src 'self' data: blob: https://cinanicheposters.blob.core.windows.net ...;
+        img-src 'self' data: blob: https://cinanicheposters.blob.core.windows.net;
         frame-src https://www.youtube.com;
         font-src 'self' fonts.gstatic.com data:;
-        connect-src 'self' https://localhost:5000 https://www.googleapis.com;
+        connect-src 'self' http://localhost:5000 https://localhost:5000 https://www.googleapis.com;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
