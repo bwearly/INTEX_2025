@@ -27,7 +27,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
     >
       <img
         src={movie.posterUrl}
-        alt={movie.title}
         onError={(e) => ((e.target as HTMLImageElement).src = '/images.png')}
       />
     </div>

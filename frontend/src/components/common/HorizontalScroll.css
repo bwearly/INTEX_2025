@@ -1,19 +1,22 @@
-/* MOVIE ROW CONTAINER */
+.movie-row-wrapper {
+  overflow: visible; /* 🔥 key parent fix */
+  position: relative;
+}
+
 .movie-row-container {
   position: relative;
-  overflow: visible;
+  overflow: visible; /* ✅ allow hover to break out */
   padding-top: 3rem;
-  margin-bottom: 5rem;
-  min-height: 360px;
+  margin-bottom: 7rem; /* increased spacing for zoom effect */
+  min-height: 400px; /* allows space above for pop-out */
   z-index: 1;
 }
 
-/* SCROLL STRIP */
 .horizontal-scroll-container {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: visible; /* ✅ allow vertical overflow */
   gap: 1rem;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -21,31 +24,27 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   position: relative;
-  z-index: 1;
+  z-index: 2; /* raised above base layout */
+  padding-inline: 2rem;
 }
 
-.horizontal-scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
-/* INDIVIDUAL CARD */
 .movie-card {
   flex: 0 0 auto;
   width: 200px;
+  position: relative;
   text-align: center;
   color: white;
-  position: relative;
   transition:
-    transform 0.25s ease,
-    z-index 0.25s ease;
-  transform-origin: center bottom;
+    transform 0.3s ease,
+    z-index 0.3s ease;
+  transform-origin: center center;
   z-index: 1;
 }
 
 .movie-card:hover {
-  transform: scale(1.15) translateY(-20px); /* lift gently */
-  z-index: 20;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transform: scale(1.5) translateY(-20px);
+  z-index: 100; /* ensure it floats above everything */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
 }
 
 /* POSTER IMAGE */
@@ -68,7 +67,7 @@
   border-radius: 4px;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  z-index: 50; /* 👈 stays above hover */
+  z-index: 1000;
   display: none;
 }
 
@@ -82,4 +81,9 @@
 
 .scroll-btn-right {
   right: 0;
+}
+
+.overflow-visible-wrapper {
+  overflow: visible; /* 🔥 crucial to allow break out on hover */
+  position: relative;
 }
