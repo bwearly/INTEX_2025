@@ -49,6 +49,38 @@ export const fetchMovies = async (
   }
 };
 
+export const rateMovie = async (
+  showId: string,
+  rating: number
+): Promise<void> => {
+  await fetch(`https://localhost:5000/Movie/Rate`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ showId, rating }),
+  });
+};
+
+export const getMovieRating = async (
+  showId: string
+): Promise<number | null> => {
+  const response = await fetch(
+    `https://localhost:5000/Movie/Rating/${showId}`,
+    {
+      credentials: 'include',
+    }
+  );
+
+  if (response.status === 404) return null;
+
+  if (!response.ok) throw new Error('Failed to get movie rating');
+
+  const data = await response.json();
+  return data.rating;
+};
+
 export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
@@ -56,6 +88,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(movie), // <-- was `newMovie` before
     });
 

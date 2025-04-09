@@ -5,6 +5,7 @@ import ManageMoviesPage from './pages/admin/ManageMoviesPage';
 import Navbar from './components/common/Navbar';
 import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import CookieConsent from 'react-cookie-consent';
 
 function App() {
   const location = useLocation();
@@ -19,6 +20,18 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/admin/movies" element={<ManageMoviesPage />} />
       </Routes>
+      <CookieConsent
+        enableDeclineButton
+        declineButtonText="No thanks"
+        onDecline={() => {
+          console.log('User declined cookies');
+        }}
+        onAccept={() => {
+          console.log('User accepted cookies');
+        }}
+      >
+        We use cookies for ratings, sessions, and saving your preferences.
+      </CookieConsent>
     </>
   );
 }
