@@ -29,11 +29,20 @@ const ManageMoviesPage: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
+    console.log('Attempting to delete movie with ID:', id); // 👈 DEBUG HERE
+
+    if (!id || id.trim() === '') {
+      alert('Invalid movie ID.');
+      return;
+    }
+
     if (!window.confirm('Are you sure you want to delete this movie?')) return;
+
     try {
-      await deleteMovie(id); // <-- no longer converting to Number
+      await deleteMovie(id);
       await loadMovies();
     } catch (err) {
+      console.error('Error deleting movie:', err);
       alert('Failed to delete movie. Please try again.');
     }
   };
