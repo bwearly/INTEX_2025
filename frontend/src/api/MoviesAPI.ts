@@ -41,7 +41,7 @@ export const fetchMovies = async (
 
     return {
       movies: moviesWithPosters,
-      totalNumMovies: data.totalCount, // <- Make sure this matches backend response key
+      totalNumMovies: data.totalCount,
     };
   } catch (error) {
     console.error('Error fetching movies:', error);
@@ -76,7 +76,7 @@ export const updateMovie = async (
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include', // <-- important if your backend uses auth cookies
+    credentials: 'include',
     body: JSON.stringify(updatedMovie),
   });
 

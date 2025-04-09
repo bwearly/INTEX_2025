@@ -260,6 +260,7 @@ function LoginPage() {
       console.error('Fetch attempt failed:', error);
     }
   };
+  */
 
   return (
     <div className="container">
