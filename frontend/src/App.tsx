@@ -9,11 +9,11 @@ import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult';
 import MyListPage from './pages/MyListPage';
 import MoviesPage from './pages/MoviesPage';
-import TvShowsPage from './pages/TvShowsPage'; 
-
+import TvShowsPage from './pages/TvShowsPage';
 
 import SettingsPage from './pages/SettingsPage';
 import PrivacyPolicy from './components/common/PrivacyPolicy';
+import AuthorizeView from './components/auth/AuthorizeView';
 
 function App() {
   const location = useLocation();
@@ -24,21 +24,24 @@ function App() {
 
   return (
     <>
-      {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/admin/movies" element={<ManageMoviesPage />} />
-        <Route path="/search" element={<SearchResult />} />
-        <Route path="/mylist" element={<MyListPage />} />
-        <Route path="/movies" element={<MoviesPage />} />
-        <Route path="/tv" element={<TvShowsPage />} />
-
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
+      {!hideNavbar && <Navbar />}{' '}
+      <AuthorizeView>
+        <Routes>
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/admin/movies" element={<ManageMoviesPage />} />
+          <Route path="/search" element={<SearchResult />} />
+          <Route path="/mylist" element={<MyListPage />} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/tv" element={<TvShowsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+        </Routes>
+      </AuthorizeView>
       <CookieConsent
         enableDeclineButton
         declineButtonText="No thanks"
