@@ -5,6 +5,7 @@ import ManageMoviesPage from './pages/admin/ManageMoviesPage';
 import Navbar from './components/common/Navbar';
 import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult'; 
 import CookieConsent from 'react-cookie-consent';
 
@@ -14,7 +15,7 @@ function App() {
 
   return (
     <>
-      {<Navbar />}
+      <Navbar />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
