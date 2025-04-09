@@ -92,6 +92,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${showId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
 
     if (!response.ok) throw new Error('Failed to delete movie');
@@ -105,7 +106,10 @@ export const deleteMovie = async (showId: string): Promise<void> => {
 export const searchMovies = async (query: string) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`
+      `http://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      {
+        credentials: 'include',
+      }
     );
 
     if (!response.ok) {
