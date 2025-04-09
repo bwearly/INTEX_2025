@@ -1,166 +1,65 @@
-// src/pages/HorizontalTest.tsx
-import React from 'react';
-import MovieCard from '../../components/common/MovieCard';
+import React, { useEffect, useState } from 'react';
+import { fetchMovies } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-
-const dummyMovies: Movie[] = [
-  {
-    showId: '1',
-    title: 'Test 1',
-    releaseYear: 2023,
-    posterUrl: '/images.png',
-    action: 1,
-    adventure: 0,
-    comedies: 0,
-    dramas: 0,
-    type: '',
-    director: '',
-    cast: '',
-    country: '',
-    rating: '',
-    duration: '',
-    description: '',
-    animeSeriesInternationalTvShows: 0,
-    britishTvShowsDocuseriesInternationalTvShows: 0,
-    children: 0,
-    comediesDramasInternationalMovies: 0,
-    comediesInternationalMovies: 0,
-    comediesRomanticMovies: 0,
-    crimeTvShowsDocuseries: 0,
-    documentaries: 0,
-    documentariesInternationalMovies: 0,
-    docuseries: 0,
-    dramasInternationalMovies: 0,
-    dramasRomanticMovies: 0,
-    familyMovies: 0,
-    fantasy: 0,
-    horrorMovies: 0,
-    internationalMoviesThrillers: 0,
-    internationalTvShowsRomanticTvShowsTvDramas: 0,
-    kidsTv: 0,
-    languageTvShows: 0,
-    musicals: 0,
-    natureTv: 0,
-    realityTv: 0,
-    spirituality: 0,
-    tvAction: 0,
-    tvComedies: 0,
-    tvDramas: 0,
-    talkShowsTvComedies: 0,
-    thrillers: 0,
-  },
-  {
-    showId: '2',
-    title: 'Test 2',
-    releaseYear: 2022,
-    posterUrl: '/images.png',
-    action: 1,
-    adventure: 0,
-    comedies: 0,
-    dramas: 0,
-    type: '',
-    director: '',
-    cast: '',
-    country: '',
-    rating: '',
-    duration: '',
-    description: '',
-    animeSeriesInternationalTvShows: 0,
-    britishTvShowsDocuseriesInternationalTvShows: 0,
-    children: 0,
-    comediesDramasInternationalMovies: 0,
-    comediesInternationalMovies: 0,
-    comediesRomanticMovies: 0,
-    crimeTvShowsDocuseries: 0,
-    documentaries: 0,
-    documentariesInternationalMovies: 0,
-    docuseries: 0,
-    dramasInternationalMovies: 0,
-    dramasRomanticMovies: 0,
-    familyMovies: 0,
-    fantasy: 0,
-    horrorMovies: 0,
-    internationalMoviesThrillers: 0,
-    internationalTvShowsRomanticTvShowsTvDramas: 0,
-    kidsTv: 0,
-    languageTvShows: 0,
-    musicals: 0,
-    natureTv: 0,
-    realityTv: 0,
-    spirituality: 0,
-    tvAction: 0,
-    tvComedies: 0,
-    tvDramas: 0,
-    talkShowsTvComedies: 0,
-    thrillers: 0,
-  },
-  {
-    showId: '3',
-    title: 'Test 3',
-    releaseYear: 2021,
-    posterUrl: '/images.png',
-    action: 1,
-    adventure: 0,
-    comedies: 0,
-    dramas: 0,
-    type: '',
-    director: '',
-    cast: '',
-    country: '',
-    rating: '',
-    duration: '',
-    description: '',
-    animeSeriesInternationalTvShows: 0,
-    britishTvShowsDocuseriesInternationalTvShows: 0,
-    children: 0,
-    comediesDramasInternationalMovies: 0,
-    comediesInternationalMovies: 0,
-    comediesRomanticMovies: 0,
-    crimeTvShowsDocuseries: 0,
-    documentaries: 0,
-    documentariesInternationalMovies: 0,
-    docuseries: 0,
-    dramasInternationalMovies: 0,
-    dramasRomanticMovies: 0,
-    familyMovies: 0,
-    fantasy: 0,
-    horrorMovies: 0,
-    internationalMoviesThrillers: 0,
-    internationalTvShowsRomanticTvShowsTvDramas: 0,
-    kidsTv: 0,
-    languageTvShows: 0,
-    musicals: 0,
-    natureTv: 0,
-    realityTv: 0,
-    spirituality: 0,
-    tvAction: 0,
-    tvComedies: 0,
-    tvDramas: 0,
-    talkShowsTvComedies: 0,
-    thrillers: 0,
-  },
-];
-
-const HorizontalTest: React.FC = () => {
+import Navbar from '../../components/common/Navbar';
+import HeroCarousel from '../../components/common/HeroCarousel';
+import MoviesList from '../../components/common/MoviesList';
+import GenreFilter from '../../components/common/GenreFilter';
+import AuthorizeView from '../../components/auth/AuthorizeView';
+import '../../components/common/HorizontalScroll.css';
+const Home: React.FC = () => {
+  const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        const res = await fetchMovies(200, 1, []);
+        console.log('First movie:', res.movies[0]);
+        setAllMovies(res.movies);
+      } catch (error) {
+        console.error('Failed to fetch movies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadMovies();
+  }, []);
   return (
-    <div className="bg-gray-900 min-h-screen text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">Horizontal Movie Row Test</h1>
-
-      {/* Scrollable Movie Row */}
-      <div className="overflow-x-auto scrollbar-hide w-full">
-        <div
-          className="flex gap-4 scroll-smooth snap-x snap-mandatory"
-          style={{ flexWrap: 'nowrap' }} // ✅ Force no wrapping
-        >
-          {dummyMovies.map((movie) => (
-            <div key={movie.showId} className="snap-start">
-              <MovieCard movie={movie} />
+    <AuthorizeView>
+      <div
+        className="bg-dark text-white min-vh-100"
+        style={{ paddingTop: '80px' }}
+      >
+        <Navbar />
+        <HeroCarousel movies={allMovies} />
+        {/* ✅ Updated layout wrapper */}
+        <div className="w-full max-w-screen-2xl mx-auto mt-4 px-4">
+          <h2 className="text-white mb-4">All Movie Titles</h2>
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Genre Filter Column */}
+            <div className="w-full lg:w-1/4">
+              <GenreFilter
+                allMovies={allMovies}
+                selectedGenres={selectedGenres}
+                setSelectedGenres={setSelectedGenres}
+              />
             </div>
-          ))}
+            {/* Movie List Column */}
+            <div className="w-full lg:w-3/4">
+              {loading ? (
+                <p>Loading...</p>
+              ) : (
+                <MoviesList
+                  allMovies={allMovies}
+                  selectedGenres={selectedGenres}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </AuthorizeView>
   );
 };
-
-export default HorizontalTest;
+export default Home;
