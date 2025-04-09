@@ -3,7 +3,6 @@ using INTEX_2025.API.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using INTEX_2025.API.Data;
-using INTEX_2025.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 using RootkitAuth.API.Services;
 
@@ -119,16 +118,14 @@ using RootkitAuth.API.Services;
 
 //app.Run();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add databases
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
 
@@ -137,8 +134,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+//builder.Services.AddIdentityApiEndpoints<IdentityUser>()  
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -151,7 +152,7 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUser
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = SameSiteMode.None; // change after adding https for production
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.LoginPath = "/login";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -163,11 +164,15 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://localhost:3000") // Replace with your frontend URL
-                .AllowCredentials()
+                .AllowCredentials() // Required to allow cookies
                 .AllowAnyMethod()
-                .AllowAnyHeader();
+                .AllowAnyHeader()
+                .WithExposedHeaders("Content-Security-Policy");
         });
 });
+
+builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -179,7 +184,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -194,23 +198,27 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
     {
         HttpOnly = true,
-        Secure = true, 
+        Secure = false,
         SameSite = SameSiteMode.None
     });
 
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-
-app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+app.MapGet("/pingauth", (HttpContext context, ClaimsPrincipal user) =>
 {
+    Console.WriteLine($"User authenticated? {user.Identity?.IsAuthenticated}");
+
     if (!user.Identity?.IsAuthenticated ?? false)
     {
+        Console.WriteLine("Unauthorized request to /pingauth");
         return Results.Unauthorized();
     }
 
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
-    return Results.Json(new { email = email }); // Return as JSON
+    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
+    Console.WriteLine($"Authenticated User Email: {email}");
+
+    return Results.Json(new { email = email });
 }).RequireAuthorization();
 
 app.Run();
