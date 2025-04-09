@@ -7,7 +7,6 @@ import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult'; 
-import CookieConsent from 'react-cookie-consent';
 
 function App() {
   const location = useLocation();
