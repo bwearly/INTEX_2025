@@ -1,4 +1,5 @@
 ﻿using INTEX_2025.API.Data;
+using INTEX_2025.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,40 @@ namespace INTEX_2025.API.Controllers
                 Movies = movies
             });
         }
+
+        [HttpPost("Rate")]
+        public IActionResult RateMovie([FromBody] RateMovieDto dto)
+        {
+            if (string.IsNullOrEmpty(dto.ShowId) || dto.Rating < 1 || dto.Rating > 5)
+            {
+                return BadRequest("Invalid movie ID or rating value.");
+            }
+
+            if (HttpContext.Request.Cookies["CookieConsent"] == "true")
+            {
+                var key = $"rating:{dto.ShowId}";
+                HttpContext.Session.SetInt32(key, dto.Rating);
+
+                return Ok(new { message = $"Rating {dto.Rating} for movie {dto.ShowId} stored in session." });
+            }
+
+            return StatusCode(403, new { message = "Cookie consent required to store rating." });
+        }
+
+        [HttpGet("Rating/{ShowId}")]
+        public IActionResult GetRatingFromSession(string showId)
+        {
+            var key = $"rating:{showId}";
+            var rating = HttpContext.Session.GetInt32(key);
+
+            if (rating.HasValue)
+            {
+                return Ok(new { ShowId = showId, Rating = rating.Value });
+            }
+
+            return NotFound(new { message = "No rating found in session for this movie." });
+        }
+
 
         [HttpGet("GetEntertainmentType")]
         public IActionResult GetEntertainmentType()
@@ -127,8 +162,6 @@ namespace INTEX_2025.API.Controllers
 
             return NoContent();
         }
-
-
 
         [HttpGet("Search")]
         public IActionResult SearchMovies([FromQuery] string query)
