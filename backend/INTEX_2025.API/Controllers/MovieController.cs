@@ -8,6 +8,7 @@ namespace INTEX_2025.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
@@ -54,16 +55,14 @@ namespace INTEX_2025.API.Controllers
         {
             if (string.IsNullOrEmpty(newMovie.ShowId))
             {
-                newMovie.ShowId = Guid.NewGuid().ToString(); // ✅ generates a unique string ID
+                newMovie.ShowId = Guid.NewGuid().ToString(); 
             }
 
             _context.MoviesTitles.Add(newMovie);
             _context.SaveChanges();
 
-            return Ok(newMovie); // ✅ returns full movie including showId
+            return Ok(newMovie);
         }
-
-
 
        [HttpPut("UpdateMovie/{showId}")]
         // [Authorize(Roles = "Admin")]
@@ -111,8 +110,6 @@ namespace INTEX_2025.API.Controllers
                 });
             }
         }
-
-
 
         [HttpDelete("DeleteMovie/{showId}")]
         public IActionResult DeleteMovie(string showId)

@@ -205,6 +205,42 @@ function LoginPage() {
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
+  const handleGoogleLogin = () => {
+    // Redirect to the backend endpoint that initiates the Google challenge.
+    window.location.href = 'https://localhost:5000/external-login/google';
+  };
+
+  // useEffect(() => {
+  //   const script = document.createElement('script');
+  //   script.src = 'https://accounts.google.com/gsi/client';
+  //   script.async = true;
+  //   script.defer = true;
+  //   script.onload = () => {
+  //     // Use a type assertion so TypeScript doesn't complain
+  //     const google = (window as any).google;
+  //     if (google && google.accounts) {
+  //       google.accounts.id.initialize({
+  //         client_id:
+  //           '502286415472-a6q0duatohbvu7mdf43jbuiulhg3p381.apps.googleusercontent.com',
+  //         callback: handleGoogleResponse,
+  //       });
+
+  //       google.accounts.id.renderButton(
+  //         document.getElementById('g_id_signin'),
+  //         { theme: 'outline', size: 'large' }
+  //       );
+  //     } else {
+  //       console.error('Google API failed to load.');
+  //     }
+  //   };
+
+  //   document.body.appendChild(script);
+
+  //   return () => {
+  //     document.body.removeChild(script);
+  //   };
+  // }, []);
+
   // handle change events for input fields
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
@@ -232,8 +268,8 @@ function LoginPage() {
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true'
-      : 'https://localhost:5000/login?useSessionCookies=true';
+      ? 'https://localhost:5000/login?useCookies=true&useSessionCookies=false'
+      : 'https://localhost:5000/login?useSessionCookies=true&useCookies=false';
 
     try {
       const response = await fetch(loginUrl, {
