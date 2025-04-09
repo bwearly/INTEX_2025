@@ -1,3 +1,4 @@
+// src/components/common/MovieRow.tsx
 import React, { useRef, useState, useEffect } from 'react';
 import { Movie } from '../../types/Movie';
 import MovieCard from './MovieCard';
@@ -50,7 +51,6 @@ const MovieRow: React.FC<MovieRowProps> = ({
       <h2 className="text-2xl font-semibold text-white mb-3">{title}</h2>
 
       <div className="group relative">
-        {/* Left Scroll Button (only visible after scroll) */}
         {showLeft && (
           <button
             className="scroll-btn scroll-btn-left"
@@ -60,7 +60,6 @@ const MovieRow: React.FC<MovieRowProps> = ({
           </button>
         )}
 
-        {/* Right Scroll Button (always visible on hover) */}
         <button
           className="scroll-btn scroll-btn-right"
           onClick={() => scroll('right')}

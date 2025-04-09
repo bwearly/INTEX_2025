@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
+  overflow-y: visible;
   gap: 1rem;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -19,6 +20,8 @@
   width: 150px;
   text-align: center;
   color: white;
+  position: relative;
+  z-index: 1;
 }
 
 .movie-card img {
@@ -31,6 +34,7 @@
 /* Scope buttons per row */
 .movie-row-container .group {
   position: relative;
+  overflow: visible;
 }
 
 .scroll-btn {
@@ -58,4 +62,30 @@
 
 .scroll-btn-right {
   right: 0;
+}
+
+.movie-card {
+  flex: 0 0 auto;
+  width: 150px;
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease-in-out;
+}
+
+.movie-card:hover {
+  transform: scale(1.15);
+  z-index: 5; /* Lifts card above neighbors */
+}
+
+.movie-title {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.movie-year {
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
