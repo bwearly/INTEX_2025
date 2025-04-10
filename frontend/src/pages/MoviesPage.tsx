@@ -6,7 +6,7 @@ import '../components/common/HorizontalScroll.css';
 
 const MoviesPage = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [allMovies, setAllMovies] = useState<Movie[]>([]);
+  const [movieOnlyList, setMovieOnlyList] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -24,10 +24,14 @@ const MoviesPage = () => {
     const loadMovies = async () => {
       try {
         const res = await fetchMovies(200, 1, []);
-        setAllMovies(res.movies);
 
+        // ✅ Only keep items where type is "Movie"
+        const filteredMovies = res.movies.filter((m) => m.type === 'Movie');
+        setMovieOnlyList(filteredMovies);
+
+        // ✅ Build genre list from filtered movies only
         const genreSet = new Set<string>();
-        res.movies.forEach((movie) => {
+        filteredMovies.forEach((movie) => {
           Object.keys(movie).forEach((key) => {
             if ((movie as any)[key] === 1 && typeof (movie as any)[key] === 'number') {
               genreSet.add(key);
@@ -35,7 +39,10 @@ const MoviesPage = () => {
           });
         });
 
-        setSelectedGenres(Array.from(genreSet));
+        const sorted = Array.from(genreSet).sort((a, b) =>
+          formatGenre(a).localeCompare(formatGenre(b))
+        );
+        setSelectedGenres(sorted);
       } catch (err) {
         console.error('Failed to fetch movies:', err);
       } finally {
@@ -74,7 +81,7 @@ const MoviesPage = () => {
         </div>
 
         {selectedGenres.map((genre) => {
-          const moviesForGenre = allMovies.filter(
+          const moviesForGenre = movieOnlyList.filter(
             (movie) => (movie as any)[genre] === 1
           );
           if (moviesForGenre.length === 0) return null;
@@ -84,7 +91,7 @@ const MoviesPage = () => {
               key={genre}
               ref={(el) => (genreRefs.current[genre] = el)}
               className="movie-row-container mb-5"
-              style={{ scrollMarginTop: '120px' }} // ✅ scroll offset fix
+              style={{ scrollMarginTop: '120px' }}
             >
               <h3 className="mb-3">{formatGenre(genre)}</h3>
               <div className="group">

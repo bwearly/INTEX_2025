@@ -38,7 +38,11 @@ const Home: React.FC = () => {
           });
         });
 
-        setSelectedGenres(Array.from(genreSet));
+        // Sort genres alphabetically
+        const sortedGenres = Array.from(genreSet).sort((a, b) =>
+          formatGenre(a).localeCompare(formatGenre(b))
+        );
+        setSelectedGenres(sortedGenres);
       } catch (err) {
         console.error('Failed to fetch movies:', err);
       } finally {
@@ -66,13 +70,14 @@ const Home: React.FC = () => {
         <div className="w-full max-w-screen-2xl mx-auto mt-4 px-4">
           {/* Header & Jump to Genre Dropdown */}
           <div className="d-flex justify-content-between align-items-center mb-4">
-          
             <select
               className="form-select w-auto bg-dark text-white"
               onChange={(e) => handleGenreJump(e.target.value)}
               defaultValue=""
             >
-              <option disabled value="">Jump to Genre</option>
+              <option disabled value="">
+                Jump to Genre
+              </option>
               {selectedGenres.map((g) => (
                 <option key={g} value={g}>
                   {formatGenre(g)}
@@ -103,10 +108,7 @@ const Home: React.FC = () => {
                   >
                     ‹
                   </button>
-                  <div
-                    id={`scroll-${genre}`}
-                    className="horizontal-scroll-container"
-                  >
+                  <div id={`scroll-${genre}`} className="horizontal-scroll-container">
                     {moviesForGenre.map((movie) => (
                       <div key={movie.showId} className="movie-card">
                         <MovieCard movie={movie} />
@@ -130,3 +132,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
