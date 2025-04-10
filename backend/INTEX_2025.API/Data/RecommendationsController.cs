@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using INTEX_2025.API.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +10,6 @@ public class RecommendationsController : ControllerBase
 {
     private RecommendationsDbContext _recommendationContext;
     private readonly MoviesDbContext _context;
-    private readonly UserDbContext _userContext;
-    private readonly ApplicationDbContext _applicationContext;
     
     public RecommendationsController(RecommendationsDbContext recommendationContext, MoviesDbContext context)
     {
@@ -352,33 +351,51 @@ public IActionResult GetUserRecommendations([FromQuery] string email)
 }
 
 
-private List<string> GetRecsFromObj(object recObj)
-{
-    var recs = new List<string>();
-
-    var props = recObj.GetType().GetProperties()
-        .Where(p => p.Name.StartsWith("Recommendation"));
-
-    foreach (var prop in props)
+    private List<string> GetRecsFromObj(object recObj)
     {
-        var value = prop.GetValue(recObj)?.ToString();
-        if (!string.IsNullOrEmpty(value))
+        var recs = new List<string>();
+
+        var props = recObj.GetType().GetProperties()
+            .Where(p => p.Name.StartsWith("Recommendation"));
+
+        foreach (var prop in props)
         {
-            recs.Add(value);
+            var value = prop.GetValue(recObj)?.ToString();
+            if (!string.IsNullOrEmpty(value))
+            {
+                recs.Add(value);
+            }
         }
+
+        return recs;
     }
 
-    return recs;
-}
 
+    [HttpGet("GetWatchedTitles")]
+    public IActionResult GetWatchedTitles()
+    {
+        // Step 1: Get email of logged-in user (from Identity)
+        var loginEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
 
-private List<string> GetMoviesByUserId(string loginEmail)
-{
-    var user = _userContext.Where(x => x.email == loginEmail).FirstOrDefault();
+        if (string.IsNullOrEmpty(loginEmail))
+        {
+            return Unauthorized("No authenticated user found.");
+        }
 
+        // Step 2: Find matching user in movies_users table
+        var user = _context.MoviesUsers.FirstOrDefault(u => u.Email == loginEmail);
+        if (user == null)
+        {
+            return NotFound("User not found in movies_users table.");
+        }
 
-}
+        // Step 3: Get all ShowIds they’ve rated
+        var showIds = _context.MoviesRatings
+            .Where(r => r.UserId == user.UserId)
+            .Select(r => r.ShowId)
+            .ToList();
 
-
+        return Ok(showIds);
+    }
 }
 
