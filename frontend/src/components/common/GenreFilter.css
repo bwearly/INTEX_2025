@@ -1,4 +1,4 @@
-/* --- GenreFilter.css with CRAZY debug colors --- */
+/* --- GenreFilter.css - Consistent Styling with New Button Hover --- */
 
 /* Outer container for the button and dropdown */
 .genre-dropdown {
@@ -9,145 +9,150 @@
 /* The main dropdown panel */
 .genre-dropdown-menu {
   position: absolute;
-  background-color: #6c9cb0 !important; /* CRAZY: Dropdown background */
-  color: yellow !important; /* CRAZY: Default text color in dropdown */
-  border: 2px solid cyan; /* CRAZY: Border around the dropdown */
+  background-color: #6c9cb0 !important; /* Panel background */
+  color: #f5e6d3 !important; /* Default text color (mostly overridden below) */
+  border: 2px solid #f5e6d3; /* Border around the panel */
   padding: 0.75rem;
-  width: 300px; /* Keep your desired width */
-  max-height: none; /* Allow content to determine height initially */
-  overflow: visible; /* Allow potential overflow if needed, though children handle scroll */
+  width: 300px;
+  max-height: none;
+  overflow: visible;
   z-index: 999;
   border-radius: 6px;
   margin-top: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Soft shadow for depth */
 }
 
 /* Labels within the dropdown */
+.genre-dropdown-menu label.form-label,
 .genre-dropdown-menu label {
-  background-color: orange; /* CRAZY: Label background */
-  color: black !important; /* CRAZY: Label text color */
+  /* Added fallback for non-bootstrap labels */
+  color: black !important; /* Label text color */
   font-size: 0.95rem;
-  display: inline-block; /* Important for background visibility */
+  font-weight: bold;
+  display: inline-block;
   margin-bottom: 0.5rem;
-  padding: 2px 4px; /* Add padding to see background */
-  white-space: normal; /* Allow labels to wrap if needed */
+  padding: 2px 4px; /* Keep padding if you like the background effect */
+  white-space: normal;
   word-break: break-word;
   line-height: 1.4;
-  text-transform: capitalize; /* Keep your text transform */
-  border: 1px dashed red; /* CRAZY: Label border */
+  text-transform: capitalize;
 }
 
-/* Input fields (Title, Year) */
-.genre-dropdown-menu input.form-control {
-  /* More specific selector */
-  background-color: lightblue; /* CRAZY: Input background */
-  color: black; /* CRAZY: Input text color */
-  border: 2px solid darkblue; /* CRAZY: Input border */
-}
-.genre-dropdown-menu input.form-control:focus {
-  /* Focus state */
-  background-color: yellow; /* CRAZY: Input background on focus */
-  outline: 3px solid red; /* CRAZY: Input outline on focus */
-  box-shadow: none; /* Remove default bootstrap focus shadow if needed */
-}
-
-/* --- General Select Styling (Genres, Type, Rating) --- */
+/* --- Consistent Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control,
 .genre-dropdown-menu select.form-select {
-  background-color: bei; /* CRAZY: Default select background */
-  color: white; /* CRAZY: Default select text color */
-  border: 2px solid yellow; /* CRAZY: Default select border */
-  max-height: 200px; /* Keep your max-height for scrolling */
-  overflow-y: auto;
-  position: relative; /* Keep for stacking context if needed */
-  z-index: 1000; /* Keep for stacking context */
-  width: 100%; /* Make select fill container */
-}
-
-/* Focus state for general selects */
-.genre-dropdown-menu select.form-select:focus {
-  background-color: teal; /* CRAZY: Select background on focus */
-  color: yellow; /* CRAZY: Select text on focus */
-  border-color: lime; /* CRAZY: Select border on focus */
-  box-shadow: 0 0 0 0.25rem rgba(255, 0, 255, 0.5); /* CRAZY: Focus shadow */
-  outline: none; /* Remove default outline if using box-shadow */
-}
-
-/* Options within general selects */
-.genre-dropdown-menu select.form-select option {
-  background-color: gray; /* CRAZY: Option background */
-  color: white; /* CRAZY: Option text */
-  white-space: normal !important; /* Ensure wrapping */
-  word-wrap: break-word !important; /* Ensure wrapping */
-  padding: 0.25rem 0.5rem;
-  border-bottom: 1px dotted yellow; /* CRAZY: Separator between options */
-}
-
-/* --- Specific Director Select Styling --- */
-/* Make it visually distinct from other selects */
-.genre-dropdown-menu select.director-select {
-  background-color: purple; /* CRAZY: Director select background */
-  color: lime; /* CRAZY: Director select text color */
-  border: 3px dashed orange; /* CRAZY: Director select border */
-  /* Inherits width, max-height, overflow-y from general select rule */
-  font-size: 0.95rem; /* Keep your specific styles */
-  line-height: 1.4; /* Keep your specific styles */
-}
-
-/* Focus state for director select */
-.genre-dropdown-menu select.director-select:focus {
-  background-color: darkred; /* CRAZY: Director select background on focus */
-  color: white; /* CRAZY: Director select text on focus */
-  border-color: aqua; /* CRAZY: Director select border on focus */
-  /* Inherits box-shadow or you can override */
-}
-
-/* Options within the director select */
-/* Make them visually distinct from other options */
-.genre-dropdown-menu select.director-select option {
-  background-color: darkgreen !important; /* CRAZY: Director option background */
-  color: yellow !important; /* CRAZY: Director option text */
-  white-space: normal !important; /* Ensure wrapping */
-  word-wrap: break-word !important; /* Ensure wrapping */
-  padding: 0.35rem 0.6rem; /* Slightly different padding */
-  border-bottom: 1px solid magenta; /* CRAZY: Separator */
-}
-
-/* --- Scrollbar Styling (Webkit browsers like Chrome/Safari/Edge) --- */
-/* Style the scrollbar track */
-.genre-dropdown-menu select.form-select::-webkit-scrollbar {
-  width: 10px; /* CRAZY: Wider scrollbar */
-  background-color: red; /* CRAZY: Scrollbar track color */
-}
-
-/* Style the scrollbar handle (the draggable part) */
-.genre-dropdown-menu select.form-select::-webkit-scrollbar-thumb {
-  background-color: blue; /* CRAZY: Scrollbar handle color */
-  border-radius: 5px; /* Make it rounded */
-  border: 2px solid yellow; /* CRAZY: Border around handle */
-}
-
-/* --- Checkbox Styling (If you had any) --- */
-.genre-dropdown-menu input[type='checkbox'] {
-  margin-right: 0.5rem;
-  accent-color: lime; /* CRAZY: Checkbox color when checked */
-  border: 2px solid red; /* CRAZY: Checkbox border */
-  /* Note: Checkbox styling is limited */
-}
-
-.genre-dropdown-menu .form-check:hover {
-  /* Hover effect for checkbox container */
-  background-color: aqua; /* CRAZY: Background on hover (if using form-check divs) */
-  border-radius: 4px;
-}
-
-/* --- Filter Button Styling (Example) --- */
-/* Style the button that opens the dropdown */
-.genre-dropdown > .btn.dropdown-toggle {
-  background-color: black;
-  color: lime;
-  border: 2px solid magenta;
-}
-.genre-dropdown > .btn.dropdown-toggle:hover {
-  background-color: magenta;
+  background-color: white;
   color: black;
-  border-color: lime;
+  border: 2px solid #f1d2a8; /* Base border color */
+  border-radius: 4px;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem; /* Space below controls */
+  /* Add transition for smooth hover/focus effects */
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    outline 0.2s ease-in-out;
+  /* Remove browser default appearance for selects */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Custom dropdown arrow */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+/* Specific override for input type number to remove arrows if needed */
+.genre-dropdown-menu input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
+.genre-dropdown-menu input[type='number']::-webkit-outer-spin-button,
+.genre-dropdown-menu input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Safari/Chrome */
+  margin: 0;
+}
+
+/* --- Hover Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control:hover,
+.genre-dropdown-menu select.form-select:hover {
+  background-color: #faf5ed; /* Slightly off-white */
+  border-color: #d9bca0; /* Darker shade of the original border */
+  cursor: pointer;
+}
+
+/* --- Consistent Focus Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control:focus,
+.genre-dropdown-menu select.form-select:focus {
+  color: black;
+  background-color: #f5e6d3; /* Focus background */
+  border-color: #6c9cb0; /* Focus border */
+  outline: 3px solid #6c9cb0; /* Focus outline */
+  outline-offset: 0px;
+  box-shadow: none;
+}
+
+/* --- Styling for Options within ALL Selects --- */
+.genre-dropdown-menu select.form-select option {
+  background-color: white;
+  color: black;
+  /* CRITICAL FOR WRAPPING: Needs white-space normal */
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  padding: 0.375rem 0.75rem;
+}
+/* Add hover effect for options */
+.genre-dropdown-menu select.form-select option:hover {
+  background-color: #f5e6d3; /* Option hover background */
+  color: black;
+}
+
+/* --- Scrollbar Styling (Webkit browsers) - Themed --- */
+.genre-dropdown-menu select.form-select::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f5e6d3; /* Scrollbar track matches focus background */
+}
+
+.genre-dropdown-menu select.form-select::-webkit-scrollbar-thumb {
+  background-color: #6c9cb0; /* Scrollbar handle matches panel background */
+  border-radius: 4px;
+  border: 1px solid #f5e6d3; /* Border matches track */
+}
+.genre-dropdown-menu select.form-select::-webkit-scrollbar-thumb:hover {
+  background-color: #5a8396; /* Slightly darker handle on hover */
+}
+
+/* --- Filter Button Styling (Updated per latest request) --- */
+/* Target based on structure/bootstrap class */
+.genre-dropdown > .btn.dropdown-toggle {
+  background-color: #f5e6d3; /* NEW Requested background */
+  color: black; /* NEW Requested text color */
+  border: none; /* No border */
+  font-weight: bold;
+  padding: 0.4rem 0.8rem; /* Adjust padding as needed */
+  border-radius: 4px; /* Optional: match input radius */
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out; /* Smooth transition */
+}
+/* Hover and Focus */
+.genre-dropdown > .btn.dropdown-toggle:hover,
+.genre-dropdown > .btn.dropdown-toggle:focus {
+  background-color: #6c9cb0; /* NEW Requested hover/focus background */
+  color: white; /* Text color for dark background */
+  border: none; /* Ensure no border on hover/focus */
+  outline: none; /* Remove default outline */
+}
+/* Style for the dropdown arrow within the button */
+.genre-dropdown > .btn.dropdown-toggle::after {
+  border-top-color: black; /* Arrow color in normal state */
+  transition: border-top-color 0.2s ease-in-out;
+}
+.genre-dropdown > .btn.dropdown-toggle:hover::after,
+.genre-dropdown > .btn.dropdown-toggle:focus::after {
+  border-top-color: white; /* Arrow color on hover/focus */
 }
