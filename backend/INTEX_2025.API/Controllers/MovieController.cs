@@ -277,18 +277,16 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(new { Movies = matched });
         }
+    }
 
-        [ApiController]
-        [Route("/")]
-        public class RootController : ControllerBase
+    [ApiController]
+    [Route("/")]
+    public class RootController : ControllerBase
+    {
+        [HttpGet]
+        public IActionResult Index()
         {
-            [HttpGet]
-            public IActionResult Index()
-            {
-                return Ok("CineNiche API is running 🚀");
-            }
+            return Ok("CineNiche API is running 🚀");
         }
-
-
     }
 }
