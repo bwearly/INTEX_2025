@@ -116,12 +116,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
