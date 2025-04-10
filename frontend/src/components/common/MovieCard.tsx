@@ -27,10 +27,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
     >
       <img
         src={movie.posterUrl}
-        onError={(e) => ((e.target as HTMLImageElement).src = '/images.png')}
+        alt={movie.title}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/poster1.png';
+        }}
       />
     </div>
   );
 };
 
 export default MovieCard;
+

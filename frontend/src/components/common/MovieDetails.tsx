@@ -114,10 +114,14 @@ const MovieDetailsPage = () => {
             />
           ) : (
             <img
-              src={movie.posterUrl}
-              alt={movie.title}
-              style={{ width: '400px', borderRadius: '8px' }}
-            />
+  src={movie.posterUrl}
+  alt={movie.title}
+  style={{ width: '400px', borderRadius: '8px' }}
+  onError={(e) =>
+    ((e.target as HTMLImageElement).src = '/poster1.png')
+  }
+/>
+
           )}
         </div>
 
