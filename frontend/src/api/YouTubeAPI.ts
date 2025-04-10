@@ -3,7 +3,7 @@ export const fetchYoutubeTrailer = async (
 ): Promise<string | null> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/api/youtube/GetTrailer?title=${encodeURIComponent(title)}`,
+      `https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api/youtube/GetTrailer?title=${encodeURIComponent(title)}`,
       {
         credentials: 'include',
       }

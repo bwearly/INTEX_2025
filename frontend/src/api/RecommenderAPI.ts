@@ -1,12 +1,20 @@
 import { Movie } from '../types/Movie';
 
+const RECOMMENDER_API_URL =
+  'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api/Recommendations';
+
+const API_URL =
+  'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie';
+
+const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
 export async function fetchRecommendationIds(
   endpoint: string,
   showId: string
 ): Promise<string[]> {
   try {
     const res = await fetch(
-      `https://localhost:5000/api/Recommendations/${endpoint}?show_id=${showId}`,
+      `${RECOMMENDER_API_URL}/${endpoint}?show_id=${showId}`,
       {
         credentials: 'include',
         headers: { Accept: 'application/json' },
@@ -26,11 +34,9 @@ export async function fetchRecommendationIds(
   }
 }
 
-const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
-
 export const fetchMoviesByIds = async (ids: string[]): Promise<Movie[]> => {
   try {
-    const res = await fetch('https://localhost:5000/Movie/ByIds', {
+    const res = await fetch(`${API_URL}/ByIds`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -111,7 +117,7 @@ export async function fetchShowRecommendationsById(
 ): Promise<string[]> {
   try {
     const res = await fetch(
-      `https://localhost:5000/api/Recommendations/GetShowId?show_id=${showId}`,
+      `${RECOMMENDER_API_URL}/GetShowId?show_id=${showId}`,
       {
         credentials: 'include',
         headers: { Accept: 'application/json' },

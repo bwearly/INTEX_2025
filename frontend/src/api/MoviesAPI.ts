@@ -5,7 +5,10 @@ interface FetchMoviesResponse {
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000/Movie';
+const API_URL =
+  'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie';
+const RECOMMENDER_API_URL =
+  'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api';
 const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
 
 // Fetch movies with pagination and genre filtering
@@ -48,7 +51,7 @@ export const fetchMovies = async (
 export const searchMovies = async (query: string): Promise<Movie[]> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      `${API_URL}/Search?query=${encodeURIComponent(query)}`,
       {
         credentials: 'include',
       }
@@ -76,7 +79,7 @@ export const rateMovie = async (
   showId: string,
   rating: number
 ): Promise<void> => {
-  await fetch(`https://localhost:5000/Movie/Rate`, {
+  await fetch(`${API_URL}/Rate`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -89,12 +92,9 @@ export const rateMovie = async (
 export const getMovieRating = async (
   showId: string
 ): Promise<number | null> => {
-  const response = await fetch(
-    `https://localhost:5000/Movie/Rating/${showId}`,
-    {
-      credentials: 'include',
-    }
-  );
+  const response = await fetch(`${API_URL}/Rating/${showId}`, {
+    credentials: 'include',
+  });
   if (response.status === 404) return null;
   if (!response.ok) throw new Error('Failed to get movie rating');
   const data = await response.json();
@@ -175,7 +175,7 @@ export const fetchTvShows = async (
 ): Promise<FetchMoviesResponse> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/Movie/TvShows?pageSize=${pageSize}&page=${pageNum}`,
+      `${API_URL}/TvShows?pageSize=${pageSize}&page=${pageNum}`,
       {
         credentials: 'include',
       }
@@ -214,7 +214,7 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
   try {
     const email = localStorage.getItem('userEmail');
     const response = await fetch(
-      `https://localhost:5000/api/YourControllerName/GetUserRecommendations?email=${encodeURIComponent(email ?? '')}`,
+      `${RECOMMENDER_API_URL}/Recommendations/GetUserRecommendations?email=${encodeURIComponent(email ?? '')}`,
       {
         credentials: 'include',
       }
