@@ -43,7 +43,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
       }
     }
 
-    fetchWithRetry('https://localhost:5000/pingauth', {
+    fetchWithRetry('https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/pingauth', {
       method: 'GET',
       credentials: 'include',
     });

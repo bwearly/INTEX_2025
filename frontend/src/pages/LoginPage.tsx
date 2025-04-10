@@ -26,8 +26,8 @@ function LoginPage() {
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true&useSessionCookies=false'
-      : 'https://localhost:5000/login?useSessionCookies=true&useCookies=false';
+      ? 'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/login?useCookies=true&useSessionCookies=false'
+      : 'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/login?useSessionCookies=true&useCookies=false';
 
     try {
       const response = await fetch(loginUrl, {
@@ -192,7 +192,9 @@ function LoginPage() {
               </button>
             </div>
             {error && (
-              <p style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}>
+              <p
+                style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
+              >
                 {error}
               </p>
             )}

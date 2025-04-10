@@ -24,7 +24,7 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
         if (!email) return;
 
         const response = await fetch(
-          `https://localhost:5000/api/Recommendations/GetUserRecommendations?email=${encodeURIComponent(email)}`,
+          `https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api/Recommendations/GetUserRecommendations?email=${encodeURIComponent(email)}`,
           {
             credentials: 'include',
           }

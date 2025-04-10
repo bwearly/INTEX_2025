@@ -136,7 +136,9 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     const fetchGenres = async () => {
       try {
         // Make sure this endpoint is correct and accessible
-        const res = await fetch('https://localhost:5000/Movie/GetGenres');
+        const res = await fetch(
+          'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres'
+        );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
