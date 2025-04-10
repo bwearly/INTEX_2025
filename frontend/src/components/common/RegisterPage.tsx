@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logo from '/logo1.png';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -25,14 +26,11 @@ function Register() {
       setError('Passwords do not match.');
     } else {
       setError('');
-      fetch(
-        'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/register',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        }
-      )
+      fetch('https://localhost:5000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
         .then((data) => {
           if (data.ok) setError('Successful registration. Please log in.');
           else setError('Error registering.');
@@ -49,13 +47,16 @@ function Register() {
       <style>
         {`
           input::placeholder {
-      color: white !important;
-      opacity: 1 !important;
+            color: #3D405B !important;
+            opacity: 1 !important;
+          }
         `}
       </style>
+
       <div
+        className="register-page"
         style={{
-          backgroundImage: `url('/login-bg.png')`,
+          backgroundImage: `url('/background.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -63,16 +64,45 @@ function Register() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
+          gap: '1rem',
         }}
       >
+        {/* Logo + Title */}
         <div
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '1rem',
+          }}
+        >
+          <img
+            src={logo}
+            alt="CineNiche Logo"
+            style={{ height: '36px', width: '36px', objectFit: 'contain' }}
+          />
+          <span
+            style={{
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              letterSpacing: '1px',
+              color: '#6C9CB0',
+            }}
+          >
+            CINENICHE
+          </span>
+        </div>
+
+        {/* Register Card */}
+        <div
+          style={{
+            backgroundColor: 'rgba(245, 230, 211, 0.9)',
             padding: '3rem',
-            borderRadius: '8px',
+            borderRadius: '10px',
             width: '100%',
             maxWidth: '350px',
-            color: 'white',
+            color: '#3D405B',
           }}
         >
           <h3 className="mb-4 text-center">Register</h3>
@@ -86,9 +116,9 @@ function Register() {
                 value={email}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: '#F5E6D3',
+                  color: '#3D405B',
+                  border: '1px solid #6C9CB0',
                   fontSize: '0.9rem',
                 }}
               />
@@ -102,9 +132,9 @@ function Register() {
                 value={password}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: '#F5E6D3',
+                  color: '#3D405B',
+                  border: '1px solid #6C9CB0',
                   fontSize: '0.9rem',
                 }}
               />
@@ -118,22 +148,24 @@ function Register() {
                 value={confirmPassword}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: '#F5E6D3',
+                  color: '#3D405B',
+                  border: '1px solid #6C9CB0',
                   fontSize: '0.9rem',
                 }}
               />
             </div>
+
             <div className="d-grid mb-2">
               <button
                 className="btn btn-primary"
                 type="submit"
                 style={{
-                  backgroundColor: '#e50914',
+                  backgroundColor: '#6C9CB0',
                   border: 'none',
                   fontWeight: 'bold',
                   fontSize: '1rem',
+                  color: '#F5E6D3',
                 }}
               >
                 Register
@@ -143,11 +175,11 @@ function Register() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/login')}
                 style={{
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  color: 'white',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #6C9CB0',
+                  color: '#6C9CB0',
                   fontSize: '0.9rem',
                 }}
               >
@@ -155,9 +187,7 @@ function Register() {
               </button>
             </div>
             {error && (
-              <p
-                style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
-              >
+              <p style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}>
                 {error}
               </p>
             )}
