@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'; // Removed useRef
+import React, { useEffect, useState, useCallback } from 'react';
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI'; // Adjust API import path
 import { Movie } from '../../types/Movie'; // Adjust type import path
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm'; // Adjust component path
@@ -7,7 +7,8 @@ import MovieRow from '../../components/common/MovieRow'; // Adjust component pat
 import FilterDropdown from '../../components/common/GenreFilter'; // Adjust component path
 import '../../components/common/crud stuff/MovieForm.css'; // Ensure CSS is linked
 
-// No pagination constants needed
+// --- Configuration ---
+const INITIAL_LOAD_LIMIT = 200; // Load up to 200 movies initially
 
 const ManageMoviesPage: React.FC = () => {
   // State needed
@@ -18,8 +19,9 @@ const ManageMoviesPage: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [netflixView, setNetflixView] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
+  // Filters state remains
   const [filters, setFilters] = useState({
-    genres: [] as string[],
+    genres: [] as string[], // Expecting zero or one genre from FilterDropdown
     director: null as string | null,
     type: null as string | null,
     year: null as string | null,
@@ -27,22 +29,22 @@ const ManageMoviesPage: React.FC = () => {
     title: '',
   });
 
-  // Removed all lazy loading state (page, hasMore, loadingMore, isLoadingMoreRef)
+  // Removed lazy loading state
 
-  // --- Load ALL Movies Function ---
+  // --- Load Initial Movies Function ---
   const loadMovies = useCallback(async () => {
-    console.log('loadMovies called: Fetching ALL movies...');
+    console.log(
+      `loadMovies called: Fetching initial batch (limit ${INITIAL_LOAD_LIMIT})`
+    );
     setLoading(true);
     setError(null);
     try {
-      // Attempt to fetch all movies by requesting a very large page size on page 1
-      // NOTE: Adjust limit if your API has a max page size or a better way to fetch all
-      const VERY_LARGE_LIMIT = 10000;
-      const res = await fetchMovies(VERY_LARGE_LIMIT, 1, []); // Fetch page 1, limit 10000
+      // Fetch page 1, limit INITIAL_LOAD_LIMIT
+      const res = await fetchMovies(INITIAL_LOAD_LIMIT, 1, []); // Pass empty array for genres initially
 
       if (res && res.movies && Array.isArray(res.movies)) {
         console.log(`API returned ${res.movies.length} movies.`);
-        setMovies(res.movies); // Set the full list
+        setMovies(res.movies);
       } else {
         console.warn('Invalid response or no movies array received.');
         setMovies([]);
@@ -59,12 +61,10 @@ const ManageMoviesPage: React.FC = () => {
   // --- Initial Load Effect ---
   useEffect(() => {
     console.log('Initial load effect running...');
-    loadMovies(); // Load all movies on mount
+    loadMovies(); // Load the initial batch
   }, [loadMovies]); // Run when component mounts
 
-  // --- Scroll Event Listener Effect is REMOVED ---
-
-  // --- Delete Function (Reloads all movies) ---
+  // --- Delete Function (Reloads movies) ---
   const handleDelete = async (id: string) => {
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
@@ -73,20 +73,22 @@ const ManageMoviesPage: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this movie?')) return;
     try {
       await deleteMovie(id);
-      loadMovies(); // Reload the *entire* list after delete
+      loadMovies(); // Reload the list after delete
     } catch (err) {
       console.error('Error deleting movie:', err);
       alert('Failed to delete movie. Please try again.');
     }
   };
 
-  // --- Filtering and Sorting (Client-side on the FULL list) ---
-  // This logic remains the same, but now operates on potentially all movies
+  // --- Filtering and Sorting (Client-side on the loaded batch) ---
   const filteredAndSortedMovies = movies
     .filter((movie) => {
+      // Check Genres: Does the movie object have a key matching the selected genre (if any) with a value of 1?
       const matchesGenres =
-        filters.genres.length === 0 ||
-        filters.genres.some((genre) => (movie as any)[genre] === 1);
+        filters.genres.length === 0 || // Pass if no genre filter selected
+        (filters.genres[0] && (movie as any)[filters.genres[0]] === 1); // Check the single selected genre
+
+      // Other filters...
       const matchesDirector =
         filters.director === null ||
         (filters.director === 'No Director' && !movie.director) ||
@@ -99,6 +101,7 @@ const ManageMoviesPage: React.FC = () => {
       const matchesTitle = movie.title
         .toLowerCase()
         .includes(filters.title.toLowerCase());
+
       return (
         matchesGenres &&
         matchesDirector &&
@@ -117,6 +120,7 @@ const ManageMoviesPage: React.FC = () => {
     const grouped: Record<string, Movie[]> = {};
     filteredAndSortedMovies.forEach((movie) => {
       Object.keys(movie).forEach((key) => {
+        // Basic check: is the key a property with value 1 (and not year/id)? Refine if needed.
         if (
           (movie as any)[key] === 1 &&
           typeof (movie as any)[key] === 'number' &&
@@ -127,7 +131,7 @@ const ManageMoviesPage: React.FC = () => {
         }
       });
     });
-    return grouped;
+    return grouped; // Ensure return statement is present
   };
 
   // --- JSX Rendering ---
@@ -162,8 +166,9 @@ const ManageMoviesPage: React.FC = () => {
           + Add Movie{' '}
         </button>
         <div className="d-flex align-items-center gap-3">
-          {/* FilterDropdown now gets potentially all movies */}
+          {/* Ensure FilterDropdown is rendered correctly ONCE */}
           <FilterDropdown
+            // Pass the originally loaded movies (or filteredAndSortedMovies if filters should affect dropdown options)
             allMovies={movies}
             filters={filters}
             setFilters={setFilters}
@@ -181,7 +186,6 @@ const ManageMoviesPage: React.FC = () => {
       {/* --- Add/Edit Forms --- */}
       {showAddForm && (
         <div className="my-4 p-4 border border-secondary rounded bg-dark shadow-lg">
-          {/* Call simple loadMovies on success */}
           <NewMovieForm
             onSuccess={() => {
               setShowAddForm(false);
@@ -192,7 +196,6 @@ const ManageMoviesPage: React.FC = () => {
         </div>
       )}
       {selectedMovie && !showAddForm && (
-        // Call simple loadMovies on success
         <EditMovieForm
           movie={selectedMovie}
           onSuccess={() => {
@@ -207,14 +210,11 @@ const ManageMoviesPage: React.FC = () => {
       {!selectedMovie && !showAddForm && (
         <>
           {loading ? (
-            <p className="text-center mt-4">Loading movies...</p> // Only initial loading indicator needed
+            <p className="text-center mt-4">Loading movies...</p>
           ) : error ? (
             <p className="text-danger text-center mt-4">{error}</p>
           ) : movies.length === 0 ? (
-            <p className="text-center mt-4">
-              {' '}
-              No movies found matching your criteria.{' '}
-            </p>
+            <p className="text-center mt-4"> No movies found. </p> // Simplified message
           ) : (
             /* Render Table or Netflix View */
             <>
@@ -233,7 +233,7 @@ const ManageMoviesPage: React.FC = () => {
                       />
                     )
                   )}
-                  {/* Lazy loading indicators removed */}
+                  {/* No lazy loading indicators */}
                 </div>
               ) : (
                 /* Table View */
@@ -249,6 +249,7 @@ const ManageMoviesPage: React.FC = () => {
                         <th style={{ width: '160px' }}>Actions</th>
                       </tr>
                     </thead>
+                    {/* Make sure filteredAndSortedMovies is used here */}
                     <tbody>
                       {filteredAndSortedMovies.map((movie) => (
                         <tr key={movie.showId}>
@@ -280,7 +281,7 @@ const ManageMoviesPage: React.FC = () => {
                       ))}
                     </tbody>
                   </table>
-                  {/* Lazy loading indicators removed */}
+                  {/* No lazy loading indicators */}
                 </div>
               )}
             </>
