@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '/logo1.png'; // Make sure this exists in /public or /src
+import logo from '/logo1.png'; // Make sure this exists in /public
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -39,7 +39,6 @@ function LoginPage() {
 
       if (!response.ok) throw new Error('Invalid email or password.');
 
-      //my edits
       localStorage.setItem('email', email);
       navigate('/home');
     } catch (error: any) {
@@ -58,25 +57,22 @@ function LoginPage() {
           }
         `}
       </style>
-      <div className="login-page">
-  <div
-    style={{
-      backgroundImage: `url('/background.png')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      minHeight: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'column',
-      gap: '1rem',
-    }}
-  >
-    {/* logo, title, and login box go here */}
-  </div>
-</div>
 
+      <div
+        className="login-page"
+        style={{
+          backgroundImage: `url('/background.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          gap: '1rem',
+        }}
+      >
         {/* LOGO + TITLE */}
         <div
           style={{
