@@ -10,21 +10,18 @@ import SearchResult from './components/common/SearchResult';
 import MyListPage from './pages/MyRatingsPage';
 import MoviesPage from './pages/MoviesPage';
 import TvShowsPage from './pages/TvShowsPage';
-
 import SettingsPage from './pages/SettingsPage';
 import PrivacyPolicy from './components/common/PrivacyPolicy';
 import AuthorizeView from './components/auth/AuthorizeView';
 import Recommended from './components/common/Recommended';
 import MovieDetailsPage from './components/common/MovieDetails';
 import MyRatingsPage from './pages/MyRatingsPage';
-
 function App() {
   const location = useLocation();
   const hideNavbar =
     location.pathname === '/login' ||
     location.pathname === '/' ||
     location.pathname === '/register';
-
   return (
     <>
       <Routes>
@@ -58,5 +55,4 @@ function App() {
     </>
   );
 }
-
 export default App;

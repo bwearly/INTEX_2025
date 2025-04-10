@@ -127,3 +127,121 @@
 .form-check-input:checked::before {
   background-color: white !important;
 }
+
+.uk-switch:focus {
+  box-shadow: 0 0 0 0.25rem rgba(186, 12, 47, 0.25);
+}
+
+/* 🟡 Custom Yellow Edit Button */
+.btn-uk-custom {
+  background-color: white;
+  color: white;
+  border: none;
+  font-weight: 600;
+}
+.btn-uk-custom:hover {
+  background-color: grey;
+}
+
+/* Custom Red "Delete" Button */
+.btn-delete-custom {
+  background-color: red;
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete-custom:hover {
+  background-color: #a71d2a; /* Darker red for hover */
+}
+
+/* Generic Yellow Admin Button (used for Add/Edit) */
+.btn-generic-yellow {
+  background-color: #ffc107; /* Bootstrap yellow */
+  color: black;
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-generic-yellow:hover {
+  background-color: #7d5e01; /* Slightly darker yellow */
+}
+
+/* Generic Red Admin Button (used for Delete) */
+.btn-delete-custom {
+  background-color: red;
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete-custom:hover {
+  background-color: #a71d2a;
+}
+
+/* 🎬 Custom Admin Table Styles */
+.table-admin {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background-color: #1f1f1f;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.95rem;
+}
+
+/* Header Row */
+.table-admin thead th {
+  background-color: #2a2a2a;
+  color: white;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid #444;
+  align-items: center;
+  text-align: center;
+}
+
+/* Data Rows */
+.table-admin tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #333;
+  color: #eaeaea;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Hover effect */
+.table-admin tbody tr:hover {
+  background-color: #2d2d2d;
+}
+
+/* Round top corners */
+.table-admin thead th:first-child {
+  border-top-left-radius: 12px;
+}
+.table-admin thead th:last-child {
+  border-top-right-radius: 12px;
+}
+
+/* Round bottom corners */
+.table-admin tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+.table-admin tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}

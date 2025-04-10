@@ -4,6 +4,7 @@ import { Movie } from '../../types/Movie';
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm';
 import EditMovieForm from '../../components/common/crud stuff/EditMovieForm';
 import MovieRow from '../../components/common/MovieRow';
+import FilterDropdown from '../../components/common/GenreFilter';
 import '../../components/common/crud stuff/MovieForm.css';
 
 const ManageMoviesPage: React.FC = () => {
@@ -13,6 +14,16 @@ const ManageMoviesPage: React.FC = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [netflixView, setNetflixView] = useState(false);
+  const [sortAsc, setSortAsc] = useState(true);
+
+  const [filters, setFilters] = useState({
+    genres: [] as string[],
+    director: null as string | null,
+    type: null as string | null,
+    year: null as string | null,
+    rating: null as string | null,
+    title: '',
+  });
 
   const loadMovies = async () => {
     setLoading(true);
@@ -46,9 +57,40 @@ const ManageMoviesPage: React.FC = () => {
     }
   };
 
+  const filteredAndSortedMovies = movies
+    .filter((movie) => {
+      const matchesGenres =
+        filters.genres.length === 0 ||
+        filters.genres.some((genre) => (movie as any)[genre] === 1);
+      const matchesDirector =
+        filters.director === null ||
+        (filters.director === 'No Director' && !movie.director) ||
+        movie.director === filters.director;
+      const matchesType = filters.type === null || movie.type === filters.type;
+      const matchesYear =
+        filters.year === null || String(movie.releaseYear) === filters.year;
+      const matchesRating =
+        filters.rating === null || movie.rating === filters.rating;
+      const matchesTitle = movie.title
+        .toLowerCase()
+        .includes(filters.title.toLowerCase());
+
+      return (
+        matchesGenres &&
+        matchesDirector &&
+        matchesType &&
+        matchesYear &&
+        matchesRating &&
+        matchesTitle
+      );
+    })
+    .sort((a, b) =>
+      sortAsc ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
+    );
+
   const groupByGenre = (): Record<string, Movie[]> => {
     const grouped: Record<string, Movie[]> = {};
-    movies.forEach((movie) => {
+    filteredAndSortedMovies.forEach((movie) => {
       Object.keys(movie).forEach((key) => {
         if (
           (movie as any)[key] === 1 &&
@@ -66,10 +108,9 @@ const ManageMoviesPage: React.FC = () => {
     <div className="bg-dark text-white min-h-screen px-5 py-5">
       <div className="d-flex justify-between align-items-center mb-4">
         <h1 className="text-2xl font-bold">Admin - Movies</h1>
-
-        <div className="form-check form-switch red-switch ms-auto d-flex align-items-center">
+        <div className="form-check form-switch ms-auto d-flex align-items-center">
           <input
-            className="form-check-input"
+            className="form-check-input uk-switch"
             type="checkbox"
             id="userViewSwitch"
             checked={netflixView}
@@ -84,15 +125,31 @@ const ManageMoviesPage: React.FC = () => {
         </div>
       </div>
 
-      <button
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4"
-        onClick={() => {
-          setShowAddForm(true);
-          setSelectedMovie(null);
-        }}
-      >
-        + Add Movie
-      </button>
+      <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <button
+          className="btn-generic-yellow"
+          onClick={() => {
+            setShowAddForm(true);
+            setSelectedMovie(null);
+          }}
+        >
+          + Add Movie
+        </button>
+
+        <div className="d-flex align-items-center gap-3">
+          <FilterDropdown
+            allMovies={movies}
+            filters={filters}
+            setFilters={setFilters}
+          />
+          <button
+            className="btn btn-light"
+            onClick={() => setSortAsc(!sortAsc)}
+          >
+            Sort by Title: {sortAsc ? 'A → Z' : 'Z → A'}
+          </button>
+        </div>
+      </div>
 
       {showAddForm && (
         <div className="my-4 p-4 border border-gray-700 rounded bg-gray-800">
@@ -122,7 +179,7 @@ const ManageMoviesPage: React.FC = () => {
           {loading ? (
             <p>Loading movies...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className="text-danger">{error}</p>
           ) : netflixView ? (
             <div className="space-y-8">
               {Object.entries(groupByGenre()).map(([genre, genreMovies]) => (
@@ -140,41 +197,43 @@ const ManageMoviesPage: React.FC = () => {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="table-auto w-full border border-gray-600">
-                <thead className="bg-gray-800 text-white">
+              <table className="table-admin">
+                <thead>
                   <tr>
-                    <th className="px-4 py-2 border">Title</th>
-                    <th className="px-4 py-2 border">Year</th>
-                    <th className="px-4 py-2 border">Director</th>
-                    <th className="px-4 py-2 border">Type</th>
-                    <th className="px-4 py-2 border">Rating</th>
-                    <th className="px-4 py-2 border">Actions</th>
+                    <th>Title</th>
+                    <th>Year</th>
+                    <th>Director</th>
+                    <th>Type</th>
+                    <th>Rating</th>
+                    <th style={{ width: '160px' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {movies.map((movie) => (
-                    <tr key={movie.showId} className="hover:bg-gray-700">
-                      <td className="px-4 py-2 border">{movie.title}</td>
-                      <td className="px-4 py-2 border">{movie.releaseYear}</td>
-                      <td className="px-4 py-2 border">{movie.director}</td>
-                      <td className="px-4 py-2 border">{movie.type}</td>
-                      <td className="px-4 py-2 border">{movie.rating}</td>
-                      <td className="px-4 py-2 border">
-                        <button
-                          className="bg-yellow-500 text-black px-3 py-1 rounded mr-2"
-                          onClick={() => {
-                            setSelectedMovie(movie);
-                            setShowAddForm(false);
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-600 text-white px-3 py-1 rounded"
-                          onClick={() => handleDelete(movie.showId)}
-                        >
-                          Delete
-                        </button>
+                  {filteredAndSortedMovies.map((movie) => (
+                    <tr key={movie.showId}>
+                      <td>{movie.title}</td>
+                      <td>{movie.releaseYear}</td>
+                      <td>{movie.director}</td>
+                      <td>{movie.type}</td>
+                      <td>{movie.rating}</td>
+                      <td>
+                        <div className="d-flex gap-2 justify-content-center">
+                          <button
+                            className="btn-generic-yellow"
+                            onClick={() => {
+                              setSelectedMovie(movie);
+                              setShowAddForm(false);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn-delete-custom"
+                            onClick={() => handleDelete(movie.showId)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
