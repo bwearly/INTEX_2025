@@ -143,7 +143,7 @@ function Register() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 style={{
                   backgroundColor: '#333',
                   border: '1px solid #555',
