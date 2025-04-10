@@ -38,6 +38,7 @@ function LoginPage() {
       });
 
       if (!response.ok) throw new Error('Invalid email or password.');
+
       //my edits
       localStorage.setItem('email', email);
       //<Recommended {email}/>
