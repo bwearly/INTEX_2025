@@ -254,19 +254,7 @@ namespace INTEX_2025.API.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return BadRequest("Movie ID cannot be empty.");
 
-            var movie = _context.MoviesTitles
-                .Where(m => m.ShowId == id)
-                .Select(m => new
-                {
-                    m.ShowId,
-                    m.Title,
-                    m.Director,
-                    m.Cast,
-                    m.ReleaseYear,
-                    m.Rating,
-                    m.Description,
-                })
-                .FirstOrDefault();
+            var movie = _context.MoviesTitles.FirstOrDefault(m => m.ShowId == id);
 
             if (movie == null)
                 return NotFound();
