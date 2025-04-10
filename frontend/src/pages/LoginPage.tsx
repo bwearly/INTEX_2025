@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Recommended from '../components/common/Recommended';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -37,6 +38,9 @@ function LoginPage() {
       });
 
       if (!response.ok) throw new Error('Invalid email or password.');
+      //my edits
+      localStorage.setItem('email', email);
+      //<Recommended {email}/>
       navigate('/home');
     } catch (error: any) {
       setError(error.message || 'Error logging in.');

@@ -14,6 +14,7 @@ import TvShowsPage from './pages/TvShowsPage';
 import SettingsPage from './pages/SettingsPage';
 import PrivacyPolicy from './components/common/PrivacyPolicy';
 import AuthorizeView from './components/auth/AuthorizeView';
+import Recommended from './components/common/Recommended';
 import MovieDetailsPage from './components/common/MovieDetails';
 import MyRatingsPage from './pages/MyRatingsPage';
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="/tv" element={<TvShowsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/recommended" element={<Recommended />} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
         </Routes>
       </AuthorizeView>
