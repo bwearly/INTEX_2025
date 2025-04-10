@@ -164,7 +164,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("Search")]
-        [AllowAnonymous] // Optional: allow unauthenticated access for public search
+        [AllowAnonymous]
         public IActionResult SearchMovies([FromQuery] string query)
         {
         if (string.IsNullOrWhiteSpace(query))
@@ -190,7 +190,6 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("GetGenres")]
-        [AllowAnonymous] // Optional if your site requires login
         public IActionResult GetGenres()
         {
             var genreProperties = typeof(MoviesTitle).GetProperties()
@@ -202,7 +201,6 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("TvShows")]
-        [AllowAnonymous] // Optional if your site requires login
         public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
         {
             if (page < 1 || pageSize < 1)
@@ -226,7 +224,6 @@ namespace INTEX_2025.API.Controllers
             });
         }
 
-        [Authorize]
         [HttpGet("me")]
         public IActionResult GetCurrentUser()
         {
@@ -269,7 +266,6 @@ namespace INTEX_2025.API.Controllers
 
 
         [HttpPost("ByIds")]
-        [AllowAnonymous] // if needed for home page
         public IActionResult GetMoviesByIds([FromBody] List<string> ids)
         {
             if (ids == null || !ids.Any())
