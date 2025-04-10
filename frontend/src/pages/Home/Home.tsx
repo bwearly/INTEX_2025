@@ -19,6 +19,8 @@ const Home: React.FC = () => {
     Record<string, Movie[]>
   >({});
   const [loading, setLoading] = useState(true);
+
+  // Properly type the ref using React.RefObject<HTMLDivElement>
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const formatGenre = (genre: string) =>
@@ -158,7 +160,9 @@ const Home: React.FC = () => {
               return (
                 <div
                   key={genre}
-                  ref={(el) => (genreRefs.current[genre] = el)}
+                  ref={(el) => {
+                    genreRefs.current[genre] = el; // Assign the ref correctly
+                  }}
                   className="movie-row-container mb-5"
                   style={{ scrollMarginTop: '120px' }}
                 >
@@ -188,37 +192,6 @@ const Home: React.FC = () => {
                     >
                       ›
                     </button>
-                  </div>
-                </div>
-              );
-            })}
-
-          {/* Genres WITHOUT recommendations - fallback to real movies */}
-          {selectedGenres
-            .filter((g) => !recommendationsByGenre[g]?.length)
-            .map((genre) => {
-              const fallbackMovies = allMovies.filter(
-                (m) =>
-                  (m as any)[genre] === 1 &&
-                  typeof (m as any)[genre] === 'number'
-              );
-
-              return (
-                <div
-                  key={genre}
-                  ref={(el) => (genreRefs.current[genre] = el)}
-                  className="movie-row-container mb-5"
-                  style={{ scrollMarginTop: '120px' }}
-                >
-                  <h3 className="mb-3">{formatGenre(genre)}</h3>
-                  <div className="horizontal-scroll-container">
-                    {fallbackMovies.map((movie) => (
-                      <div key={movie.showId} className="movie-card">
-                        <Link to={`/Movie/${movie.showId}`}>
-                          <MovieCard movie={movie} />
-                        </Link>
-                      </div>
-                    ))}
                   </div>
                 </div>
               );

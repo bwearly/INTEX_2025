@@ -8,6 +8,8 @@ const TvShowsPage = () => {
   const [tvShows, setTvShows] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<string[]>([]);
+
+  // Properly type genreRefs as a record of genre to HTMLDivElement references
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Initial guess of genres — we'll correct this after we log a real movie
@@ -20,7 +22,6 @@ const TvShowsPage = () => {
     'languageTVShows',
     'spirituality',
   ];
-
 
   const formatGenre = (genre: string) =>
     genre.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
@@ -41,7 +42,10 @@ const TvShowsPage = () => {
         const genreSet = new Set<string>();
         res.movies.forEach((show) => {
           Object.keys(show).forEach((key) => {
-            if ((show as any)[key] === 1 && typeof (show as any)[key] === 'number') {
+            if (
+              (show as any)[key] === 1 &&
+              typeof (show as any)[key] === 'number'
+            ) {
               genreSet.add(key);
             }
           });
@@ -79,7 +83,9 @@ const TvShowsPage = () => {
             onChange={(e) => handleGenreJump(e.target.value)}
             defaultValue=""
           >
-            <option disabled value="">Jump to Genre</option>
+            <option disabled value="">
+              Jump to Genre
+            </option>
             {genres.map((g) => (
               <option key={g} value={g}>
                 {formatGenre(g)}
@@ -100,7 +106,9 @@ const TvShowsPage = () => {
             return (
               <div
                 key={genre}
-                ref={(el) => (genreRefs.current[genre] = el)}
+                ref={(el: HTMLDivElement | null) => {
+                  genreRefs.current[genre] = el;
+                }} // Correctly assigning ref
                 className="movie-row-container mb-5"
                 style={{ scrollMarginTop: '120px' }}
               >

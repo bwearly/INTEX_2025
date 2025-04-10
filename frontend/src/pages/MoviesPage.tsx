@@ -8,6 +8,8 @@ const MoviesPage = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [movieOnlyList, setMovieOnlyList] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Properly type genreRefs as a record of genre to HTMLDivElement references
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const formatGenre = (genre: string) =>
@@ -33,7 +35,10 @@ const MoviesPage = () => {
         const genreSet = new Set<string>();
         filteredMovies.forEach((movie) => {
           Object.keys(movie).forEach((key) => {
-            if ((movie as any)[key] === 1 && typeof (movie as any)[key] === 'number') {
+            if (
+              (movie as any)[key] === 1 &&
+              typeof (movie as any)[key] === 'number'
+            ) {
               genreSet.add(key);
             }
           });
@@ -71,7 +76,9 @@ const MoviesPage = () => {
             onChange={(e) => handleGenreJump(e.target.value)}
             defaultValue=""
           >
-            <option disabled value="">Jump to Genre</option>
+            <option disabled value="">
+              Jump to Genre
+            </option>
             {selectedGenres.map((g) => (
               <option key={g} value={g}>
                 {formatGenre(g)}
@@ -89,7 +96,9 @@ const MoviesPage = () => {
           return (
             <div
               key={genre}
-              ref={(el) => (genreRefs.current[genre] = el)}
+              ref={(el: HTMLDivElement | null) => {
+                genreRefs.current[genre] = el;
+              }}
               className="movie-row-container mb-5"
               style={{ scrollMarginTop: '120px' }}
             >
