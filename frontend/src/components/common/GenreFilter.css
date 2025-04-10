@@ -4,13 +4,12 @@
 .genre-dropdown {
   display: inline-block;
   position: relative;
-  border: 3px dotted lime; /* CRAZY: Border for the whole component area */
 }
 
 /* The main dropdown panel */
 .genre-dropdown-menu {
   position: absolute;
-  background-color: fuchsia !important; /* CRAZY: Dropdown background */
+  background-color: #6c9cb0 !important; /* CRAZY: Dropdown background */
   color: yellow !important; /* CRAZY: Default text color in dropdown */
   border: 2px solid cyan; /* CRAZY: Border around the dropdown */
   padding: 0.75rem;
@@ -53,7 +52,7 @@
 
 /* --- General Select Styling (Genres, Type, Rating) --- */
 .genre-dropdown-menu select.form-select {
-  background-color: navy; /* CRAZY: Default select background */
+  background-color: bei; /* CRAZY: Default select background */
   color: white; /* CRAZY: Default select text color */
   border: 2px solid yellow; /* CRAZY: Default select border */
   max-height: 200px; /* Keep your max-height for scrolling */
