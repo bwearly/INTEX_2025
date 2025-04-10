@@ -167,7 +167,9 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
         >
           {genreOptions.map((genre) => (
             <option key={genre} value={genre}>
-              {genre.replace(/([A-Z])/g, ' $1')}
+              {genre
+                .replace(/([A-Z])/g, ' $1') // add space before capital letters
+                .replace(/^./, (char) => char.toUpperCase())}{' '}
             </option>
           ))}
         </select>

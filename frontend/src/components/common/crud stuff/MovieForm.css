@@ -17,7 +17,7 @@
 }
 
 .movie-form {
-  background-color: #1e293b; /* bg-slate-800 */
+  background-color: #8a0007; /* bg-slate-800 */
   border-radius: 12px;
   padding: 2rem;
   color: white;
@@ -39,9 +39,9 @@
 .movie-form input,
 .movie-form textarea,
 .movie-form select {
-  background-color: #1e293b;
+  background-color: #232527;
   color: white;
-  border: 1px solid #475569;
+  border: 1px solid #5c6065;
   border-radius: 6px;
   padding: 0.5rem;
   width: 100%;
@@ -84,21 +84,21 @@
 }
 
 .movie-form .btn-submit {
-  background-color: #10b981; /* green-500 */
+  background-color: #232527; /* green-500 */
   color: white;
 }
 
 .movie-form .btn-submit:hover {
-  background-color: #059669; /* green-600 */
+  background-color: #6b7280; /* green-600 */
 }
 
 .movie-form .btn-cancel {
-  background-color: #6b7280; /* gray-500 */
+  background-color: #232527; /* gray-500 */
   color: white;
 }
 
 .movie-form .btn-cancel:hover {
-  background-color: #4b5563; /* gray-600 */
+  background-color: #6b7280; /* gray-600 */
 }
 
 .movie-form .btn-close {
@@ -110,4 +110,20 @@
   border: none;
   color: white;
   cursor: pointer;
+}
+
+/* 🔥 RED Toggle when ON */
+.form-check-input:checked {
+  background-color: #dc3545 !important; /* Bootstrap red */
+  border-color: #dc3545 !important;
+}
+
+/* 🛡 Optional: Red shadow ring for accessibility */
+.form-check-input:focus:checked {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.5) !important;
+}
+
+/* ⚪ Optional: Make sure the toggle knob stays white */
+.form-check-input:checked::before {
+  background-color: white !important;
 }

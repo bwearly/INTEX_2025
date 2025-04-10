@@ -106,6 +106,9 @@ const Home: React.FC = () => {
               <option disabled value="">
                 Jump to Genre
               </option>
+              <option disabled value="">
+                Jump to Genre
+              </option>
               {selectedGenres.map((g) => (
                 <option key={g} value={g}>
                   {formatGenre(g)}
@@ -161,3 +164,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+

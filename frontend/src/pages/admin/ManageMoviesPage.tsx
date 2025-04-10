@@ -4,6 +4,7 @@ import { Movie } from '../../types/Movie';
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm';
 import EditMovieForm from '../../components/common/crud stuff/EditMovieForm';
 import MovieRow from '../../components/common/MovieRow';
+import '../../components/common/crud stuff/MovieForm.css';
 
 const ManageMoviesPage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -31,7 +32,6 @@ const ManageMoviesPage: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    console.log('Attempting to delete movie with ID:', id);
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
       return;
@@ -64,20 +64,26 @@ const ManageMoviesPage: React.FC = () => {
 
   return (
     <div className="bg-dark text-white min-h-screen px-5 py-5">
-      <div className="flex justify-between items-center mb-4">
+      <div className="d-flex justify-between align-items-center mb-4">
         <h1 className="text-2xl font-bold">Admin - Movies</h1>
-        <label className="flex items-center">
+
+        <div className="form-check form-switch red-switch ms-auto d-flex align-items-center">
           <input
+            className="form-check-input"
             type="checkbox"
+            id="userViewSwitch"
             checked={netflixView}
             onChange={() => setNetflixView(!netflixView)}
-            className="mr-2"
           />
-          Toggle User View
-        </label>
+          <label
+            className="form-check-label text-white ms-2"
+            htmlFor="userViewSwitch"
+          >
+            Toggle User View
+          </label>
+        </div>
       </div>
 
-      {/* Add Movie Button */}
       <button
         className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4"
         onClick={() => {
@@ -88,7 +94,6 @@ const ManageMoviesPage: React.FC = () => {
         + Add Movie
       </button>
 
-      {/* Add Movie Form (inline section, not replacing main view) */}
       {showAddForm && (
         <div className="my-4 p-4 border border-gray-700 rounded bg-gray-800">
           <NewMovieForm
@@ -101,7 +106,6 @@ const ManageMoviesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Edit Form (optional: currently still replaces view) */}
       {selectedMovie && (
         <EditMovieForm
           movie={selectedMovie}
@@ -113,7 +117,6 @@ const ManageMoviesPage: React.FC = () => {
         />
       )}
 
-      {/* Main Movie View (table or Netflix-style row layout) */}
       {!selectedMovie && (
         <>
           {loading ? (

@@ -10,7 +10,6 @@ const SettingsPage = () => {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
-        console.log('Fetched user from /me:', data); // ✅ This should show in your browser console
         setIsAdmin(data.role === 'admin');
       } catch (err) {
         console.error('Could not fetch user:', err);
