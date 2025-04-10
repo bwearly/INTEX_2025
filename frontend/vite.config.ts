@@ -13,7 +13,7 @@ export default defineConfig({
         img-src 'self' data: blob: https://cinanicheposters.blob.core.windows.net;
         frame-src https://www.youtube.com;
         font-src 'self' fonts.gstatic.com data:;
-        connect-src 'self' http://localhost:5000 https://localhost:5000 https://www.googleapis.com;
+        connect-src 'self' https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net https://www.googleapis.com;
         object-src 'none';
         base-uri 'self';
         form-action 'self';
