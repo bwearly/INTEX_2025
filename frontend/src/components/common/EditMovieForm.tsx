@@ -8,59 +8,67 @@ interface EditMovieFormProps {
   onCancel: () => void;
 }
 
+const genreOptions = [
+  'action',
+  'adventure',
+  'animeSeriesInternationalTvShows',
+  'britishTvShowsDocuseriesInternationalTvShows',
+  'children',
+  'comedies',
+  'comediesDramasInternationalMovies',
+  'comediesInternationalMovies',
+  'comediesRomanticMovies',
+  'crimeTvShowsDocuseries',
+  'documentaries',
+  'documentariesInternationalMovies',
+  'docuseries',
+  'dramas',
+  'dramasInternationalMovies',
+  'dramasRomanticMovies',
+  'familyMovies',
+  'fantasy',
+  'horrorMovies',
+  'internationalMoviesThrillers',
+  'internationalTvShowsRomanticTvShowsTvDramas',
+  'kidsTv',
+  'languageTvShows',
+  'musicals',
+  'natureTv',
+  'realityTv',
+  'spirituality',
+  'tvAction',
+  'tvComedies',
+  'tvDramas',
+  'talkShowsTvComedies',
+  'thrillers',
+];
+
 const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({
     ...movie,
     showId: movie.showId || '',
   });
 
-  const numericFields = [
-    'releaseYear',
-    'action',
-    'adventure',
-    'animeSeriesInternationalTvShows',
-    'britishTvShowsDocuseriesInternationalTvShows',
-    'children',
-    'comedies',
-    'comediesDramasInternationalMovies',
-    'comediesInternationalMovies',
-    'comediesRomanticMovies',
-    'crimeTvShowsDocuseries',
-    'documentaries',
-    'documentariesInternationalMovies',
-    'docuseries',
-    'dramas',
-    'dramasInternationalMovies',
-    'dramasRomanticMovies',
-    'familyMovies',
-    'fantasy',
-    'horrorMovies',
-    'internationalMoviesThrillers',
-    'internationalTvShowsRomanticTvShowsTvDramas',
-    'kidsTv',
-    'languageTvShows',
-    'musicals',
-    'natureTv',
-    'realityTv',
-    'spirituality',
-    'tvAction',
-    'tvComedies',
-    'tvDramas',
-    'talkShowsTvComedies',
-    'thrillers',
-  ];
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    genreOptions.filter((g) => formData[g as keyof Movie] === 1)
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        numericFields.includes(name) || type === 'number'
-          ? Number(value)
-          : value,
+      [name]: value,
     }));
+  };
+
+  const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedGenres(selected);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,8 +78,16 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
       return;
     }
 
+    const genrePayload = genreOptions.reduce((acc, genre) => {
+      acc[genre] = selectedGenres.includes(genre) ? 1 : 0;
+      return acc;
+    }, {} as any);
+
     try {
-      await updateMovie(formData.showId, formData);
+      await updateMovie(formData.showId, {
+        ...formData,
+        ...genrePayload,
+      });
       onSuccess();
     } catch (err) {
       console.error('Error updating movie:', err);
@@ -79,86 +95,173 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     }
   };
 
-  const renderTextField = (name: keyof Movie, label: string) => (
-    <label className="block mb-2">
-      {label}:
-      <input
-        className="block w-full border p-1 rounded"
-        name={name}
-        value={formData[name] || ''}
-        onChange={handleChange}
-      />
-    </label>
-  );
-
-  const renderNumberField = (name: keyof Movie, label: string) => (
-    <label className="block mb-2">
-      {label}:
-      <input
-        type="number"
-        className="block w-full border p-1 rounded"
-        name={name}
-        value={formData[name] || 0}
-        onChange={handleChange}
-      />
-    </label>
-  );
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-4 rounded shadow text-black w-full max-w-3xl"
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        zIndex: 999,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'start',
+        overflowY: 'auto',
+        paddingTop: '8vh',
+        backdropFilter: 'blur(3px)',
+      }}
     >
-      <h2 className="text-xl font-bold mb-4">Edit Movie</h2>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          backgroundColor: '#111',
+          borderRadius: '12px',
+          padding: '2rem',
+          color: 'white',
+          boxShadow: '0 0 20px rgba(0,0,0,0.6)',
+          maxWidth: '1000px',
+          width: '90%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          position: 'relative',
+        }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onCancel}
+          type="button"
+          style={{
+            position: 'absolute',
+            top: '15px',
+            right: '15px',
+            fontSize: '1.5rem',
+            background: 'transparent',
+            border: 'none',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          &times;
+        </button>
 
-      <div className="grid grid-cols-2 gap-4">
-        {renderTextField('title', 'Title')}
-        {renderTextField('posterUrl', 'Poster URL')}
-        {renderTextField('type', 'Type')}
-        {renderTextField('director', 'Director')}
-        {renderTextField('cast', 'Cast')}
-        {renderTextField('country', 'Country')}
-        {renderTextField('rating', 'Rating')}
-        {renderTextField('duration', 'Duration')}
-        {renderNumberField('releaseYear', 'Release Year')}
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Edit Movie</h2>
 
-        <label className="col-span-2">
-          Description:
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1rem',
+          }}
+        >
+          <input
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="posterUrl"
+            placeholder="Poster URL"
+            value={formData.posterUrl}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="type"
+            placeholder="Type"
+            value={formData.type}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="director"
+            placeholder="Director"
+            value={formData.director}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="cast"
+            placeholder="Cast"
+            value={formData.cast}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="country"
+            placeholder="Country"
+            value={formData.country}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="rating"
+            placeholder="Rating"
+            value={formData.rating}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            name="duration"
+            placeholder="Duration"
+            value={formData.duration}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
+          <input
+            type="number"
+            name="releaseYear"
+            placeholder="Release Year"
+            value={formData.releaseYear}
+            onChange={handleChange}
+            className="bg-black text-white border rounded p-2"
+          />
           <textarea
             name="description"
-            className="block w-full border p-1 rounded"
-            value={formData.description || ''}
+            placeholder="Description"
+            value={formData.description}
             onChange={handleChange}
+            className="bg-black text-white border rounded p-2 col-span-2"
+            rows={4}
           />
-        </label>
-      </div>
+        </div>
 
-      <h3 className="font-semibold mt-6">Genres (0 or 1):</h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {numericFields.map((genreKey) =>
-          renderNumberField(
-            genreKey as keyof Movie,
-            genreKey.replace(/([A-Z])/g, ' $1')
-          )
-        )}
-      </div>
+        <label className="font-semibold mt-4">Genres:</label>
+        <select
+          multiple
+          value={selectedGenres}
+          onChange={handleGenreChange}
+          className="bg-black text-white border rounded p-2"
+          style={{ height: '200px' }}
+        >
+          {genreOptions.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre.replace(/([A-Z])/g, ' $1')}
+            </option>
+          ))}
+        </select>
 
-      <div className="mt-6 flex gap-4">
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Update Movie
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="bg-gray-500 text-white px-4 py-2 rounded"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+        <div className="flex gap-4 mt-4">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Update Movie
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="bg-gray-500 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
