@@ -35,21 +35,16 @@ const MovieDetailsPage = () => {
 
     const getMovie = async () => {
       try {
-        // Fetch the movie details using the movie ID
         const data = await fetchMovieById(id);
         setMovie(data);
 
-        // Fetch the trailer for the movie
         setTimeout(async () => {
           const trailer = await fetchYoutubeTrailer(data.title);
           if (trailer) setTrailerId(trailer);
         }, 2000);
 
-        // Fetch recommendations using the movie's showId
         const recIds = await fetchShowRecommendationsById(data.showId);
         const recs = await fetchMoviesByIds(recIds);
-
-        // Filter out the current movie and limit to 5 recommendations
         const filtered = recs.filter((m) => m.showId !== data.showId);
         setRecommended(filtered.slice(0, 5));
       } catch (err) {
@@ -86,8 +81,6 @@ const MovieDetailsPage = () => {
           backgroundColor: '#111',
           borderRadius: '12px',
           padding: '2rem',
-          display: 'flex',
-          gap: '2rem',
           maxWidth: '1000px',
           width: '90%',
           color: 'white',
@@ -116,80 +109,83 @@ const MovieDetailsPage = () => {
           &times;
         </button>
 
-        {/* Trailer or Poster */}
-        <div style={{ width: '400px', minWidth: '400px' }}>
-          {trailerId ? (
-            <iframe
-              width="400"
-              height="600"
-              src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0`}
-              title="YouTube trailer"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              style={{ borderRadius: '8px', border: 'none' }}
-            />
-          ) : (
-            <img
-              src={movie.posterUrl}
-              alt={movie.title}
-              style={{ width: '400px', borderRadius: '8px' }}
-              onError={(e) =>
-                ((e.target as HTMLImageElement).src = '/poster1.png')
-              }
-            />
-          )}
+        {/* Poster + Info */}
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          {/* Poster or Trailer */}
+          <div style={{ width: '400px', minWidth: '400px' }}>
+            {trailerId ? (
+              <iframe
+                width="400"
+                height="600"
+                src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0`}
+                title="YouTube trailer"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                style={{ borderRadius: '8px', border: 'none' }}
+              />
+            ) : (
+              <img
+                src={movie.posterUrl}
+                alt={movie.title}
+                style={{ width: '400px', borderRadius: '8px' }}
+                onError={(e) =>
+                  ((e.target as HTMLImageElement).src = '/poster1.png')
+                }
+              />
+            )}
+          </div>
+
+          {/* Movie Info */}
+          <div>
+            <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+              {movie.title}
+            </h1>
+            <div>
+              <strong>Your Rating:</strong>
+              <StarRating
+                movieId={id!}
+                currentRating={rating}
+                setRating={setRating}
+              />
+            </div>
+            <p>
+              <strong>Director:</strong> {movie.director}
+            </p>
+            <p>
+              <strong>Cast:</strong>{' '}
+              {movie.cast.includes(',')
+                ? movie.cast
+                    .split(',')
+                    .map((name) => name.trim())
+                    .filter((name) => name.length > 0)
+                    .join(', ')
+                : movie.cast
+                    .split(' ')
+                    .reduce((acc: string[], val, i, arr) => {
+                      if (i % 2 === 0) {
+                        acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
+                      }
+                      return acc;
+                    }, [] as string[])
+                    .join(', ')}
+            </p>
+            <p>
+              <strong>Description:</strong> {movie.description}
+            </p>
+          </div>
         </div>
 
-        {/* Movie Info */}
-        <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
-            {movie.title}
-          </h1>
-          <div>
-            <strong>Your Rating:</strong>
-            <StarRating
-              movieId={id!}
-              currentRating={rating}
-              setRating={setRating}
+        {/* Moved here — OUTSIDE the flex container */}
+        {recommended.length > 0 && (
+          <div className="w-full mb-2 px-6" style={{ marginTop: '2rem' }}>
+            <MovieRow
+              title="Shows Like This"
+              movies={recommended}
+              onClick={(movie) => navigate(`/movie/${movie.showId}`)}
             />
           </div>
-          <p>
-            <strong>Director:</strong> {movie.director}
-          </p>
-          <p>
-            <strong>Cast:</strong>{' '}
-            {movie.cast.includes(',')
-              ? movie.cast
-                  .split(',')
-                  .map((name) => name.trim())
-                  .filter((name) => name.length > 0)
-                  .join(', ')
-              : movie.cast
-                  .split(' ')
-                  .reduce((acc: string[], val, i, arr) => {
-                    if (i % 2 === 0) {
-                      acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
-                    }
-                    return acc;
-                  }, [] as string[])
-                  .join(', ')}
-          </p>
-          <p>
-            <strong>Description:</strong> {movie.description}
-          </p>
-        </div>
+        )}
       </div>
-
-      {/* Recommended Shows */}
-      {recommended.length > 0 && (
-        <div className="w-full mt-8 mb-16 px-6">
-          <MovieRow
-            title="Shows Like This"
-            movies={recommended}
-            onClick={(movie) => navigate(`/movie/${movie.showId}`)}
-          />
-        </div>
-      )}
     </div>
   );
 };
