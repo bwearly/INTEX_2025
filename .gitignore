@@ -104,3 +104,5 @@ frontend/vite.config.js
 # OS generated
 .DS_Store
 Thumbs.db
+/.vscode.zip
+/INTEX_2025.zip
