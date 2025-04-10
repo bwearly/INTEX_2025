@@ -73,7 +73,7 @@ const ManageMoviesPage: React.FC = () => {
             onChange={() => setNetflixView(!netflixView)}
             className="mr-2"
           />
-          Toggle Netflix View
+          Toggle User View
         </label>
       </div>
 
