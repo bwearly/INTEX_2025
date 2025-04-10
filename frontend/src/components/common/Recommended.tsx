@@ -8,17 +8,23 @@ interface RecommendedProps {
   onDelete?: (id: string) => void;
 }
 
+type RecommendationMap = {
+  [showId: string]: Movie[];
+};
+
 const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
-  const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
+  const [recommendedMovies, setRecommendedMovies] = useState<RecommendationMap>(
+    {}
+  );
 
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const email = localStorage.getItem('userEmail');
+        const email = localStorage.getItem('email');
         if (!email) return;
 
         const response = await fetch(
-          `https://localhost:5000/api/YourControllerName/GetUserRecommendations?email=${encodeURIComponent(email)}`,
+          `https://localhost:5000/api/Recommendations/GetUserRecommendations?email=${encodeURIComponent(email)}`,
           {
             credentials: 'include',
           }
@@ -26,7 +32,9 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
 
         if (!response.ok) throw new Error('Failed to fetch recommended movies');
 
-        const data = await response.json();
+        const data: RecommendationMap = await response.json();
+        console.log('Fetched grouped recommended movies:', data);
+
         setRecommendedMovies(data);
       } catch (error) {
         console.error('Error fetching recommended movies:', error);
@@ -37,12 +45,17 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
   }, []);
 
   return (
-    <MovieRow
-      title="Recommended for You"
-      movies={recommendedMovies}
-      onClick={onClick}
-      onDelete={onDelete}
-    />
+    <div className="space-y-8 p-4">
+      {Object.entries(recommendedMovies).map(([showId, movies]) => (
+        <MovieRow
+          key={showId}
+          title={`Based on show ID: ${showId}`}
+          movies={movies}
+          onClick={onClick}
+          onDelete={onDelete}
+        />
+      ))}
+    </div>
   );
 };
 
