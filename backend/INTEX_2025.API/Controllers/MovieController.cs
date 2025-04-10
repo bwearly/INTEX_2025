@@ -277,5 +277,13 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(new { Movies = matched });
         }
+
+        [Route("/")]
+        [HttpGet]
+        public IActionResult Root()
+        {
+            return Ok("API is live");
+        }
+
     }
 }
