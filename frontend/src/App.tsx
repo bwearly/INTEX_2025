@@ -7,7 +7,6 @@ import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult';
-import MyRatingsPage from './pages/MyRatingsPage';
 import MoviesPage from './pages/MoviesPage';
 import TvShowsPage from './pages/TvShowsPage';
 import SettingsPage from './pages/SettingsPage';
@@ -38,7 +37,6 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/admin/movies" element={<ManageMoviesPage />} />
           <Route path="/search" element={<SearchResult />} />
-          <Route path="/myRatings" element={<MyRatingsPage />} />
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/tv" element={<TvShowsPage />} />
           <Route path="/settings" element={<SettingsPage />} />

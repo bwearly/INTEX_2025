@@ -81,12 +81,6 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             {/* Nav Links */}
             {!minimal && (
               <div className="d-flex align-items-center ms-4 gap-4">
-                <span
-                  style={navItemStyle}
-                  onClick={() => navigate('/myRatings')}
-                >
-                  My List
-                </span>
                 <span style={navItemStyle} onClick={() => navigate('/tv')}>
                   TV Shows
                 </span>
