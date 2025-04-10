@@ -20,7 +20,6 @@ const Home: React.FC = () => {
   >({});
   const [loading, setLoading] = useState(true);
 
-  // Properly type the ref using React.RefObject<HTMLDivElement>
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const formatGenre = (genre: string) =>
@@ -90,8 +89,6 @@ const Home: React.FC = () => {
           for (const showId of watchedIds) {
             try {
               const ids = await recommenderMapByColumn[normalizedKey](showId);
-              console.log(`🎯 ${rawGenre} (from ${showId}) => Show IDs:`, ids);
-
               if (ids.length > 0) {
                 const recMovies = await fetchMoviesByIds(ids);
                 genreRecs[rawGenre] = recMovies;
@@ -124,6 +121,13 @@ const Home: React.FC = () => {
     loadMovies();
   }, []);
 
+  const genresWithRecs = selectedGenres.filter(
+    (g) => recommendationsByGenre[g]?.length > 0
+  );
+  const genresWithoutRecs = selectedGenres.filter(
+    (g) => !recommendationsByGenre[g]
+  );
+
   return (
     <AuthorizeView>
       <div
@@ -134,7 +138,6 @@ const Home: React.FC = () => {
         <HeroCarousel movies={allMovies} />
 
         <div className="w-full max-w-screen-2xl mx-auto mt-4 px-4">
-          {/* Genre Dropdown */}
           <div className="d-flex justify-content-between align-items-center mb-4">
             <select
               className="form-select w-auto bg-dark text-white"
@@ -152,50 +155,95 @@ const Home: React.FC = () => {
             </select>
           </div>
 
-          {/* Genres WITH recommendations */}
-          {selectedGenres
-            .filter((g) => recommendationsByGenre[g]?.length > 0)
-            .map((genre) => {
-              const recs = recommendationsByGenre[genre];
-              return (
-                <div
-                  key={genre}
-                  ref={(el) => {
-                    genreRefs.current[genre] = el; // Assign the ref correctly
-                  }}
-                  className="movie-row-container mb-5"
-                  style={{ scrollMarginTop: '120px' }}
-                >
-                  <h3 className="mb-3">{formatGenre(genre)}</h3>
-                  <div className="group">
-                    <button
-                      className="scroll-btn scroll-btn-left"
-                      onClick={() => scrollRow(genre, 'left')}
-                    >
-                      ‹
-                    </button>
-                    <div
-                      id={`scroll-${genre}`}
-                      className="horizontal-scroll-container"
-                    >
-                      {recs.map((movie) => (
-                        <div key={movie.showId} className="movie-card">
-                          <Link to={`/Movie/${movie.showId}`}>
-                            <MovieCard movie={movie} />
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      className="scroll-btn scroll-btn-right"
-                      onClick={() => scrollRow(genre, 'right')}
-                    >
-                      ›
-                    </button>
+          {/* Recommended Genres */}
+          {genresWithRecs.map((genre) => {
+            const recs = recommendationsByGenre[genre];
+            return (
+              <div
+                key={genre}
+                ref={(el) => {
+                  genreRefs.current[genre] = el;
+                }}
+                className="movie-row-container mb-5"
+                style={{ scrollMarginTop: '120px' }}
+              >
+                <h3 className="mb-3">{formatGenre(genre)}</h3>
+                <div className="group">
+                  <button
+                    className="scroll-btn scroll-btn-left"
+                    onClick={() => scrollRow(genre, 'left')}
+                  >
+                    ‹
+                  </button>
+                  <div
+                    id={`scroll-${genre}`}
+                    className="horizontal-scroll-container"
+                  >
+                    {recs.map((movie) => (
+                      <div key={movie.showId} className="movie-card">
+                        <Link to={`/Movie/${movie.showId}`}>
+                          <MovieCard movie={movie} />
+                        </Link>
+                      </div>
+                    ))}
                   </div>
+                  <button
+                    className="scroll-btn scroll-btn-right"
+                    onClick={() => scrollRow(genre, 'right')}
+                  >
+                    ›
+                  </button>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
+
+          {/* Fallback Genres (non-recommended) */}
+          {genresWithoutRecs.map((genre) => {
+            const fallbackMovies = allMovies.filter(
+              (movie) => (movie as any)[genre] === 1
+            );
+            if (fallbackMovies.length === 0) return null;
+
+            return (
+              <div
+                key={genre}
+                ref={(el) => {
+                  genreRefs.current[genre] = el;
+                }}
+                className="movie-row-container mb-5"
+                style={{ scrollMarginTop: '120px' }}
+              >
+                <h3 className="mb-3">{formatGenre(genre)}</h3>
+                <div className="group">
+                  <button
+                    className="scroll-btn scroll-btn-left"
+                    onClick={() => scrollRow(genre, 'left')}
+                  >
+                    ‹
+                  </button>
+                  <div
+                    id={`scroll-${genre}`}
+                    className="horizontal-scroll-container"
+                  >
+                    {fallbackMovies.map((movie) => (
+                      <div key={movie.showId} className="movie-card">
+                        <Link to={`/Movie/${movie.showId}`}>
+                          <MovieCard movie={movie} />
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="scroll-btn scroll-btn-right"
+                    onClick={() => scrollRow(genre, 'right')}
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </AuthorizeView>
