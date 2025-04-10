@@ -156,7 +156,14 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
 
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
-      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(
+        movie.title
+          .toLowerCase()
+          .replace(/[^\w\s]/gi, '') // remove punctuation
+          .replace(/\s+/g, '')      // remove whitespace
+          .trim()
+      )}.jpg`
+      
     }));
 
     return moviesWithPosters;
