@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 const Footer: React.FC = () => {
   const location = useLocation();
 
+  if (location.pathname === '/') return null;
   if (location.pathname === '/login') return null;
 
   return (
@@ -12,7 +13,10 @@ const Footer: React.FC = () => {
       style={{ textAlign: 'center', padding: '1rem', color: '#ccc' }}
     >
       <p>&copy; 2025 CineNiche</p>
-      <a href="/privacy" style={{ color: '#5dade2', textDecoration: 'underline' }}>
+      <a
+        href="/privacy"
+        style={{ color: '#5dade2', textDecoration: 'underline' }}
+      >
         Privacy Policy
       </a>
     </footer>
