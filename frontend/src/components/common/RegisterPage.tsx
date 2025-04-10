@@ -1,4 +1,4 @@
-import { useState } from 'react';
+{ useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '/logo1.png';
 function Register() {
@@ -23,7 +23,7 @@ function Register() {
       setError('Passwords do not match.');
     } else {
       setError('');
-      fetch('https://localhost:5000/register', {
+      fetch('https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -168,7 +168,7 @@ function Register() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid #6C9CB0',
@@ -180,9 +180,7 @@ function Register() {
               </button>
             </div>
             {error && (
-              <p
-                style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
-              >
+              <p style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}>
                 {error}
               </p>
             )}
