@@ -32,7 +32,6 @@ const genreAliases: Record<string, string> = {
   documentariesseries: 'Documentary Series',
   comediesinternationalmovies: 'International Comedies',
   documentariesinternationalmovies: 'International Documentaries',
-  talkshowstvcomedies: 'Talk Show TV Comedies',
 };
 
 const formatGenreLabel = (genre: string) => {
@@ -155,7 +154,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
       {isOpen && (
         <div className="genre-dropdown-menu show p-3">
-          {/* Title */}
           <div className="mb-3">
             <label className="form-label text-white">Title</label>
             <input
@@ -168,7 +166,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* Genre */}
           <div className="mb-3">
             <label className="form-label text-white">Genres</label>
             <select
@@ -189,35 +186,30 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               ))}
             </select>
           </div>
-          {/* Director */}
+
           <div className="mb-3">
             <label className="form-label text-white">Director</label>
             <select
-              className="form-select dropdown-select"
+              name="director-filter"
+              className="form-select director-select"
               value={filters.director || ''}
               onChange={(e) =>
                 setFilters((prev) => ({
                   ...prev,
                   director:
-                    e.target.value === '' || e.target.value === 'No Director'
-                      ? null
-                      : e.target.value,
+                    e.target.value === 'No Director' ? null : e.target.value,
                 }))
               }
             >
               <option value="">All</option>
-              <option value="No Director">No Director</option>
-              {directors
-                .filter((d) => d && d !== 'No Director') // optional: remove duplicates
-                .map((d, i) => (
-                  <option key={i} value={d}>
-                    {d}
-                  </option>
-                ))}
+              {directors.map((d, i) => (
+                <option key={i} value={d}>
+                  {d}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Type */}
           <div className="mb-3">
             <label className="form-label text-white">Type</label>
             <select
@@ -237,7 +229,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             </select>
           </div>
 
-          {/* Year */}
           <div className="mb-3">
             <label className="form-label text-white">Year</label>
             <input
@@ -253,7 +244,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* Rating */}
           <div className="mb-3">
             <label className="form-label text-white">Rating</label>
             <select

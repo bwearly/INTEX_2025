@@ -10,14 +10,13 @@
   border: 1px solid #4b5563;
   padding: 0.75rem;
   width: 300px;
-  max-height: none; /* let inner elements expand freely */
-  overflow: visible; /* allow dropdowns to render correctly */
+  max-height: none;
+  overflow: visible;
   z-index: 999;
   border-radius: 6px;
   margin-top: 0.5rem;
 }
 
-/* Checkbox Labels */
 .genre-dropdown-menu label {
   color: white !important;
   font-size: 0.95rem;
@@ -29,19 +28,16 @@
   text-transform: capitalize;
 }
 
-/* Checkbox Input */
 .genre-dropdown-menu input[type='checkbox'] {
   margin-right: 0.5rem;
   accent-color: #ba0c2f;
 }
 
-/* Hover */
 .genre-dropdown-menu .form-check:hover {
   background-color: #374151;
   border-radius: 4px;
 }
 
-/* Select Styling */
 .genre-dropdown-menu select.form-select {
   background-color: #1f2937;
   color: white;
@@ -56,7 +52,7 @@
   box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.5);
 }
 
-/* Optional Scrollbar Styling */
+/* Scrollbar styling */
 .genre-dropdown-menu select.form-select::-webkit-scrollbar {
   width: 6px;
 }
@@ -66,36 +62,43 @@
   border-radius: 4px;
 }
 
-select[name='director-filter'],
+/* Ensures long text wraps in the dropdown */
+.genre-dropdown-menu select.form-select option {
+  white-space: normal; /* Allows text to wrap */
+  word-wrap: break-word; /* Break long words if necessary */
+  padding: 0.25rem 0.5rem;
+  background-color: #1f2937;
+  color: white;
+}
+
+/* Specific styling for the director dropdown */
 .genre-dropdown-menu select.director-select {
-  max-height: 200px;
-  overflow-y: auto;
   background-color: #1f2937;
   color: white;
   border: 1px solid #4b5563;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: normal;
+  word-break: break-word;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
-/* Make long dropdown options wrap and stay within the box */
-.genre-dropdown-menu .dropdown-select option {
-  background-color: #1f2937;
-  color: white;
-  white-space: normal; /* ✅ allows wrapping */
-  word-break: break-word; /* ✅ breaks long strings */
-  max-width: 100%; /* ✅ keeps within container */
+
+/* Ensures long text in director dropdown options wraps */
+.genre-dropdown-menu select.director-select option {
+  white-space: normal; /* Allows text to wrap */
+  word-wrap: break-word; /* Break long words if necessary */
   padding: 0.25rem 0.5rem;
-}
-
-/* Dropdown options styling (for consistency with theme) */
-.genre-dropdown-menu .dropdown-select option {
   background-color: #1f2937;
   color: white;
 }
 
-/* Scrollbar customization for consistency */
-.genre-dropdown-menu .dropdown-select::-webkit-scrollbar {
+/* Scrollbar customization for director select */
+.genre-dropdown-menu select.director-select::-webkit-scrollbar {
   width: 6px;
 }
 
-.genre-dropdown-menu .dropdown-select::-webkit-scrollbar-thumb {
+.genre-dropdown-menu select.director-select::-webkit-scrollbar-thumb {
   background-color: #4b5563;
   border-radius: 4px;
 }
