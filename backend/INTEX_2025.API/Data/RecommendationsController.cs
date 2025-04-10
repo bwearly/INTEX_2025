@@ -9,6 +9,8 @@ public class RecommendationsController : ControllerBase
 {
     private RecommendationsDbContext _recommendationContext;
     private readonly MoviesDbContext _context;
+    private readonly UserDbContext _userContext;
+    private readonly ApplicationDbContext _applicationContext;
     
     public RecommendationsController(RecommendationsDbContext recommendationContext, MoviesDbContext context)
     {
@@ -274,114 +276,109 @@ public class RecommendationsController : ControllerBase
     }
 
     [HttpGet("GetUserRecommendations")]
-    public IActionResult GetUserRecommendations([FromQuery] string email)
+public IActionResult GetUserRecommendations([FromQuery] string email)
+{
+    var user = _context.MoviesUsers.FirstOrDefault(u => u.Email == email);
+    if (user == null) return NotFound("User not found");
+
+    var userShowIds = _context.MoviesRatings
+        .Where(r => r.UserId == user.UserId)
+        .Select(r => r.ShowId)
+        .ToList();
+
+    var recommendationsByShowId = new Dictionary<string, List<MoviesTitle>>();
+
+    // All your recommendation table lookups
+    var tables = new List<Func<string, object?>>
     {
-        var user = _context.MoviesUsers.FirstOrDefault(u => u.Email == email);
-        if (user == null) return NotFound("User not found");
+        sid => _recommendationContext.MovieActions.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieAdventures.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieChildrens.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieComedies.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieComediesDramaInternationals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieComediesInternationals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieDocumentaries.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieDocumentariesInternationals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieDramas.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieDramasInternationals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieDramasRomantics.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieFamilies.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieFantasies.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieHorrors.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieInternationalThrillers.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieMusicals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieSpiritualities.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.MovieThrillers.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowActions.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowAdventures.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowAnimeInternationals.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowComedies.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowCrimeDocuseries.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowDocuseries.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowDramas.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowFantasies.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowInternationalRomanticDramas.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowKids.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowLanguages.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowNatures.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowRealities.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.TvShowThrillers.FirstOrDefault(m => m.show_id == sid),
+        sid => _recommendationContext.ShowRecommendations.FirstOrDefault(m => m.show_id == sid)
+    };
 
-        var userShowIds = _context.MoviesRatings
-            .Where(r => r.UserId == user.UserId)
-            .Select(r => r.ShowId)
-            .ToList();
-
-        var allRecommendations = new List<string>();
-
-        foreach (var showId in userShowIds)
-        {
-            var fromMovieAction = _recommendationContext.MovieActions.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieAdventure = _recommendationContext.MovieAdventures.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieChildren = _recommendationContext.MovieChildrens.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieComedies = _recommendationContext.MovieComedies.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieComediesDramaInternational = _recommendationContext.MovieComediesDramaInternationals.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieComediesInternational = _recommendationContext.MovieComediesInternationals.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieDocumentaries = _recommendationContext.MovieDocumentaries.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieDocumentariesInternational = _recommendationContext.MovieDocumentariesInternationals.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieDramas = _recommendationContext.MovieDramas.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieDramasInternational = _recommendationContext.MovieDramasInternationals.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieDramasRomantic = _recommendationContext.MovieDramasRomantics.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieFamily = _recommendationContext.MovieFamilies.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieFantasy = _recommendationContext.MovieFantasies.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieHorror = _recommendationContext.MovieHorrors.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieInternationalThriller = _recommendationContext.MovieInternationalThrillers.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieMusicals = _recommendationContext.MovieMusicals.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieSpirituality = _recommendationContext.MovieSpiritualities.FirstOrDefault(m => m.show_id == showId);
-            var fromMovieThrillers = _recommendationContext.MovieThrillers.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowAction = _recommendationContext.TvShowActions.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowAdventure = _recommendationContext.TvShowAdventures.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowAnimeInternational = _recommendationContext.TvShowAnimeInternationals.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowComedies = _recommendationContext.TvShowComedies.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowCrimeDocuseries = _recommendationContext.TvShowCrimeDocuseries.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowDocuseries = _recommendationContext.TvShowDocuseries.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowDramas = _recommendationContext.TvShowDramas.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowFantasy = _recommendationContext.TvShowFantasies.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowInternationalRomanticDrama = _recommendationContext.TvShowInternationalRomanticDramas.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowKids = _recommendationContext.TvShowKids.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowLanguage = _recommendationContext.TvShowLanguages.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowNature = _recommendationContext.TvShowNatures.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowReality = _recommendationContext.TvShowRealities.FirstOrDefault(m => m.show_id == showId);
-            var fromTvShowThriller = _recommendationContext.TvShowThrillers.FirstOrDefault(m => m.show_id == showId);
-            var fromShowRecommendation = _recommendationContext.ShowRecommendations.FirstOrDefault(m => m.show_id == showId);
-
-
-            if (fromMovieAction != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieAction));
-            if (fromMovieAdventure != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieAdventure));
-            if (fromMovieChildren != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieChildren));
-            if (fromMovieComedies != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieComedies));
-            if (fromMovieComediesDramaInternational != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieComediesDramaInternational));
-            if (fromMovieComediesInternational != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieComediesInternational));
-            if (fromMovieDocumentaries != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieDocumentaries));
-            if (fromMovieDocumentariesInternational != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieDocumentariesInternational));
-            if (fromMovieDramas != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieDramas));
-            if (fromMovieDramasInternational != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieDramasInternational));
-            if (fromMovieDramasRomantic != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieDramasRomantic));
-            if (fromMovieFamily != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieFamily));
-            if (fromMovieFantasy != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieFantasy));
-            if (fromMovieHorror != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieHorror));
-            if (fromMovieInternationalThriller != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieInternationalThriller));
-            if (fromMovieMusicals != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieMusicals));
-            if (fromMovieSpirituality != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieSpirituality));
-            if (fromMovieThrillers != null) allRecommendations.AddRange(GetRecsFromObj(fromMovieThrillers));
-            if (fromTvShowAction != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowAction));
-            if (fromTvShowAdventure != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowAdventure));
-            if (fromTvShowAnimeInternational != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowAnimeInternational));
-            if (fromTvShowComedies != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowComedies));
-            if (fromTvShowCrimeDocuseries != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowCrimeDocuseries));
-            if (fromTvShowDocuseries != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowDocuseries));
-            if (fromTvShowDramas != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowDramas));
-            if (fromTvShowFantasy != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowFantasy));
-            if (fromTvShowInternationalRomanticDrama != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowInternationalRomanticDrama));
-            if (fromTvShowKids != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowKids));
-            if (fromTvShowLanguage != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowLanguage));
-            if (fromTvShowNature != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowNature));
-            if (fromTvShowReality != null) allRecommendations.AddRange(GetRecsFromObj(fromTvShowReality));
-            if (fromShowRecommendation != null) allRecommendations.AddRange(GetRecsFromObj(fromShowRecommendation));
-        }
-
-        var uniqueRecs = allRecommendations.Distinct().ToList();
-        var recommendedMovies = _context.MoviesTitles
-            .Where(m => uniqueRecs.Contains(m.Title))
-            .ToList();
-
-        return Ok(recommendedMovies);
-    }
-    
-    private List<string> GetRecsFromObj(object recObj)
+    foreach (var showId in userShowIds)
     {
-        var recs = new List<string>();
-    
-        var props = recObj.GetType().GetProperties()
-            .Where(p => p.Name.StartsWith("Recommendation"));
-
-        foreach (var prop in props)
+        foreach (var table in tables)
         {
-            var value = prop.GetValue(recObj)?.ToString();
-            if (!string.IsNullOrEmpty(value))
+            var match = table(showId);
+            if (match != null)
             {
-                recs.Add(value);
+                var recTitles = GetRecsFromObj(match);
+                if (recTitles.Count > 0)
+                {
+                    var fullMovies = _context.MoviesTitles
+                        .Where(m => recTitles.Contains(m.Title))
+                        .ToList();
+
+                    recommendationsByShowId[showId] = fullMovies;
+                }
+
+                break; 
             }
         }
-
-        return recs;
     }
+
+    return Ok(recommendationsByShowId);
+}
+
+
+private List<string> GetRecsFromObj(object recObj)
+{
+    var recs = new List<string>();
+
+    var props = recObj.GetType().GetProperties()
+        .Where(p => p.Name.StartsWith("Recommendation"));
+
+    foreach (var prop in props)
+    {
+        var value = prop.GetValue(recObj)?.ToString();
+        if (!string.IsNullOrEmpty(value))
+        {
+            recs.Add(value);
+        }
+    }
+
+    return recs;
+}
+
+
+private List<string> GetMoviesByUserId(string loginEmail)
+{
+    var user = _userContext.Where(x => x.email == loginEmail).FirstOrDefault();
+
+
+}
+
+
 }
 
