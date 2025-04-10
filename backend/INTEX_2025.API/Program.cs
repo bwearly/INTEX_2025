@@ -126,7 +126,7 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<IdentityUser>().RequireCors("AllowFrontend");
 
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
