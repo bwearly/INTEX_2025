@@ -166,29 +166,28 @@ namespace INTEX_2025.API.Controllers
         [HttpGet("Search")]
         [AllowAnonymous] // Optional: allow unauthenticated access for public search
         public IActionResult SearchMovies([FromQuery] string query)
-{
+        {
         if (string.IsNullOrWhiteSpace(query))
-        return BadRequest("Search query cannot be empty.");
+            return BadRequest("Search query cannot be empty.");
 
         var loweredQuery = query.Trim().ToLower();
 
         var movies = _context.MoviesTitles
-        .Where(m => m.Title.ToLower().Contains(loweredQuery))
-        .Select(m => new
-        {
-            m.ShowId,
-            m.Title,
-            m.Director,
-            m.Cast,
-            m.ReleaseYear,
-            m.Rating,
-            m.Description
-        })
-        .ToList();
+            .Where(m => m.Title.ToLower().Contains(loweredQuery))
+            .Select(m => new
+            {
+                m.ShowId,
+                m.Title,
+                m.Director,
+                m.Cast,
+                m.ReleaseYear,
+                m.Rating,
+                m.Description
+            })
+            .ToList();
 
-    return Ok(movies);
-}
-
+            return Ok(movies);
+        }
 
         [HttpGet("GetGenres")]
         [AllowAnonymous] // Optional if your site requires login
@@ -201,30 +200,31 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(genreProperties);
         }
-[HttpGet("TvShows")]
-[AllowAnonymous] // Optional if your site requires login
-public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
-{
-    if (page < 1 || pageSize < 1)
-        return BadRequest("Page and pageSize must be greater than 0.");
 
-    var shows = _context.MoviesTitles
-        .Where(m => m.Type == "TV Show")
-        .OrderBy(m => m.ShowId)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
+        [HttpGet("TvShows")]
+        [AllowAnonymous] // Optional if your site requires login
+        public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
+        {
+            if (page < 1 || pageSize < 1)
+                return BadRequest("Page and pageSize must be greater than 0.");
 
-    var totalCount = _context.MoviesTitles.Count(m => m.Type == "TV Show");
+            var shows = _context.MoviesTitles
+                .Where(m => m.Type == "TV Show")
+                .OrderBy(m => m.ShowId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-    return Ok(new
-    {
-        TotalCount = totalCount,
-        CurrentPage = page,
-        PageSize = pageSize,
-        Movies = shows
-    });
-}
+            var totalCount = _context.MoviesTitles.Count(m => m.Type == "TV Show");
+
+            return Ok(new
+            {
+                TotalCount = totalCount,
+                CurrentPage = page,
+                PageSize = pageSize,
+                Movies = shows
+            });
+        }
 
         [Authorize]
         [HttpGet("me")]
@@ -247,5 +247,31 @@ public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSi
             });
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public IActionResult GetMovieById(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return BadRequest("Movie ID cannot be empty.");
+
+            var movie = _context.MoviesTitles
+                .Where(m => m.ShowId == id)
+                .Select(m => new
+                {
+                    m.ShowId,
+                    m.Title,
+                    m.Director,
+                    m.Cast,
+                    m.ReleaseYear,
+                    m.Rating,
+                    m.Description,
+                })
+                .FirstOrDefault();
+
+            if (movie == null)
+                return NotFound();
+
+            return Ok(movie);
+        }
     }
 }

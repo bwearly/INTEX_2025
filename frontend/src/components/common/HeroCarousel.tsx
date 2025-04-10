@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Movie } from '../../types/Movie';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroCarouselProps {
   movies: Movie[];
@@ -7,6 +8,7 @@ interface HeroCarouselProps {
 
 const HeroCarousel = ({ movies }: HeroCarouselProps) => {
   const [index, setIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Rotate every 5 seconds
   useEffect(() => {
@@ -24,20 +26,19 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
 
   return (
     <div
-    style={{
-      backgroundImage: `url(${bgImage})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center top',
-      backgroundSize: 'contain', // <— key line to shrink
-      height: '70vh',
-      width: '100%',
-      backgroundColor: '#000', // fallback for letterboxing
-      position: 'relative',
-      padding: '2rem',
-      display: 'flex',
-      alignItems: 'flex-end',
-    }}
-    
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center top',
+        backgroundSize: 'contain', // <— key line to shrink
+        height: '70vh',
+        width: '100%',
+        backgroundColor: '#000', // fallback for letterboxing
+        position: 'relative',
+        padding: '2rem',
+        display: 'flex',
+        alignItems: 'flex-end',
+      }}
     >
       <div
         style={{
@@ -57,8 +58,12 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
         <p style={{ color: '#aaa', fontSize: '0.9rem' }}>
           {featured.releaseYear} | Rating: {featured.rating}
         </p>
-        <button className="btn btn-light btn-sm me-2">▶ Play</button>
-        <button className="btn btn-outline-light btn-sm">More Info</button>
+        <button
+          className="btn btn-outline-light btn-sm"
+          onClick={() => navigate(`/movie/${featured.showId}`)}
+        >
+          More Info
+        </button>
       </div>
     </div>
   );

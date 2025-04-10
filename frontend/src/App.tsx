@@ -14,6 +14,7 @@ import TvShowsPage from './pages/TvShowsPage';
 import SettingsPage from './pages/SettingsPage';
 import PrivacyPolicy from './components/common/PrivacyPolicy';
 import AuthorizeView from './components/auth/AuthorizeView';
+import MovieDetailsPage from './components/common/MovieDetails';
 
 function App() {
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
           <Route path="/tv" element={<TvShowsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/movie/:id" element={<MovieDetailsPage />} />
         </Routes>
       </AuthorizeView>
       <CookieConsent

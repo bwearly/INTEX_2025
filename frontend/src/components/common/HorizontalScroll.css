@@ -4,22 +4,17 @@
 }
 
 .movie-row-container {
-  position: relative;
-  overflow: visible; /* ✅ allow hover to break out */
-  padding-top: 3rem;
-  margin-bottom: 7rem; /* increased spacing for zoom effect */
-  min-height: 400px; /* allows space above for pop-out */
-  z-index: 1;
+  min-height: 200px;
 }
 
 .horizontal-scroll-container {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  overflow-y: visible; /* ✅ allow vertical overflow */
   gap: 1rem;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
+  padding-top: 1rem;
   padding-bottom: 1rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -42,8 +37,8 @@
 }
 
 .movie-card:hover {
-  transform: scale(1.5) translateY(-20px);
-  z-index: 100; /* ensure it floats above everything */
+  transform: scale(1.05);
+  z-index: 2;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
 }
 
@@ -58,21 +53,19 @@
 /* SCROLL BUTTONS */
 .scroll-btn {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 30%;
+  background-color: #00000099;
   color: white;
-  font-size: 1.5rem;
+  font-size: 5rem;
   border: none;
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
   cursor: pointer;
   z-index: 1000;
   display: none;
 }
 
 .group:hover .scroll-btn {
-  display: block;
+  display: inline-block;
 }
 
 .scroll-btn-left {
@@ -83,7 +76,8 @@
   right: 0;
 }
 
+.movie-row-wrapper,
+.movie-row-container,
 .overflow-visible-wrapper {
-  overflow: visible; /* 🔥 crucial to allow break out on hover */
-  position: relative;
+  overflow: visible;
 }
