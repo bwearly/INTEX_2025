@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react'; // Removed useRef
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI'; // Adjust API import path
 import { Movie } from '../../types/Movie'; // Adjust type import path
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm'; // Adjust component path
@@ -7,21 +7,20 @@ import MovieRow from '../../components/common/MovieRow'; // Adjust component pat
 import FilterDropdown from '../../components/common/GenreFilter'; // Adjust component path
 import '../../components/common/crud stuff/MovieForm.css'; // Ensure CSS is linked
 
-// --- Configuration ---
+// Configuration (Original Load Limit)
 const INITIAL_LOAD_LIMIT = 200; // Load up to 200 movies initially
 
 const ManageMoviesPage: React.FC = () => {
-  // State needed
+  // Original State
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true); // Only need initial loading state
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [netflixView, setNetflixView] = useState(false);
   const [sortAsc, setSortAsc] = useState(true);
-  // Filters state remains
   const [filters, setFilters] = useState({
-    genres: [] as string[], // Expecting zero or one genre from FilterDropdown
+    genres: [] as string[],
     director: null as string | null,
     type: null as string | null,
     year: null as string | null,
@@ -29,9 +28,15 @@ const ManageMoviesPage: React.FC = () => {
     title: '',
   });
 
-  // Removed lazy loading state
+  // Mount/Unmount Logging (Optional - kept for debugging if needed)
+  useEffect(() => {
+    console.log('%cManageMoviesPage Component MOUNTED', 'color: gray;');
+    return () => {
+      console.warn('%cManageMoviesPage Component UNMOUNTED', 'color: orange;');
+    };
+  }, []);
 
-  // --- Load Initial Movies Function ---
+  // --- Load Movies Function (Fetches initial batch ONLY) ---
   const loadMovies = useCallback(async () => {
     console.log(
       `loadMovies called: Fetching initial batch (limit ${INITIAL_LOAD_LIMIT})`
@@ -39,8 +44,8 @@ const ManageMoviesPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      // Fetch page 1, limit INITIAL_LOAD_LIMIT
-      const res = await fetchMovies(INITIAL_LOAD_LIMIT, 1, []); // Pass empty array for genres initially
+      // Fetch a single batch of movies (page 1, limit INITIAL_LOAD_LIMIT)
+      const res = await fetchMovies(INITIAL_LOAD_LIMIT, 1, []); // Pass filters if needed
 
       if (res && res.movies && Array.isArray(res.movies)) {
         console.log(`API returned ${res.movies.length} movies.`);
@@ -56,15 +61,15 @@ const ManageMoviesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // Empty dependency array means function is created once
+  }, []); // Empty dependency array
 
   // --- Initial Load Effect ---
   useEffect(() => {
     console.log('Initial load effect running...');
-    loadMovies(); // Load the initial batch
-  }, [loadMovies]); // Run when component mounts
+    loadMovies(); // Load movies on mount
+  }, [loadMovies]); // Run when component mounts or loadMovies changes
 
-  // --- Delete Function (Reloads movies) ---
+  // --- Delete Function (Reloads all movies) ---
   const handleDelete = async (id: string) => {
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
@@ -83,12 +88,9 @@ const ManageMoviesPage: React.FC = () => {
   // --- Filtering and Sorting (Client-side on the loaded batch) ---
   const filteredAndSortedMovies = movies
     .filter((movie) => {
-      // Check Genres: Does the movie object have a key matching the selected genre (if any) with a value of 1?
       const matchesGenres =
-        filters.genres.length === 0 || // Pass if no genre filter selected
-        (filters.genres[0] && (movie as any)[filters.genres[0]] === 1); // Check the single selected genre
-
-      // Other filters...
+        filters.genres.length === 0 ||
+        (filters.genres[0] && (movie as any)[filters.genres[0]] === 1);
       const matchesDirector =
         filters.director === null ||
         (filters.director === 'No Director' && !movie.director) ||
@@ -101,7 +103,6 @@ const ManageMoviesPage: React.FC = () => {
       const matchesTitle = movie.title
         .toLowerCase()
         .includes(filters.title.toLowerCase());
-
       return (
         matchesGenres &&
         matchesDirector &&
@@ -120,7 +121,6 @@ const ManageMoviesPage: React.FC = () => {
     const grouped: Record<string, Movie[]> = {};
     filteredAndSortedMovies.forEach((movie) => {
       Object.keys(movie).forEach((key) => {
-        // Basic check: is the key a property with value 1 (and not year/id)? Refine if needed.
         if (
           (movie as any)[key] === 1 &&
           typeof (movie as any)[key] === 'number' &&
@@ -131,7 +131,7 @@ const ManageMoviesPage: React.FC = () => {
         }
       });
     });
-    return grouped; // Ensure return statement is present
+    return grouped;
   };
 
   // --- JSX Rendering ---
@@ -166,9 +166,7 @@ const ManageMoviesPage: React.FC = () => {
           + Add Movie{' '}
         </button>
         <div className="d-flex align-items-center gap-3">
-          {/* Ensure FilterDropdown is rendered correctly ONCE */}
           <FilterDropdown
-            // Pass the originally loaded movies (or filteredAndSortedMovies if filters should affect dropdown options)
             allMovies={movies}
             filters={filters}
             setFilters={setFilters}
@@ -214,7 +212,10 @@ const ManageMoviesPage: React.FC = () => {
           ) : error ? (
             <p className="text-danger text-center mt-4">{error}</p>
           ) : movies.length === 0 ? (
-            <p className="text-center mt-4"> No movies found. </p> // Simplified message
+            <p className="text-center mt-4">
+              {' '}
+              No movies found matching your criteria.{' '}
+            </p>
           ) : (
             /* Render Table or Netflix View */
             <>
@@ -249,7 +250,6 @@ const ManageMoviesPage: React.FC = () => {
                         <th style={{ width: '160px' }}>Actions</th>
                       </tr>
                     </thead>
-                    {/* Make sure filteredAndSortedMovies is used here */}
                     <tbody>
                       {filteredAndSortedMovies.map((movie) => (
                         <tr key={movie.showId}>
