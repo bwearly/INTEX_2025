@@ -107,7 +107,7 @@ const ManageMoviesPage: React.FC = () => {
   return (
     <div className="bg-dark text-white min-h-screen px-5 py-5">
       <div className="d-flex justify-between align-items-center mb-4">
-        <h1 className="text-2xl font-bold">Admin - Movies</h1>
+        <h1 className="text-2xl font-bold">Admin Console</h1>
         <div className="form-check form-switch ms-auto d-flex align-items-center">
           <input
             className="form-check-input uk-switch"
