@@ -71,9 +71,11 @@ const ProfileDropdown = () => {
         <div
           style={{
             padding: '8px 16px',
-            color: '#e50914',
+            color: '#6C9CB0', // retro blue
             cursor: 'pointer',
           }}
+          onMouseOver={(e) => (e.currentTarget.style.color = '#50798d')}
+          onMouseOut={(e) => (e.currentTarget.style.color = '#6C9CB0')}
           onClick={() => {
             setIsClicked(false);
             handleLogout();

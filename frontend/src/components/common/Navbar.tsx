@@ -13,7 +13,6 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Close search when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -26,30 +25,30 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   }, []);
 
   const navItemStyle: React.CSSProperties = {
-    color: '#bbb',
+    color: '#6C9CB0', // changed to retro blue
     cursor: 'pointer',
     marginRight: '16px',
     fontWeight: 400,
     fontSize: '0.9rem',
     transition: 'color 0.2s ease-in-out',
   };
+  
 
   return (
     <AuthorizeView>
       <BootstrapNavbar
-        expand="lg"
-        fixed="top"
-        className="px-4 py-2"
-        style={{
-          backgroundColor: '#000',
-          borderBottom: '2px solid #111',
-          zIndex: 1000,
-        }}
-      >
-        <Container
-          fluid
-          className="d-flex justify-content-between align-items-center"
-        >
+  expand="lg"
+  fixed="top"
+  className="px-4 py-2"
+  style={{
+    backgroundColor: '#000000', // back to black
+    borderBottom: '2px solid #6C9CB0', // keep retro blue line
+    zIndex: 1000,
+  }}
+>
+
+      
+        <Container fluid className="d-flex justify-content-between align-items-center">
           {/* Logo */}
           <div className="d-flex align-items-center">
             <BootstrapNavbar.Brand
@@ -62,13 +61,21 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
               }}
             >
               <img
-                src={logo}
-                alt="CineNiche Logo"
-                style={{ height: '32px', width: '32px', objectFit: 'contain' }}
-              />
+  src={logo}
+  alt="CineNiche Logo"
+  style={{
+    height: '32px',
+    width: '32px',
+    objectFit: 'contain',
+    outline: 'none',       // <-- remove focus outline
+    boxShadow: 'none',     // <-- remove possible default shadows
+    border: 'none',        // <-- in case border is auto-applied
+  }}
+/>
+
               <span
                 style={{
-                  color: '#e50914',
+                  color: '#6C9CB0', // retro blue accent
                   fontWeight: 'bold',
                   fontSize: '20px',
                   letterSpacing: '1px',
@@ -81,10 +88,7 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             {/* Nav Links */}
             {!minimal && (
               <div className="d-flex align-items-center ms-4 gap-4">
-                <span
-                  style={navItemStyle}
-                  onClick={() => navigate('/myRatings')}
-                >
+                <span style={navItemStyle} onClick={() => navigate('/myRatings')}>
                   My List
                 </span>
                 <span style={navItemStyle} onClick={() => navigate('/tv')}>
@@ -99,10 +103,11 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
 
           {/* Search + Logout */}
           <div className="d-flex align-items-center gap-3" ref={searchRef}>
-            <FaSearch
-              style={{ color: 'white', cursor: 'pointer', fontSize: '1.2rem' }}
-              onClick={() => setShowSearch((prev) => !prev)}
-            />
+          <FaSearch
+  style={{ color: '#FFFFFF', cursor: 'pointer', fontSize: '1.2rem' }}
+  onClick={() => setShowSearch((prev) => !prev)}
+/>
+
             {showSearch && (
               <div style={{ width: '200px', marginLeft: '8px' }}>
                 <SearchBar />

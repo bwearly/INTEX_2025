@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Recommended from '../components/common/Recommended';
+import logo from '/logo1.png'; // Make sure this exists in /public or /src
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -38,9 +38,7 @@ function LoginPage() {
       });
 
       if (!response.ok) throw new Error('Invalid email or password.');
-      //my edits
       localStorage.setItem('email', email);
-      //<Recommended {email}/>
       navigate('/home');
     } catch (error: any) {
       setError(error.message || 'Error logging in.');
@@ -53,30 +51,69 @@ function LoginPage() {
       <style>
         {`
           input::placeholder {
-      color: white !important;
-      opacity: 1 !important;
+            color: #3D405B !important;
+            opacity: 1 !important;
+          }
         `}
       </style>
-      <div
-        style={{
-          backgroundImage: `url('/login-bg.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          minHeight: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <div className="login-page">
+  <div
+    style={{
+      backgroundImage: `url('/background.png')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      gap: '1rem',
+    }}
+  >
+    {/* logo, title, and login box go here */}
+  </div>
+</div>
+
+        {/* LOGO + TITLE */}
         <div
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            marginBottom: '1rem',
+          }}
+        >
+          <img
+            src={logo}
+            alt="CineNiche Logo"
+            style={{
+              height: '36px',
+              width: '36px',
+              objectFit: 'contain',
+            }}
+          />
+          <span
+            style={{
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              letterSpacing: '1px',
+              color: '#6C9CB0',
+            }}
+          >
+            CINENICHE
+          </span>
+        </div>
+
+        {/* LOGIN CARD */}
+        <div
+          style={{
+            backgroundColor: 'rgba(245, 230, 211, 0.9)',
             padding: '3rem',
-            borderRadius: '8px',
+            borderRadius: '10px',
             width: '100%',
             maxWidth: '350px',
-            color: 'white',
+            color: '#3D405B',
           }}
         >
           <h3 className="mb-4 text-center">Sign In</h3>
@@ -90,9 +127,9 @@ function LoginPage() {
                 value={email}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: '#F5E6D3',
+                  color: '#3D405B',
+                  border: '1px solid #6C9CB0',
                   fontSize: '0.9rem',
                 }}
               />
@@ -106,9 +143,9 @@ function LoginPage() {
                 value={password}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: '#333',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: '#F5E6D3',
+                  color: '#3D405B',
+                  border: '1px solid #6C9CB0',
                   fontSize: '0.9rem',
                 }}
               />
@@ -131,10 +168,11 @@ function LoginPage() {
                 className="btn btn-primary"
                 type="submit"
                 style={{
-                  backgroundColor: '#e50914',
+                  backgroundColor: '#6C9CB0',
                   border: 'none',
                   fontWeight: 'bold',
                   fontSize: '1rem',
+                  color: '#F5E6D3',
                 }}
               >
                 Sign in
@@ -146,9 +184,9 @@ function LoginPage() {
                 className="btn btn-secondary"
                 onClick={() => navigate('/register')}
                 style={{
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  color: 'white',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #6C9CB0',
+                  color: '#6C9CB0',
                   fontSize: '0.9rem',
                 }}
               >
@@ -156,9 +194,7 @@ function LoginPage() {
               </button>
             </div>
             {error && (
-              <p
-                style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
-              >
+              <p style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}>
                 {error}
               </p>
             )}
