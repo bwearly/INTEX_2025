@@ -10,10 +10,20 @@ const TvShowsPage = () => {
   const [genres, setGenres] = useState<string[]>([]);
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  // Initial guess of genres — we'll correct this after we log a real movie
+  const tvGenres = [
+    'fantasy',
+    'tvComedies',
+    'tvDramas',
+    'realityTV',
+    'talkShowsTvComedies',
+    'languageTVShows',
+    'spirituality',
+  ];
+
+
   const formatGenre = (genre: string) =>
-    genre
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, (str) => str.toUpperCase());
+    genre.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 
   const handleGenreJump = (genre: string) => {
     const section = genreRefs.current[genre];
