@@ -36,9 +36,24 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
+    // Set up claim types
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email; // Ensure email is stored in claims
+
+    // Password settings
+    options.Password.RequireDigit = true; // Requires at least one digit
+    options.Password.RequireUppercase = true; // Requires at least one uppercase letter
+    options.Password.RequiredLength = 12; // Minimum password length of 12 characters
+
+    // Lockout settings
+    options.Lockout.MaxFailedAccessAttempts = 5; // Allow 5 failed attempts
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10); // Lockout for 10 minutes after 5 failed attempts
+    options.Lockout.AllowedForNewUsers = true; // Enable lockout for new users
+
+    // User settings
+    options.User.RequireUniqueEmail = true; // Ensure emails are unique in the system
 });
+
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
 
@@ -83,7 +98,7 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(120);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.None;

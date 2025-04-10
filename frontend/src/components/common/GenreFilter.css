@@ -1,13 +1,17 @@
+/* --- GenreFilter.css - Consistent Styling with New Button Hover --- */
+
+/* Outer container for the button and dropdown */
 .genre-dropdown {
   display: inline-block;
   position: relative;
 }
 
+/* The main dropdown panel */
 .genre-dropdown-menu {
   position: absolute;
-  background-color: #1f2937 !important;
-  color: white !important;
-  border: 1px solid #4b5563;
+  background-color: #6c9cb0 !important; /* Panel background */
+  color: #f5e6d3 !important; /* Default text color (mostly overridden below) */
+  border: 2px solid #f5e6d3; /* Border around the panel */
   padding: 0.75rem;
   width: 300px;
   max-height: none;
@@ -15,90 +19,140 @@
   z-index: 999;
   border-radius: 6px;
   margin-top: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Soft shadow for depth */
 }
 
+/* Labels within the dropdown */
+.genre-dropdown-menu label.form-label,
 .genre-dropdown-menu label {
-  color: white !important;
+  /* Added fallback for non-bootstrap labels */
+  color: black !important; /* Label text color */
   font-size: 0.95rem;
+  font-weight: bold;
   display: inline-block;
   margin-bottom: 0.5rem;
+  padding: 2px 4px; /* Keep padding if you like the background effect */
   white-space: normal;
   word-break: break-word;
   line-height: 1.4;
   text-transform: capitalize;
 }
 
-.genre-dropdown-menu input[type='checkbox'] {
-  margin-right: 0.5rem;
-  accent-color: #ba0c2f;
-}
-
-.genre-dropdown-menu .form-check:hover {
-  background-color: #374151;
-  border-radius: 4px;
-}
-
+/* --- Consistent Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control,
 .genre-dropdown-menu select.form-select {
-  background-color: #1f2937;
-  color: white;
-  border: 1px solid #4b5563;
-  max-height: 200px;
-  overflow-y: auto;
-  position: relative;
-  z-index: 1000;
+  background-color: white;
+  color: black;
+  border: 2px solid #f1d2a8; /* Base border color */
+  border-radius: 4px;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem; /* Space below controls */
+  /* Add transition for smooth hover/focus effects */
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    outline 0.2s ease-in-out;
+  /* Remove browser default appearance for selects */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Custom dropdown arrow */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+/* Specific override for input type number to remove arrows if needed */
+.genre-dropdown-menu input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
+.genre-dropdown-menu input[type='number']::-webkit-outer-spin-button,
+.genre-dropdown-menu input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Safari/Chrome */
+  margin: 0;
 }
 
+/* --- Hover Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control:hover,
+.genre-dropdown-menu select.form-select:hover {
+  background-color: #faf5ed; /* Slightly off-white */
+  border-color: #d9bca0; /* Darker shade of the original border */
+  cursor: pointer;
+}
+
+/* --- Consistent Focus Styling for ALL Inputs & Selects --- */
+.genre-dropdown-menu input.form-control:focus,
 .genre-dropdown-menu select.form-select:focus {
-  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.5);
+  color: black;
+  background-color: #f5e6d3; /* Focus background */
+  border-color: #6c9cb0; /* Focus border */
+  outline: 3px solid #6c9cb0; /* Focus outline */
+  outline-offset: 0px;
+  box-shadow: none;
 }
 
-/* Scrollbar styling */
+/* --- Styling for Options within ALL Selects --- */
+.genre-dropdown-menu select.form-select option {
+  background-color: white;
+  color: black;
+  /* CRITICAL FOR WRAPPING: Needs white-space normal */
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  padding: 0.375rem 0.75rem;
+}
+/* Add hover effect for options */
+.genre-dropdown-menu select.form-select option:hover {
+  background-color: #f5e6d3; /* Option hover background */
+  color: black;
+}
+
+/* --- Scrollbar Styling (Webkit browsers) - Themed --- */
 .genre-dropdown-menu select.form-select::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  background-color: #f5e6d3; /* Scrollbar track matches focus background */
 }
 
 .genre-dropdown-menu select.form-select::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
+  background-color: #6c9cb0; /* Scrollbar handle matches panel background */
   border-radius: 4px;
+  border: 1px solid #f5e6d3; /* Border matches track */
+}
+.genre-dropdown-menu select.form-select::-webkit-scrollbar-thumb:hover {
+  background-color: #5a8396; /* Slightly darker handle on hover */
 }
 
-/* Ensures long text wraps in the dropdown */
-.genre-dropdown-menu select.form-select option {
-  white-space: normal; /* Allows text to wrap */
-  word-wrap: break-word; /* Break long words if necessary */
-  padding: 0.25rem 0.5rem;
-  background-color: #1f2937;
-  color: white;
+/* --- Filter Button Styling (Updated per latest request) --- */
+/* Target based on structure/bootstrap class */
+.genre-dropdown > .btn.dropdown-toggle {
+  background-color: #f5e6d3; /* NEW Requested background */
+  color: black; /* NEW Requested text color */
+  border: none; /* No border */
+  font-weight: bold;
+  padding: 0.4rem 0.8rem; /* Adjust padding as needed */
+  border-radius: 4px; /* Optional: match input radius */
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out; /* Smooth transition */
 }
-
-/* Specific styling for the director dropdown */
-.genre-dropdown-menu select.director-select {
-  background-color: #1f2937;
-  color: white;
-  border: 1px solid #4b5563;
-  max-height: 200px;
-  overflow-y: auto;
-  white-space: normal;
-  word-break: break-word;
-  font-size: 0.95rem;
-  line-height: 1.4;
+/* Hover and Focus */
+.genre-dropdown > .btn.dropdown-toggle:hover,
+.genre-dropdown > .btn.dropdown-toggle:focus {
+  background-color: #6c9cb0; /* NEW Requested hover/focus background */
+  color: white; /* Text color for dark background */
+  border: none; /* Ensure no border on hover/focus */
+  outline: none; /* Remove default outline */
 }
-
-/* Ensures long text in director dropdown options wraps */
-.genre-dropdown-menu select.director-select option {
-  white-space: normal; /* Allows text to wrap */
-  word-wrap: break-word; /* Break long words if necessary */
-  padding: 0.25rem 0.5rem;
-  background-color: #1f2937;
-  color: white;
+/* Style for the dropdown arrow within the button */
+.genre-dropdown > .btn.dropdown-toggle::after {
+  border-top-color: black; /* Arrow color in normal state */
+  transition: border-top-color 0.2s ease-in-out;
 }
-
-/* Scrollbar customization for director select */
-.genre-dropdown-menu select.director-select::-webkit-scrollbar {
-  width: 6px;
-}
-
-.genre-dropdown-menu select.director-select::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-  border-radius: 4px;
+.genre-dropdown > .btn.dropdown-toggle:hover::after,
+.genre-dropdown > .btn.dropdown-toggle:focus::after {
+  border-top-color: white; /* Arrow color on hover/focus */
 }
