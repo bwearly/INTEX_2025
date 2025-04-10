@@ -236,16 +236,21 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
 
 export const fetchMovieById = async (id: string): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/${id}`, {
+    // Use the correct GET request to fetch movie by ID
+    const response = await fetch(`${API_URL}/Movie/${id}`, {
       credentials: 'include',
     });
+
     if (!response.ok) {
       throw new Error('Failed to fetch movie details');
     }
+
     const data = await response.json();
+
+    // Return the movie with the poster URL
     return {
-      ...data,
-      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(data.title)}.jpg`,
+      ...data.movies[0], // Assuming the response contains an array of movies
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(data.movies[0].title)}.jpg`,
     };
   } catch (error) {
     console.error('Error fetching movie details:', error);

@@ -91,4 +91,10 @@ public class RecommendationsController : ControllerBase
 
         return Ok(showIds);
     }
+
+    [HttpGet("GetShowId")] public IActionResult GetShowId([FromQuery] string show_id)
+    { 
+        var rec = _recommendationContext.ShowRecommendations.FirstOrDefault(r => r.show_id == show_id);
+        return Ok(rec); 
+    }
 }

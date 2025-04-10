@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchMovieById } from '../../api/MoviesAPI';
-import { Movie } from '../../types/Movie';
 import { fetchYoutubeTrailer } from '../../api/YouTubeAPI';
 import StarRating from './StarRating';
 import MovieRow from './MovieRow';
 import {
-  recommenderMapByColumn,
   fetchMoviesByIds,
+  fetchShowRecommendationsById,
 } from '../../api/RecommenderAPI';
+import { Movie } from '../../types/Movie';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -35,47 +35,25 @@ const MovieDetailsPage = () => {
 
     const getMovie = async () => {
       try {
+        // Fetch the movie details using the movie ID
         const data = await fetchMovieById(id);
-        console.log('Fetched movie:', data);
         setMovie(data);
 
-        const genreKeys = Object.keys(recommenderMapByColumn);
-        const matchedGenreKeys = genreKeys.filter(
-          (key) => (data as any)[key] === 1
-        );
-        console.log('Matched genre keys:', matchedGenreKeys);
-
+        // Fetch the trailer for the movie
         setTimeout(async () => {
           const trailer = await fetchYoutubeTrailer(data.title);
-          console.log('Fetched trailer ID:', trailer);
           if (trailer) setTrailerId(trailer);
         }, 2000);
 
-        let allRecs: Movie[] = [];
+        // Fetch recommendations using the movie's showId
+        const recIds = await fetchShowRecommendationsById(data.showId);
+        const recs = await fetchMoviesByIds(recIds);
 
-        for (const key of matchedGenreKeys) {
-          if (recommenderMapByColumn[key]) {
-            try {
-              const ids = await recommenderMapByColumn[key](id);
-              const recs = await fetchMoviesByIds(ids);
-              console.log(`Fetched ${key} recommendations:`, recs);
-              allRecs.push(...recs);
-            } catch (recErr) {
-              console.error(`Error fetching ${key} recommendations:`, recErr);
-            }
-          }
-        }
-
-        const uniqueRecs = Array.from(
-          new Map(allRecs.map((m) => [m.showId, m])).values()
-        );
-
-        const filteredRecs = uniqueRecs.filter((m) => m.showId !== data.showId);
-        console.log('Final filtered recommendations:', filteredRecs);
-
-        setRecommended(filteredRecs);
+        // Filter out the current movie and limit to 5 recommendations
+        const filtered = recs.filter((m) => m.showId !== data.showId);
+        setRecommended(filtered.slice(0, 5));
       } catch (err) {
-        console.error('Error loading movie details:', err);
+        console.error('Error loading movie details or recommendations:', err);
       }
     };
 
@@ -118,6 +96,7 @@ const MovieDetailsPage = () => {
           margin: '0 auto',
         }}
       >
+        {/* Close Button */}
         <button
           onClick={() => navigate('/home')}
           style={{
@@ -137,6 +116,7 @@ const MovieDetailsPage = () => {
           &times;
         </button>
 
+        {/* Trailer or Poster */}
         <div style={{ width: '400px', minWidth: '400px' }}>
           {trailerId ? (
             <iframe
@@ -150,17 +130,17 @@ const MovieDetailsPage = () => {
             />
           ) : (
             <img
-  src={movie.posterUrl}
-  alt={movie.title}
-  style={{ width: '400px', borderRadius: '8px' }}
-  onError={(e) =>
-    ((e.target as HTMLImageElement).src = '/poster1.png')
-  }
-/>
-
+              src={movie.posterUrl}
+              alt={movie.title}
+              style={{ width: '400px', borderRadius: '8px' }}
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src = '/poster1.png')
+              }
+            />
           )}
         </div>
 
+        {/* Movie Info */}
         <div>
           <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
             {movie.title}
@@ -173,38 +153,34 @@ const MovieDetailsPage = () => {
               setRating={setRating}
             />
           </div>
-
           <p>
             <strong>Director:</strong> {movie.director}
           </p>
           <p>
-  <strong>Cast:</strong>{' '}
-  {movie.cast.includes(',')
-    ? movie.cast
-        .split(',')
-        .map((name) => name.trim())
-        .filter((name) => name.length > 0)
-        .join(', ')
-    : movie.cast
-        .split(' ')
-        .reduce((acc: string[], val, i, arr) => {
-          if (i % 2 === 0) {
-            acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
-          }
-          return acc;
-        }, [])
-        .join(', ')}
-</p>
-
-
-
-
+            <strong>Cast:</strong>{' '}
+            {movie.cast.includes(',')
+              ? movie.cast
+                  .split(',')
+                  .map((name) => name.trim())
+                  .filter((name) => name.length > 0)
+                  .join(', ')
+              : movie.cast
+                  .split(' ')
+                  .reduce((acc: string[], val, i, arr) => {
+                    if (i % 2 === 0) {
+                      acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
+                    }
+                    return acc;
+                  }, [] as string[])
+                  .join(', ')}
+          </p>
           <p>
             <strong>Description:</strong> {movie.description}
           </p>
         </div>
       </div>
 
+      {/* Recommended Shows */}
       {recommended.length > 0 && (
         <div className="w-full mt-8 mb-16 px-6">
           <MovieRow
