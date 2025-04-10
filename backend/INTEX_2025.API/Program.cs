@@ -126,6 +126,8 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+app.MapGet("/testcors", () => Results.Ok("CORS route works")).RequireCors("AllowFrontend");
+
 app.MapIdentityApi<IdentityUser>().RequireCors("AllowFrontend");
 
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
