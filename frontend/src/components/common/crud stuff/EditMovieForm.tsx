@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Movie } from '../../types/Movie';
-import { updateMovie } from '../../api/MoviesAPI';
+import { Movie } from '../../../types/Movie';
+import { updateMovie } from '../../../api/MoviesAPI';
+import './MovieForm.css';
 
 interface EditMovieFormProps {
   movie: Movie;
@@ -44,11 +45,7 @@ const genreOptions = [
 ];
 
 const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
-  const [formData, setFormData] = useState<Movie>({
-    ...movie,
-    showId: movie.showId || '',
-  });
-
+  const [formData, setFormData] = useState<Movie>({ ...movie });
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     genreOptions.filter((g) => formData[g as keyof Movie] === 1)
   );
@@ -56,10 +53,10 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'number' ? Number(value) : value,
     }));
   };
 
@@ -73,21 +70,13 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.showId || formData.showId.trim() === '') {
-      alert('ShowId is required.');
-      return;
-    }
-
     const genrePayload = genreOptions.reduce((acc, genre) => {
       acc[genre] = selectedGenres.includes(genre) ? 1 : 0;
       return acc;
     }, {} as any);
 
     try {
-      await updateMovie(formData.showId, {
-        ...formData,
-        ...genrePayload,
-      });
+      await updateMovie(formData.showId, { ...formData, ...genrePayload });
       onSuccess();
     } catch (err) {
       console.error('Error updating movie:', err);
@@ -96,121 +85,62 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        zIndex: 999,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'start',
-        overflowY: 'auto',
-        paddingTop: '8vh',
-        backdropFilter: 'blur(3px)',
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          backgroundColor: '#111',
-          borderRadius: '12px',
-          padding: '2rem',
-          color: 'white',
-          boxShadow: '0 0 20px rgba(0,0,0,0.6)',
-          maxWidth: '1000px',
-          width: '90%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          position: 'relative',
-        }}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onCancel}
-          type="button"
-          style={{
-            position: 'absolute',
-            top: '15px',
-            right: '15px',
-            fontSize: '1.5rem',
-            background: 'transparent',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-          }}
-        >
+    <div className="modal-overlay">
+      <form onSubmit={handleSubmit} className="movie-form">
+        <button type="button" onClick={onCancel} className="btn-close">
           &times;
         </button>
 
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Edit Movie</h2>
+        <h2>Edit Movie</h2>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '1rem',
-          }}
-        >
+        <div className="form-grid">
           <input
             name="title"
             placeholder="Title"
             value={formData.title}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="posterUrl"
             placeholder="Poster URL"
             value={formData.posterUrl}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="type"
             placeholder="Type"
             value={formData.type}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="director"
             placeholder="Director"
             value={formData.director}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="cast"
             placeholder="Cast"
             value={formData.cast}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="country"
             placeholder="Country"
             value={formData.country}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="rating"
             placeholder="Rating"
             value={formData.rating}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             name="duration"
             placeholder="Duration"
             value={formData.duration}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <input
             type="number"
@@ -218,14 +148,12 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
             placeholder="Release Year"
             value={formData.releaseYear}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2"
           />
           <textarea
             name="description"
             placeholder="Description"
             value={formData.description}
             onChange={handleChange}
-            className="bg-black text-white border rounded p-2 col-span-2"
             rows={4}
           />
         </div>
@@ -235,8 +163,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           multiple
           value={selectedGenres}
           onChange={handleGenreChange}
-          className="bg-black text-white border rounded p-2"
-          style={{ height: '200px' }}
+          className="genre-select"
         >
           {genreOptions.map((genre) => (
             <option key={genre} value={genre}>
@@ -245,18 +172,11 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           ))}
         </select>
 
-        <div className="flex gap-4 mt-4">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
+        <div className="form-actions">
+          <button type="submit" className="btn btn-submit">
             Update Movie
           </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-          >
+          <button type="button" onClick={onCancel} className="btn btn-cancel">
             Cancel
           </button>
         </div>

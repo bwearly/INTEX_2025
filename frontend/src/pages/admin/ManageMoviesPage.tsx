@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
-import NewMovieForm from '../../components/common/NewMovieForm';
-import EditMovieForm from '../../components/common/EditMovieForm';
+import NewMovieForm from '../../components/common/crud stuff/NewMovieForm';
+import EditMovieForm from '../../components/common/crud stuff/EditMovieForm';
 import MovieRow from '../../components/common/MovieRow';
 
 const ManageMoviesPage: React.FC = () => {
