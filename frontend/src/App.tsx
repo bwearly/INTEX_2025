@@ -19,21 +19,18 @@ import Footer from './components/common/Footer';
 function App() {
   const location = useLocation();
   const hideNavbar =
-    location.pathname === '/login' ||
-    location.pathname === '/' ||
-    location.pathname === '/register';
+    location.pathname === '/' || location.pathname === '/register';
   return (
     <>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
 
       {!hideNavbar && <Navbar />}
 
       <AuthorizeView>
         <Routes>
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<Home />} />
           <Route path="/admin/movies" element={<ManageMoviesPage />} />
           <Route path="/search" element={<SearchResult />} />
