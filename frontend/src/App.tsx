@@ -7,7 +7,7 @@ import RegisterPage from './components/common/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import CookieConsent from 'react-cookie-consent';
 import SearchResult from './components/common/SearchResult';
-import MyListPage from './pages/MyListPage';
+import MyListPage from './pages/MyRatingsPage';
 import MoviesPage from './pages/MoviesPage';
 import TvShowsPage from './pages/TvShowsPage';
 
@@ -15,6 +15,7 @@ import SettingsPage from './pages/SettingsPage';
 import PrivacyPolicy from './components/common/PrivacyPolicy';
 import AuthorizeView from './components/auth/AuthorizeView';
 import MovieDetailsPage from './components/common/MovieDetails';
+import MyRatingsPage from './pages/MyRatingsPage';
 
 function App() {
   const location = useLocation();
@@ -36,7 +37,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/admin/movies" element={<ManageMoviesPage />} />
           <Route path="/search" element={<SearchResult />} />
-          <Route path="/mylist" element={<MyListPage />} />
+          <Route path="/myRatings" element={<MyRatingsPage />} />
           <Route path="/movies" element={<MoviesPage />} />
           <Route path="/tv" element={<TvShowsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
