@@ -50,12 +50,8 @@ function App() {
       <CookieConsent
         enableDeclineButton
         declineButtonText="No thanks"
-        onDecline={() => {
-          console.log('User declined cookies');
-        }}
-        onAccept={() => {
-          console.log('User accepted cookies');
-        }}
+        onDecline={() => {}}
+        onAccept={() => {}}
       >
         We use cookies for ratings, sessions, and saving your preferences.
       </CookieConsent>
