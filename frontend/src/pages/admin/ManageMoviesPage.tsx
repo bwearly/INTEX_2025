@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback } from 'react'; // Removed useRef
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI'; // Adjust API import path
 import { Movie } from '../../types/Movie'; // Adjust type import path
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm'; // Adjust component path
@@ -7,14 +7,13 @@ import MovieRow from '../../components/common/MovieRow'; // Adjust component pat
 import FilterDropdown from '../../components/common/GenreFilter'; // Adjust component path
 import '../../components/common/crud stuff/MovieForm.css'; // Ensure CSS is linked
 
-// --- Configuration for Lazy Loading ---
-const INITIAL_LOAD_COUNT = 20; // Load 20 movies initially
-const SCROLL_LOAD_COUNT = 10; // Load 10 movies on subsequent scrolls
+// --- Configuration ---
+const INITIAL_LOAD_LIMIT = 200; // Load up to 200 movies initially
 
 const ManageMoviesPage: React.FC = () => {
-  // Existing State
+  // State needed
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true); // Loading state for initial page load
+  const [loading, setLoading] = useState(true); // Only need initial loading state
   const [error, setError] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -29,115 +28,46 @@ const ManageMoviesPage: React.FC = () => {
     title: '',
   });
 
-  // --- State Variables for Lazy Loading ---
-  const [page, setPage] = useState(1); // Track the current page number loaded
-  const [hasMore, setHasMore] = useState(true); // Flag to check if more movies can be loaded
-  const [loadingMore, setLoadingMore] = useState(false); // Loading state specifically for fetching more pages
+  // State variables for lazy loading are removed:
+  // page, hasMore, loadingMore, isLoadingMoreRef
 
-  // Ref to prevent fetching more while already fetching
-  const isLoadingMoreRef = useRef(loadingMore);
-  useEffect(() => {
-    isLoadingMoreRef.current = loadingMore;
-  }, [loadingMore]);
+  // --- Simplified Load Movies Function ---
+  const loadMovies = useCallback(async () => {
+    console.log(
+      `loadMovies called: Fetching initial batch (limit ${INITIAL_LOAD_LIMIT})`
+    );
+    setLoading(true);
+    setError(null);
+    try {
+      // Fetch a single batch of movies (page 1, limit INITIAL_LOAD_LIMIT)
+      // Pass filters [] for now, adjust if server-side filtering is needed
+      const res = await fetchMovies(INITIAL_LOAD_LIMIT, 1, []);
 
-  // --- Load Movies Function (Handles Pagination) ---
-  // Using the structure from the first working example
-  const loadMovies = useCallback(
-    async (currentPage: number, limit: number, currentMovies: Movie[] = []) => {
-      const isInitialLoad = currentPage === 1;
-      if (isInitialLoad) {
-        setLoading(true);
-        setError(null);
+      if (res && res.movies && Array.isArray(res.movies)) {
+        setMovies(res.movies); // Just set the movies, no appending
       } else {
-        // Prevent fetching if already loading more
-        if (loadingMore) return;
-        setLoadingMore(true);
+        console.warn('Invalid response or no movies array received.');
+        setMovies([]); // Set empty if invalid response
       }
-
-      try {
-        // *** Ensure fetchMovies API supports limit and currentPage ***
-        const res = await fetchMovies(limit, currentPage, []); // Pass filters if needed
-
-        if (res && res.movies && Array.isArray(res.movies)) {
-          // Added Array check
-          const newMovies = res.movies;
-          // Append new movies for pages > 1, set for page 1
-          setMovies(
-            isInitialLoad ? newMovies : [...currentMovies, ...newMovies]
-          );
-
-          // *** Adjust this logic based on your API response ***
-          setHasMore(newMovies.length === limit); // Assumes more if full page is returned
-          setPage(currentPage);
-        } else {
-          setHasMore(false);
-          if (isInitialLoad) setMovies([]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch movies:', err);
-        if (isInitialLoad) {
-          setError('Failed to load movies.');
-          setMovies([]);
-        } else {
-          console.error('Failed to load more movies.');
-          setHasMore(false); // Stop trying on error
-        }
-      } finally {
-        if (isInitialLoad) {
-          setLoading(false);
-        } else {
-          setLoadingMore(false);
-        }
-      }
-      // Dependency ensures we don't try to load more if already loading
-    },
-    [loadingMore]
-  );
+    } catch (err) {
+      console.error('Failed to fetch movies:', err);
+      setError('Failed to load movies.');
+      setMovies([]); // Clear movies on error
+    } finally {
+      setLoading(false);
+    }
+    // Dependencies can be empty if filters/sort aren't passed to API yet
+  }, []);
 
   // --- Initial Load Effect ---
   useEffect(() => {
-    setMovies([]);
-    setPage(1);
-    setHasMore(true);
-    loadMovies(1, INITIAL_LOAD_COUNT); // Load the first 20 movies
-    // Add dependencies (e.g., filters) if they should trigger a reload
-  }, [loadMovies]);
+    console.log('Initial load effect triggered');
+    loadMovies(); // Load the initial batch
+  }, [loadMovies]); // Run when component mounts or loadMovies changes
 
-  // --- Scroll Event Listener Effect ---
-  useEffect(() => {
-    const handleScroll = () => {
-      const threshold = 500; // Pixels from bottom
-      const nearBottom =
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - threshold;
+  // --- Scroll Event Listener Effect is REMOVED ---
 
-      // Use ref for immediate check of loading state
-      if (nearBottom && hasMore && !isLoadingMoreRef.current) {
-        console.log(
-          `Scroll Triggered: Loading page ${page + 1} (10 movies)...`
-        );
-        // *** Use SCROLL_LOAD_COUNT here, passing current movies ***
-        loadMovies(page + 1, SCROLL_LOAD_COUNT, movies);
-      }
-    };
-
-    let timeoutId: NodeJS.Timeout | null = null;
-    const debouncedHandleScroll = () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleScroll, 150); // Debounce delay
-    };
-
-    window.addEventListener('scroll', debouncedHandleScroll, { passive: true });
-
-    return () => {
-      // Cleanup
-      if (timeoutId) clearTimeout(timeoutId);
-      window.removeEventListener('scroll', debouncedHandleScroll);
-    };
-    // Dependencies - includes movies because handleScroll passes it to loadMovies
-  }, [hasMore, page, loadMovies, movies]);
-
-  // --- Delete Function ---
+  // --- Delete Function (Reloads all movies) ---
   const handleDelete = async (id: string) => {
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
@@ -146,21 +76,16 @@ const ManageMoviesPage: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this movie?')) return;
     try {
       await deleteMovie(id);
-      // Instead of full reload, remove locally (more responsive)
-      setMovies((prevMovies) =>
-        prevMovies.filter((movie) => movie.showId !== id)
-      );
-      // Optional: Could check if movies.length is now very small and trigger loadMovies if hasMore
+      loadMovies(); // Reload the list after delete
     } catch (err) {
       console.error('Error deleting movie:', err);
       alert('Failed to delete movie. Please try again.');
     }
   };
 
-  // --- Filtering and Sorting (Client-side) ---
+  // --- Filtering and Sorting (Client-side on the loaded batch) ---
   const filteredAndSortedMovies = movies
     .filter((movie) => {
-      // ... (your filter logic) ...
       const matchesGenres =
         filters.genres.length === 0 ||
         filters.genres.some((genre) => (movie as any)[genre] === 1);
@@ -191,13 +116,13 @@ const ManageMoviesPage: React.FC = () => {
 
   // --- Grouping by Genre (Client-side) ---
   const groupByGenre = (): Record<string, Movie[]> => {
-    // ... (your grouping logic) ...
     const grouped: Record<string, Movie[]> = {};
     filteredAndSortedMovies.forEach((movie) => {
       Object.keys(movie).forEach((key) => {
         if (
           (movie as any)[key] === 1 &&
-          typeof (movie as any)[key] === 'number'
+          typeof (movie as any)[key] === 'number' &&
+          !['releaseYear', 'showId'].includes(key)
         ) {
           if (!grouped[key]) grouped[key] = [];
           grouped[key].push(movie);
@@ -239,6 +164,7 @@ const ManageMoviesPage: React.FC = () => {
           + Add Movie{' '}
         </button>
         <div className="d-flex align-items-center gap-3">
+          {/* Pass 'movies' to FilterDropdown if it needs the full list for options */}
           <FilterDropdown
             allMovies={movies}
             filters={filters}
@@ -257,22 +183,23 @@ const ManageMoviesPage: React.FC = () => {
       {/* --- Add/Edit Forms --- */}
       {showAddForm && (
         <div className="my-4 p-4 border border-secondary rounded bg-dark shadow-lg">
-          {' '}
+          {/* Call simple loadMovies on success */}
           <NewMovieForm
             onSuccess={() => {
               setShowAddForm(false);
-              loadMovies(1, INITIAL_LOAD_COUNT);
+              loadMovies();
             }}
             onCancel={() => setShowAddForm(false)}
-          />{' '}
+          />
         </div>
       )}
       {selectedMovie && !showAddForm && (
+        // Call simple loadMovies on success
         <EditMovieForm
           movie={selectedMovie}
           onSuccess={() => {
             setSelectedMovie(null);
-            loadMovies(1, INITIAL_LOAD_COUNT);
+            loadMovies();
           }}
           onCancel={() => setSelectedMovie(null)}
         />
@@ -308,16 +235,7 @@ const ManageMoviesPage: React.FC = () => {
                       />
                     )
                   )}
-                  {/* Loading More / End Indicators */}
-                  {loadingMore && (
-                    <p className="text-center mt-4">Loading more movies...</p>
-                  )}
-                  {!loadingMore && !hasMore && movies.length > 0 && (
-                    <p className="text-center mt-4 text-secondary">
-                      {' '}
-                      You've reached the end!{' '}
-                    </p>
-                  )}
+                  {/* Removed loadingMore/hasMore indicators */}
                 </div>
               ) : (
                 /* Table View */
@@ -364,16 +282,7 @@ const ManageMoviesPage: React.FC = () => {
                       ))}
                     </tbody>
                   </table>
-                  {/* Loading More / End Indicators */}
-                  {loadingMore && (
-                    <p className="text-center mt-4">Loading more movies...</p>
-                  )}
-                  {!loadingMore && !hasMore && movies.length > 0 && (
-                    <p className="text-center mt-4 text-secondary">
-                      {' '}
-                      You've reached the end!{' '}
-                    </p>
-                  )}
+                  {/* Removed loadingMore/hasMore indicators */}
                 </div>
               )}
             </>
