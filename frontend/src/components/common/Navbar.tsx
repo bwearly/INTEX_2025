@@ -90,12 +90,7 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
                 <span style={navItemStyle} onClick={() => navigate('/movies')}>
                   Movies
                 </span>
-                <span
-                  style={navItemStyle}
-                  onClick={() => navigate('/categories')}
-                >
-                  Categories
-                </span>
+                
               </div>
             )}
           </div>
