@@ -89,4 +89,8 @@ h4 {
   .carousel-inner img {
     height: 300px;
   }
+  .login-page {
+    background-color: transparent !important;
+  }
+  
 }
