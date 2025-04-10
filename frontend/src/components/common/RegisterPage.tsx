@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '/logo1.png';
-
 function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'email') setEmail(value);
     if (name === 'password') setPassword(value);
     if (name === 'confirmPassword') setConfirmPassword(value);
   };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password || !confirmPassword) {
@@ -41,7 +38,6 @@ function Register() {
         });
     }
   };
-
   return (
     <>
       <style>
@@ -52,7 +48,6 @@ function Register() {
           }
         `}
       </style>
-
       <div
         className="register-page"
         style={{
@@ -93,7 +88,6 @@ function Register() {
             CINENICHE
           </span>
         </div>
-
         {/* Register Card */}
         <div
           style={{
@@ -155,7 +149,6 @@ function Register() {
                 }}
               />
             </div>
-
             <div className="d-grid mb-2">
               <button
                 className="btn btn-primary"
@@ -187,7 +180,9 @@ function Register() {
               </button>
             </div>
             {error && (
-              <p style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}>
+              <p
+                style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
+              >
                 {error}
               </p>
             )}
@@ -197,5 +192,4 @@ function Register() {
     </>
   );
 }
-
 export default Register;
