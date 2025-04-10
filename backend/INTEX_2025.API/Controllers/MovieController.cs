@@ -20,6 +20,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("AllMovies")]
+        [Authorize]
         public IActionResult GetMovies([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
         {
             if (page < 1 || pageSize < 1)
@@ -43,6 +44,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpPost("Rate")]
+        [Authorize]
         public IActionResult RateMovie([FromBody] RateMovieDto dto)
         {
             if (string.IsNullOrEmpty(dto.ShowId) || dto.Rating < 1 || dto.Rating > 5)
@@ -62,6 +64,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("Rating/{ShowId}")]
+        [Authorize]
         public IActionResult GetRatingFromSession(string showId)
         {
             var key = $"rating:{showId}";
@@ -77,6 +80,7 @@ namespace INTEX_2025.API.Controllers
 
 
         [HttpGet("GetEntertainmentType")]
+        [Authorize]
         public IActionResult GetEntertainmentType()
         {
             var entertainmentType = _context.MoviesTitles.Select(X => X.Type).Distinct().ToList();
@@ -190,6 +194,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("GetGenres")]
+        [Authorize]
         public IActionResult GetGenres()
         {
             var genreProperties = typeof(MoviesTitle).GetProperties()
@@ -201,6 +206,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("TvShows")]
+        [Authorize]
         public IActionResult GetTvShows([FromQuery] int page = 1, [FromQuery] int pageSize = 100)
         {
             if (page < 1 || pageSize < 1)
@@ -245,6 +251,7 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetMovieById(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -266,6 +273,7 @@ namespace INTEX_2025.API.Controllers
 
 
         [HttpPost("ByIds")]
+        [Authorize]
         public IActionResult GetMoviesByIds([FromBody] List<string> ids)
         {
             if (ids == null || !ids.Any())
