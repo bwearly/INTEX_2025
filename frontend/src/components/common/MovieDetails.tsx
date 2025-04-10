@@ -143,8 +143,27 @@ const MovieDetailsPage = () => {
             <strong>Director:</strong> {movie.director}
           </p>
           <p>
-            <strong>Cast:</strong> {movie.cast}
-          </p>
+  <strong>Cast:</strong>{' '}
+  {movie.cast.includes(',')
+    ? movie.cast
+        .split(',')
+        .map((name) => name.trim())
+        .filter((name) => name.length > 0)
+        .join(', ')
+    : movie.cast
+        .split(' ')
+        .reduce((acc: string[], val, i, arr) => {
+          if (i % 2 === 0) {
+            acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
+          }
+          return acc;
+        }, [])
+        .join(', ')}
+</p>
+
+
+
+
           <p>
             <strong>Description:</strong> {movie.description}
           </p>
