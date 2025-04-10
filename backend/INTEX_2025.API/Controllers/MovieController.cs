@@ -9,7 +9,6 @@ namespace INTEX_2025.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
     public class MovieController : ControllerBase
     {
         private MoviesDbContext _context;
