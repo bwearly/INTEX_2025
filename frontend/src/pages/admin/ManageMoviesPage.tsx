@@ -31,7 +31,6 @@ const ManageMoviesPage: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    console.log('Attempting to delete movie with ID:', id);
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
       return;

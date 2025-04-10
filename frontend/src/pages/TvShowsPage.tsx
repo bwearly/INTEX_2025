@@ -19,21 +19,15 @@ const TvShowsPage = () => {
     'languageTVShows',
     'spirituality',
   ];
-  
 
   const formatGenre = (genre: string) =>
-    genre
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, (str) => str.toUpperCase());
+    genre.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 
   useEffect(() => {
     const loadShows = async () => {
       try {
         const res = await fetchTvShows(200, 1);
         setTvShows(res.movies);
-
-        // ✅ Debug one TV show's fields
-        console.log('Sample TV Show:', res.movies[0]);
       } catch (err) {
         console.error('Failed to load TV shows:', err);
       } finally {

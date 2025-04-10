@@ -33,7 +33,6 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
         if (!response.ok) throw new Error('Failed to fetch recommended movies');
 
         const data: RecommendationMap = await response.json();
-        console.log('Fetched grouped recommended movies:', data);
 
         setRecommendedMovies(data);
       } catch (error) {
