@@ -1,16 +1,13 @@
 import React from 'react';
 import { Movie } from '../../types/Movie';
 import { useNavigate } from 'react-router-dom';
-
 interface MovieCardProps {
   movie: Movie;
   onClick?: (movie: Movie) => void;
   onDelete?: (id: string) => void;
 }
-
 const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
   const navigate = useNavigate();
-
   const handleClick = () => {
     if (onClick) {
       onClick(movie);
@@ -18,7 +15,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
       navigate(`/movie/${movie.showId}`);
     }
   };
-
   return (
     <div
       className="movie-card"
@@ -35,6 +31,4 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
     </div>
   );
 };
-
 export default MovieCard;
-

@@ -1,10 +1,13 @@
 import { Movie } from '../types/Movie';
+
 interface FetchMoviesResponse {
   movies: Movie[];
   totalNumMovies: number;
 }
+
 const API_URL = 'https://localhost:5000/Movie';
 const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
+
 // Fetch movies with pagination and genre filtering
 export const fetchMovies = async (
   pageSize: number,
@@ -40,6 +43,35 @@ export const fetchMovies = async (
     throw error;
   }
 };
+
+// Search for movies by title
+export const searchMovies = async (query: string): Promise<Movie[]> => {
+  try {
+    const response = await fetch(
+      `https://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
+      {
+        credentials: 'include',
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`Search failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // 👇 Use the exact movie title as filename
+    const moviesWithPosters = data.map((movie: Movie) => ({
+      ...movie,
+      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
+    }));
+
+    return moviesWithPosters;
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    throw error;
+  }
+};
+
 export const rateMovie = async (
   showId: string,
   rating: number
@@ -53,6 +85,7 @@ export const rateMovie = async (
     body: JSON.stringify({ showId, rating }),
   });
 };
+
 export const getMovieRating = async (
   showId: string
 ): Promise<number | null> => {
@@ -67,6 +100,7 @@ export const getMovieRating = async (
   const data = await response.json();
   return data.rating;
 };
+
 export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
@@ -84,6 +118,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
     throw error;
   }
 };
+
 export const updateMovie = async (
   showId: string,
   updatedMovie: Movie
@@ -101,6 +136,7 @@ export const updateMovie = async (
   }
   return await response.json();
 };
+
 // Delete a movie
 export const deleteMovie = async (showId: string): Promise<void> => {
   try {
@@ -114,37 +150,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
     throw error;
   }
 };
-// Search for movies by title
-export const searchMovies = async (query: string): Promise<Movie[]> => {
-  try {
-    const response = await fetch(
-      `https://localhost:5000/Movie/Search?query=${encodeURIComponent(query)}`,
-      {
-        credentials: 'include',
-      }
-    );
-    if (!response.ok) {
-      throw new Error(`Search failed: ${response.statusText}`);
-    }
-    const data = await response.json();
-    const AZURE_BLOB_URL =
-      'https://cinanicheposters.blob.core.windows.net/posters';
-    const moviesWithPosters = data.map((movie: Movie) => ({
-      ...movie,
-      posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(
-        movie.title
-          .toLowerCase()
-          .replace(/[^\w\s]/gi, '') // remove punctuation
-          .replace(/\s+/g, '')      // remove whitespace
-          .trim()
-      )}.jpg`
-    }));
-    return moviesWithPosters;
-  } catch (error) {
-    console.error('Error searching movies:', error);
-    throw error;
-  }
-};
+
 // Fetch available genres from backend
 export const fetchGenres = async (): Promise<string[]> => {
   try {
@@ -161,6 +167,7 @@ export const fetchGenres = async (): Promise<string[]> => {
     return [];
   }
 };
+
 // :white_check_mark: Fetch TV Shows only
 export const fetchTvShows = async (
   pageSize: number,
@@ -190,6 +197,7 @@ export const fetchTvShows = async (
     throw error;
   }
 };
+
 export async function getCurrentUser() {
   const response = await fetch(`${API_URL}/me`, {
     method: 'GET',
@@ -200,10 +208,11 @@ export async function getCurrentUser() {
   }
   return await response.json();
 }
+
 // Fetch recommended movies for the logged-in user
 export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
   try {
-    const email = localStorage.getItem('userEmail'); // :point_left: ensure this is set at login
+    const email = localStorage.getItem('userEmail');
     const response = await fetch(
       `https://localhost:5000/api/YourControllerName/GetUserRecommendations?email=${encodeURIComponent(email ?? '')}`,
       {
@@ -214,7 +223,6 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
       throw new Error('Failed to fetch recommended movies');
     }
     const data = await response.json();
-    // Optional: add poster URLs using your blob storage
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
@@ -225,6 +233,7 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
     return [];
   }
 };
+
 export const fetchMovieById = async (id: string): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/${id}`, {
@@ -243,18 +252,3 @@ export const fetchMovieById = async (id: string): Promise<Movie> => {
     throw error;
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
