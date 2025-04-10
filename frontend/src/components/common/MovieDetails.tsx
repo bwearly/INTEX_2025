@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchMovieById } from '../../api/MoviesAPI';
-import { Movie } from '../../types/Movie';
 import { fetchYoutubeTrailer } from '../../api/YouTubeAPI';
 import StarRating from './StarRating';
+import MovieRow from './MovieRow';
+import {
+  fetchMoviesByIds,
+  fetchShowRecommendationsById,
+} from '../../api/RecommenderAPI';
+import { Movie } from '../../types/Movie';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -11,8 +16,8 @@ const MovieDetailsPage = () => {
 
   const [movie, setMovie] = useState<Movie | null>(null);
   const [trailerId, setTrailerId] = useState<string | null>(null);
-
   const [rating, setRating] = useState<number>(0);
+  const [recommended, setRecommended] = useState<Movie[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -30,16 +35,25 @@ const MovieDetailsPage = () => {
 
     const getMovie = async () => {
       try {
+        // Fetch the movie details using the movie ID
         const data = await fetchMovieById(id);
         setMovie(data);
 
-        // Delay before fetching the trailer
+        // Fetch the trailer for the movie
         setTimeout(async () => {
           const trailer = await fetchYoutubeTrailer(data.title);
           if (trailer) setTrailerId(trailer);
         }, 2000);
+
+        // Fetch recommendations using the movie's showId
+        const recIds = await fetchShowRecommendationsById(data.showId);
+        const recs = await fetchMoviesByIds(recIds);
+
+        // Filter out the current movie and limit to 5 recommendations
+        const filtered = recs.filter((m) => m.showId !== data.showId);
+        setRecommended(filtered.slice(0, 5));
       } catch (err) {
-        console.error('Error loading movie:', err);
+        console.error('Error loading movie details or recommendations:', err);
       }
     };
 
@@ -62,8 +76,9 @@ const MovieDetailsPage = () => {
         justifyContent: 'center',
         alignItems: 'start',
         overflowY: 'auto',
-        paddingTop: '8vh',
+        paddingTop: '16vh',
         backdropFilter: 'blur(3px)',
+        flexDirection: 'column',
       }}
     >
       <div
@@ -78,11 +93,12 @@ const MovieDetailsPage = () => {
           color: 'white',
           boxShadow: '0 0 20px rgba(0,0,0,0.6)',
           position: 'relative',
+          margin: '0 auto',
         }}
       >
         {/* Close Button */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/home')}
           style={{
             position: 'absolute',
             top: '15px',
@@ -114,14 +130,13 @@ const MovieDetailsPage = () => {
             />
           ) : (
             <img
-  src={movie.posterUrl}
-  alt={movie.title}
-  style={{ width: '400px', borderRadius: '8px' }}
-  onError={(e) =>
-    ((e.target as HTMLImageElement).src = '/poster1.png')
-  }
-/>
-
+              src={movie.posterUrl}
+              alt={movie.title}
+              style={{ width: '400px', borderRadius: '8px' }}
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src = '/poster1.png')
+              }
+            />
           )}
         </div>
 
@@ -138,18 +153,43 @@ const MovieDetailsPage = () => {
               setRating={setRating}
             />
           </div>
-
           <p>
             <strong>Director:</strong> {movie.director}
           </p>
           <p>
-            <strong>Cast:</strong> {movie.cast}
+            <strong>Cast:</strong>{' '}
+            {movie.cast.includes(',')
+              ? movie.cast
+                  .split(',')
+                  .map((name) => name.trim())
+                  .filter((name) => name.length > 0)
+                  .join(', ')
+              : movie.cast
+                  .split(' ')
+                  .reduce((acc: string[], val, i, arr) => {
+                    if (i % 2 === 0) {
+                      acc.push(val + (arr[i + 1] ? ' ' + arr[i + 1] : ''));
+                    }
+                    return acc;
+                  }, [] as string[])
+                  .join(', ')}
           </p>
           <p>
             <strong>Description:</strong> {movie.description}
           </p>
         </div>
       </div>
+
+      {/* Recommended Shows */}
+      {recommended.length > 0 && (
+        <div className="w-full mt-8 mb-16 px-6">
+          <MovieRow
+            title="Shows Like This"
+            movies={recommended}
+            onClick={(movie) => navigate(`/movie/${movie.showId}`)}
+          />
+        </div>
+      )}
     </div>
   );
 };

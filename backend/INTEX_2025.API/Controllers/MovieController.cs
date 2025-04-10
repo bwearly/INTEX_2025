@@ -248,30 +248,38 @@ namespace INTEX_2025.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
-        public IActionResult GetMovieById(string id)
+        public async Task<IActionResult> GetMovieById(string id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                return BadRequest("Movie ID cannot be empty.");
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("No ID provided");
+            }
 
-            var movie = _context.MoviesTitles
-                .Where(m => m.ShowId == id)
-                .Select(m => new
-                {
-                    m.ShowId,
-                    m.Title,
-                    m.Director,
-                    m.Cast,
-                    m.ReleaseYear,
-                    m.Rating,
-                    m.Description,
-                })
-                .FirstOrDefault();
+            var movie = await _context.MoviesTitles
+                .FirstOrDefaultAsync(m => m.ShowId == id);
 
             if (movie == null)
-                return NotFound();
+            {
+                return NotFound($"Movie with ShowId {id} not found");
+            }
 
-            return Ok(movie);
+            return Ok(new { Movies = new[] { movie } });
+        }
+
+
+
+        [HttpPost("ByIds")]
+        [AllowAnonymous] // if needed for home page
+        public IActionResult GetMoviesByIds([FromBody] List<string> ids)
+        {
+            if (ids == null || !ids.Any())
+                return BadRequest("No IDs provided");
+
+            var matched = _context.MoviesTitles
+                .Where(m => ids.Contains(m.ShowId))
+                .ToList();
+
+            return Ok(new { Movies = matched });
         }
     }
 }
