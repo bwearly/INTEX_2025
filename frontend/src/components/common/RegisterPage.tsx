@@ -23,11 +23,14 @@ function Register() {
       setError('Passwords do not match.');
     } else {
       setError('');
-      fetch('https://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+      fetch(
+        'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/register',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      )
         .then((data) => {
           if (data.ok) setError('Successful registration. Please log in.');
           else setError('Error registering.');
@@ -168,7 +171,7 @@ function Register() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid #6C9CB0',

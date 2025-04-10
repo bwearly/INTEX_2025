@@ -7,12 +7,13 @@ import MovieRow from '../../components/common/MovieRow'; // Adjust component pat
 import FilterDropdown from '../../components/common/GenreFilter'; // Adjust component path
 import '../../components/common/crud stuff/MovieForm.css'; // Ensure CSS is linked
 
-// No pagination constants needed
+// Configuration (Original Load Limit)
+const INITIAL_LOAD_LIMIT = 200; // Load up to 200 movies initially
 
 const ManageMoviesPage: React.FC = () => {
-  // State needed
+  // Original State
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true); // Only need initial loading state
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -27,22 +28,28 @@ const ManageMoviesPage: React.FC = () => {
     title: '',
   });
 
-  // Removed all lazy loading state (page, hasMore, loadingMore, isLoadingMoreRef)
+  // Mount/Unmount Logging (Optional - kept for debugging if needed)
+  useEffect(() => {
+    console.log('%cManageMoviesPage Component MOUNTED', 'color: gray;');
+    return () => {
+      console.warn('%cManageMoviesPage Component UNMOUNTED', 'color: orange;');
+    };
+  }, []);
 
-  // --- Load ALL Movies Function ---
+  // --- Load Movies Function (Fetches initial batch ONLY) ---
   const loadMovies = useCallback(async () => {
-    console.log('loadMovies called: Fetching ALL movies...');
+    console.log(
+      `loadMovies called: Fetching initial batch (limit ${INITIAL_LOAD_LIMIT})`
+    );
     setLoading(true);
     setError(null);
     try {
-      // Attempt to fetch all movies by requesting a very large page size on page 1
-      // NOTE: Adjust limit if your API has a max page size or a better way to fetch all
-      const VERY_LARGE_LIMIT = 10000;
-      const res = await fetchMovies(VERY_LARGE_LIMIT, 1, []); // Fetch page 1, limit 10000
+      // Fetch a single batch of movies (page 1, limit INITIAL_LOAD_LIMIT)
+      const res = await fetchMovies(INITIAL_LOAD_LIMIT, 1, []); // Pass filters if needed
 
       if (res && res.movies && Array.isArray(res.movies)) {
         console.log(`API returned ${res.movies.length} movies.`);
-        setMovies(res.movies); // Set the full list
+        setMovies(res.movies);
       } else {
         console.warn('Invalid response or no movies array received.');
         setMovies([]);
@@ -54,15 +61,13 @@ const ManageMoviesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // Empty dependency array means function is created once
+  }, []); // Empty dependency array
 
   // --- Initial Load Effect ---
   useEffect(() => {
     console.log('Initial load effect running...');
-    loadMovies(); // Load all movies on mount
-  }, [loadMovies]); // Run when component mounts
-
-  // --- Scroll Event Listener Effect is REMOVED ---
+    loadMovies(); // Load movies on mount
+  }, [loadMovies]); // Run when component mounts or loadMovies changes
 
   // --- Delete Function (Reloads all movies) ---
   const handleDelete = async (id: string) => {
@@ -73,20 +78,19 @@ const ManageMoviesPage: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this movie?')) return;
     try {
       await deleteMovie(id);
-      loadMovies(); // Reload the *entire* list after delete
+      loadMovies(); // Reload the list after delete
     } catch (err) {
       console.error('Error deleting movie:', err);
       alert('Failed to delete movie. Please try again.');
     }
   };
 
-  // --- Filtering and Sorting (Client-side on the FULL list) ---
-  // This logic remains the same, but now operates on potentially all movies
+  // --- Filtering and Sorting (Client-side on the loaded batch) ---
   const filteredAndSortedMovies = movies
     .filter((movie) => {
       const matchesGenres =
         filters.genres.length === 0 ||
-        filters.genres.some((genre) => (movie as any)[genre] === 1);
+        (filters.genres[0] && (movie as any)[filters.genres[0]] === 1);
       const matchesDirector =
         filters.director === null ||
         (filters.director === 'No Director' && !movie.director) ||
@@ -162,7 +166,6 @@ const ManageMoviesPage: React.FC = () => {
           + Add Movie{' '}
         </button>
         <div className="d-flex align-items-center gap-3">
-          {/* FilterDropdown now gets potentially all movies */}
           <FilterDropdown
             allMovies={movies}
             filters={filters}
@@ -181,7 +184,6 @@ const ManageMoviesPage: React.FC = () => {
       {/* --- Add/Edit Forms --- */}
       {showAddForm && (
         <div className="my-4 p-4 border border-secondary rounded bg-dark shadow-lg">
-          {/* Call simple loadMovies on success */}
           <NewMovieForm
             onSuccess={() => {
               setShowAddForm(false);
@@ -192,7 +194,6 @@ const ManageMoviesPage: React.FC = () => {
         </div>
       )}
       {selectedMovie && !showAddForm && (
-        // Call simple loadMovies on success
         <EditMovieForm
           movie={selectedMovie}
           onSuccess={() => {
@@ -207,7 +208,7 @@ const ManageMoviesPage: React.FC = () => {
       {!selectedMovie && !showAddForm && (
         <>
           {loading ? (
-            <p className="text-center mt-4">Loading movies...</p> // Only initial loading indicator needed
+            <p className="text-center mt-4">Loading movies...</p>
           ) : error ? (
             <p className="text-danger text-center mt-4">{error}</p>
           ) : movies.length === 0 ? (
@@ -233,7 +234,7 @@ const ManageMoviesPage: React.FC = () => {
                       />
                     )
                   )}
-                  {/* Lazy loading indicators removed */}
+                  {/* No lazy loading indicators */}
                 </div>
               ) : (
                 /* Table View */
@@ -280,7 +281,7 @@ const ManageMoviesPage: React.FC = () => {
                       ))}
                     </tbody>
                   </table>
-                  {/* Lazy loading indicators removed */}
+                  {/* No lazy loading indicators */}
                 </div>
               )}
             </>
