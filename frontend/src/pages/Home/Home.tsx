@@ -69,7 +69,7 @@ const Home: React.FC = () => {
         setSelectedGenres(genres);
 
         const watchedRes = await fetch(
-          'https://localhost:5000/api/Recommendations/GetWatchedTitles',
+          'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api/Recommendations',
           { credentials: 'include' }
         );
         const watchedIds: string[] = await watchedRes.json();
