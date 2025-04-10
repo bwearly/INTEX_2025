@@ -44,7 +44,7 @@ function App() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/recommended" element={<Recommended />} />
-          <Route path="/movie/:id" element={<MovieDetailsPage />} />
+          <Route path="/Movie/:id" element={<MovieDetailsPage />} />
         </Routes>
       </AuthorizeView>
 

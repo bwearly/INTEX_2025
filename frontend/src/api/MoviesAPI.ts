@@ -237,7 +237,7 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
 export const fetchMovieById = async (id: string): Promise<Movie> => {
   try {
     // Use the correct GET request to fetch movie by ID
-    const response = await fetch(`${API_URL}/Movie/${id}`, {
+    const response = await fetch(`${API_URL}/${id}`, {
       credentials: 'include',
     });
 
