@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchMovieById } from '../../api/MoviesAPI';
 import { Movie } from '../../types/Movie';
 import { fetchYoutubeTrailer } from '../../api/YouTubeAPI';
+import StarRating from './StarRating';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -10,6 +11,19 @@ const MovieDetailsPage = () => {
 
   const [movie, setMovie] = useState<Movie | null>(null);
   const [trailerId, setTrailerId] = useState<string | null>(null);
+
+  const [rating, setRating] = useState<number>(0);
+
+  useEffect(() => {
+    if (id) {
+      const match = document.cookie.match(
+        new RegExp(`(?:^|; )rating_${id}=([^;]*)`)
+      );
+      if (match) {
+        setRating(parseInt(match[1]));
+      }
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -112,9 +126,15 @@ const MovieDetailsPage = () => {
           <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
             {movie.title}
           </h1>
-          <p>
-            <strong>Rating:</strong> {movie.rating}
-          </p>
+          <div>
+            <strong>Your Rating:</strong>
+            <StarRating
+              movieId={id!}
+              currentRating={rating}
+              setRating={setRating}
+            />
+          </div>
+
           <p>
             <strong>Director:</strong> {movie.director}
           </p>
