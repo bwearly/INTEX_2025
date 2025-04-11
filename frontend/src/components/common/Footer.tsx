@@ -10,8 +10,8 @@ const Footer: React.FC = () => {
 
   const handlePrivacyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (isLoginPage) {
-      e.preventDefault(); // Prevent routing to /privacy
-      setShowModal(true); // Show modal
+      e.preventDefault();
+      setShowModal(true);
     }
   };
 
@@ -36,8 +36,7 @@ const Footer: React.FC = () => {
         </a>
       </footer>
 
-      {/* Modal only shows on login */}
-      {isLoginPage && showModal && (
+      {showModal && (
         <div
           style={{
             position: 'fixed',
@@ -45,7 +44,7 @@ const Footer: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -57,12 +56,12 @@ const Footer: React.FC = () => {
               backgroundColor: '#fff',
               padding: '2rem',
               borderRadius: '12px',
-              width: '90%',
-              maxWidth: '700px',
+              width: '95%',
+              maxWidth: '800px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
               position: 'relative',
               color: '#000',
-              maxHeight: '80vh',
-              overflowY: 'auto',
             }}
           >
             <button
@@ -74,14 +73,18 @@ const Footer: React.FC = () => {
                 background: 'none',
                 border: 'none',
                 fontSize: '1.5rem',
+                fontWeight: 'bold',
                 cursor: 'pointer',
+                color: '#000',
               }}
+              aria-label="Close Privacy Policy"
             >
               ×
             </button>
 
             <h2>Privacy Policy</h2>
             <p>Effective Date: April 2025</p>
+
             <p>
               At <strong>CineNiche</strong>, your privacy is important to us.
               This Privacy Policy explains how we collect, use, and protect your
@@ -90,6 +93,9 @@ const Footer: React.FC = () => {
             </p>
 
             <h3>1. Information We Collect</h3>
+            <p>
+              When you use CineNiche, we may collect the following information:
+            </p>
             <ul>
               <li>Your name and email address when you register an account</li>
               <li>
