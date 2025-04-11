@@ -11,7 +11,7 @@ const RECOMMENDER_API_URL =
   'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api';
 const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
 
-// Fetch movies with pagination and genre filtering
+// Fetch movies with pagination and optional genre filtering
 export const fetchMovies = async (
   pageSize: number,
   pageNum: number,
@@ -21,6 +21,7 @@ export const fetchMovies = async (
     const genreParams = selectedGenres
       .map((g) => `genres=${encodeURIComponent(g)}`)
       .join('&');
+
     const response = await fetch(
       `${API_URL}/AllMovies?pageSize=${pageSize}&page=${pageNum}${
         selectedGenres.length ? `&${genreParams}` : ''
@@ -29,14 +30,19 @@ export const fetchMovies = async (
         credentials: 'include',
       }
     );
+
     if (!response.ok) {
       throw new Error('Failed to fetch movies');
     }
+
     const data = await response.json();
+
+    // Attach poster URLs to each movie
     const moviesWithPosters = data.movies.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
     }));
+
     return {
       movies: moviesWithPosters,
       totalNumMovies: data.totalCount,
@@ -47,7 +53,7 @@ export const fetchMovies = async (
   }
 };
 
-// Search for movies by title
+// Search movies by title query
 export const searchMovies = async (query: string): Promise<Movie[]> => {
   try {
     const response = await fetch(
@@ -56,13 +62,14 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
         credentials: 'include',
       }
     );
+
     if (!response.ok) {
       throw new Error(`Search failed: ${response.statusText}`);
     }
 
     const data = await response.json();
 
-    // 👇 Use the exact movie title as filename
+    // Attach poster URLs to search results
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
@@ -75,6 +82,7 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
   }
 };
 
+// Submit a movie rating
 export const rateMovie = async (
   showId: string,
   rating: number
@@ -89,6 +97,7 @@ export const rateMovie = async (
   });
 };
 
+// Get the current user's rating for a specific movie
 export const getMovieRating = async (
   showId: string
 ): Promise<number | null> => {
@@ -101,6 +110,7 @@ export const getMovieRating = async (
   return data.rating;
 };
 
+// Add a new movie to the database
 export const addMovie = async (movie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/AddMovie`, {
@@ -119,6 +129,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
   }
 };
 
+// Update an existing movie's details
 export const updateMovie = async (
   showId: string,
   updatedMovie: Movie
@@ -137,7 +148,7 @@ export const updateMovie = async (
   return await response.json();
 };
 
-// Delete a movie
+// Delete a movie from the database
 export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${showId}`, {
@@ -151,7 +162,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   }
 };
 
-// Fetch available genres from backend
+// Retrieve available genres from the API
 export const fetchGenres = async (): Promise<string[]> => {
   try {
     const response = await fetch(`${API_URL}/GetGenres`, {
@@ -168,7 +179,7 @@ export const fetchGenres = async (): Promise<string[]> => {
   }
 };
 
-// :white_check_mark: Fetch TV Shows only
+// Fetch only TV shows with pagination
 export const fetchTvShows = async (
   pageSize: number,
   pageNum: number
@@ -183,11 +194,15 @@ export const fetchTvShows = async (
     if (!response.ok) {
       throw new Error('Failed to fetch TV shows');
     }
+
     const data = await response.json();
+
+    // Attach poster URLs to each show
     const showsWithPosters = data.movies.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
     }));
+
     return {
       movies: showsWithPosters,
       totalNumMovies: data.totalCount,
@@ -198,6 +213,7 @@ export const fetchTvShows = async (
   }
 };
 
+// Get the currently authenticated user
 export async function getCurrentUser() {
   const response = await fetch(`${API_URL}/me`, {
     method: 'GET',
@@ -209,7 +225,7 @@ export async function getCurrentUser() {
   return await response.json();
 }
 
-// Fetch recommended movies for the logged-in user
+// Fetch movie recommendations for the logged-in user
 export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
   try {
     const email = localStorage.getItem('userEmail');
@@ -222,11 +238,15 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
     if (!response.ok) {
       throw new Error('Failed to fetch recommended movies');
     }
+
     const data = await response.json();
+
+    // Attach poster URLs to recommendations
     const moviesWithPosters = data.map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
     }));
+
     return moviesWithPosters;
   } catch (error) {
     console.error('Error fetching recommended movies:', error);
@@ -234,9 +254,9 @@ export const fetchRecommendedMovies = async (): Promise<Movie[]> => {
   }
 };
 
+// Fetch movie details by ID
 export const fetchMovieById = async (id: string): Promise<Movie> => {
   try {
-    // Use the correct GET request to fetch movie by ID
     const response = await fetch(`${API_URL}/${id}`, {
       credentials: 'include',
     });
@@ -247,9 +267,9 @@ export const fetchMovieById = async (id: string): Promise<Movie> => {
 
     const data = await response.json();
 
-    // Return the movie with the poster URL
+    // Attach poster URL to the fetched movie
     return {
-      ...data.movies[0], // Assuming the response contains an array of movies
+      ...data.movies[0], // Assumes API returns an array with one movie
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(data.movies[0].title)}.jpg`,
     };
   } catch (error) {

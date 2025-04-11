@@ -9,6 +9,7 @@ interface EditMovieFormProps {
   onCancel: () => void;
 }
 
+// List of all possible genre keys used in the form
 const genreOptions = [
   'action',
   'adventure',
@@ -45,11 +46,15 @@ const genreOptions = [
 ];
 
 const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
+  // Prepopulate form state with existing movie data
   const [formData, setFormData] = useState<Movie>({ ...movie });
+
+  // Extract currently active genres from the movie
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
     genreOptions.filter((g) => formData[g as keyof Movie] === 1)
   );
 
+  // Handle text/number input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -60,6 +65,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     }));
   };
 
+  // Handle genre selection from multi-select dropdown
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(
       e.target.selectedOptions,
@@ -68,8 +74,11 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     setSelectedGenres(selected);
   };
 
+  // Submit updated movie data with selected genres
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Create genre fields as 0/1 booleans for payload
     const genrePayload = genreOptions.reduce((acc, genre) => {
       acc[genre] = selectedGenres.includes(genre) ? 1 : 0;
       return acc;
@@ -94,6 +103,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
         <h2>Edit Movie</h2>
 
         <div className="form-grid">
+          {/* Basic movie info inputs */}
           <input
             name="title"
             placeholder="Title"
@@ -158,6 +168,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           />
         </div>
 
+        {/* Genre selector */}
         <label className="font-semibold mt-4">Genres:</label>
         <select
           multiple
@@ -168,8 +179,8 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           {genreOptions.map((genre) => (
             <option key={genre} value={genre}>
               {genre
-                .replace(/([A-Z])/g, ' $1') // add space before capital letters
-                .replace(/^./, (char) => char.toUpperCase())}{' '}
+                .replace(/([A-Z])/g, ' $1') // Format camelCase to spaced words
+                .replace(/^./, (char) => char.toUpperCase())}
             </option>
           ))}
         </select>

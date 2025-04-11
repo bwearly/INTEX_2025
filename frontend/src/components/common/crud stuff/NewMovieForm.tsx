@@ -8,6 +8,7 @@ interface NewMovieFormProps {
   onCancel: () => void;
 }
 
+// All genre keys for dynamic multi-select handling
 const genreOptions = [
   'action',
   'adventure',
@@ -44,6 +45,7 @@ const genreOptions = [
 ];
 
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
+  // Form state with default values
   const [formData, setFormData] = useState<Partial<Movie>>({
     title: '',
     posterUrl: '',
@@ -59,6 +61,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
+  // Handle input field updates
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -69,6 +72,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     }));
   };
 
+  // Handle multi-select genre changes
   const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = Array.from(
       e.target.selectedOptions,
@@ -77,18 +81,18 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     setSelectedGenres(selected);
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Convert selected genres into 1/0 boolean fields
     const genrePayload = genreOptions.reduce((acc, genre) => {
       acc[genre] = selectedGenres.includes(genre) ? 1 : 0;
       return acc;
     }, {} as any);
 
     try {
-      const createdMovie = await addMovie({
-        ...formData,
-        ...genrePayload,
-      } as Movie);
+      await addMovie({ ...formData, ...genrePayload } as Movie);
       onSuccess();
     } catch (err) {
       console.error('Error adding movie:', err);
@@ -106,6 +110,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
         <h2>Add New Movie</h2>
 
         <div className="form-grid">
+          {/* Basic info inputs */}
           <input
             name="title"
             placeholder="Title"
@@ -170,6 +175,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
           />
         </div>
 
+        {/* Genre multi-select */}
         <label className="font-semibold mt-4">Genres:</label>
         <select
           multiple
@@ -181,7 +187,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             <option key={genre} value={genre}>
               {genre
                 .replace(/([A-Z])/g, ' $1')
-                .replace(/^./, (char) => char.toUpperCase())}{' '}
+                .replace(/^./, (char) => char.toUpperCase())}
             </option>
           ))}
         </select>

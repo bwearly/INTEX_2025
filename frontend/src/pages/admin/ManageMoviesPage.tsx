@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { fetchMovies, deleteMovie } from '../../api/MoviesAPI'; // Adjust API import path
-import { Movie } from '../../types/Movie'; // Adjust type import path
-import NewMovieForm from '../../components/common/crud stuff/NewMovieForm'; // Adjust component path
-import EditMovieForm from '../../components/common/crud stuff/EditMovieForm'; // Adjust component path
-import MovieRow from '../../components/common/MovieRow'; // Adjust component path
-import FilterDropdown from '../../components/common/GenreFilter'; // Adjust component path
-import '../../components/common/crud stuff/MovieForm.css'; // Ensure CSS is linked
+import { fetchMovies, deleteMovie } from '../../api/MoviesAPI';
+import { Movie } from '../../types/Movie';
+import NewMovieForm from '../../components/common/crud stuff/NewMovieForm';
+import EditMovieForm from '../../components/common/crud stuff/EditMovieForm';
+import MovieRow from '../../components/common/MovieRow';
+import FilterDropdown from '../../components/common/GenreFilter';
+import '../../components/common/crud stuff/MovieForm.css';
 
 // --- Configuration ---
 const INITIAL_LOAD_LIMIT = 200; // Load up to 200 movies initially
