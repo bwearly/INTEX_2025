@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { fetchMovies, deleteMovie } from '../../api/MoviesAPI'; // Adjust API import path
-// Assuming Movie type might have a genres array - adjust if needed!
-import { Movie } from '../../types/Movie'; // Adjust type import path if necessary
+import { Movie } from '../../types/Movie'; // Adjust type import path
 import NewMovieForm from '../../components/common/crud stuff/NewMovieForm'; // Adjust component path
 import EditMovieForm from '../../components/common/crud stuff/EditMovieForm'; // Adjust component path
 import MovieRow from '../../components/common/MovieRow'; // Adjust component path
@@ -30,7 +29,7 @@ const ManageMoviesPage: React.FC = () => {
     title: '',
   });
 
-  // Mount/Unmount Logging (Optional - kept for debugging if needed)
+  // Mount/Unmount Logging (Optional)
   useEffect(() => {
     console.log('%cManageMoviesPage Component MOUNTED', 'color: gray;');
     return () => {
@@ -72,6 +71,7 @@ const ManageMoviesPage: React.FC = () => {
 
   // --- Delete Function (Reloads movies) ---
   const handleDelete = async (id: string) => {
+    // ... (delete logic) ...
     if (!id || id.trim() === '') {
       alert('Invalid movie ID.');
       return;
@@ -89,16 +89,13 @@ const ManageMoviesPage: React.FC = () => {
   // --- Filtering and Sorting (Client-side on the loaded batch) ---
   const filteredAndSortedMovies = movies
     .filter((movie) => {
-      // --- Updated Genre Filter Logic ---
-      // Assumes movie object has a 'genres' array property (e.g., movie.genres = ["Action", "Drama"])
-      // Adjust 'movie.genres' if your property name is different!
-      const selectedGenreLower = filters.genres[0]; // The lowercase genre string from the filter state
+      // --- Reverted Genre Filter Logic ---
+      // Assumes movie object has properties named like lowercase genres (e.g., movie.action === 1)
+      const selectedGenreLower = filters.genres[0]; // e.g., 'action' or undefined
       const matchesGenres =
-        !selectedGenreLower || // Pass if 'All' genres selected (filters.genres is empty)
-        (movie.genres &&
-          Array.isArray(movie.genres) && // Check if movie.genres exists and is an array
-          movie.genres.some((g) => g.toLowerCase() === selectedGenreLower)); // Check if any genre in the movie's array matches (case-insensitive)
-      // --- End Updated Genre Filter Logic ---
+        !selectedGenreLower || // Pass if 'All' selected
+        (selectedGenreLower && (movie as any)[selectedGenreLower] === 1); // Check dynamic property === 1
+      // --- End Reverted Genre Filter Logic ---
 
       // Other filters...
       const matchesDirector =
@@ -114,9 +111,9 @@ const ManageMoviesPage: React.FC = () => {
         .toLowerCase()
         .includes(filters.title.toLowerCase());
 
-      // Optional: Log the filtering result for a specific movie if debugging
-      // if (movie.title === "Specific Movie Title") {
-      //    console.log(`Filtering "${movie.title}": Selected='${selectedGenreLower}', MovieGenres='${movie.genres?.join(',')}', Matches=${matchesGenres}`);
+      // Optional: Log filtering for debugging
+      // if (selectedGenreLower) { // Log only when a genre is selected
+      //     console.log(`Filtering "${movie.title}": Selected='${selectedGenreLower}', MovieHasFlag=${(movie as any)[selectedGenreLower] === 1}, Matches=${matchesGenres}`);
       // }
 
       return (
@@ -133,15 +130,12 @@ const ManageMoviesPage: React.FC = () => {
     );
 
   // --- Grouping by Genre (Client-side) ---
-  // This assumes your original logic for grouping was based on flag properties (e.g., movie.action=1)
-  // If filtering now relies on movie.genres array, this grouping might need adjustment too.
-  // Keeping original logic for now, but be aware it might not align with the new filter logic.
+  // This logic should match the movie structure (e.g., checking for value 1)
   const groupByGenre = (): Record<string, Movie[]> => {
     const grouped: Record<string, Movie[]> = {};
     filteredAndSortedMovies.forEach((movie) => {
       Object.keys(movie).forEach((key) => {
-        // Basic check: is the key a property with value 1 (and not year/id)? Refine if needed.
-        // This check might need updating if your movie structure uses an array for genres.
+        // Assuming genre keys have value 1
         if (
           (movie as any)[key] === 1 &&
           typeof (movie as any)[key] === 'number' &&
@@ -187,7 +181,6 @@ const ManageMoviesPage: React.FC = () => {
           + Add Movie{' '}
         </button>
         <div className="d-flex align-items-center gap-3">
-          {/* Ensure FilterDropdown is rendered correctly ONCE */}
           <FilterDropdown
             allMovies={movies}
             filters={filters}
@@ -206,13 +199,14 @@ const ManageMoviesPage: React.FC = () => {
       {/* --- Add/Edit Forms --- */}
       {showAddForm && (
         <div className="my-4 p-4 border border-secondary rounded bg-dark shadow-lg">
+          {' '}
           <NewMovieForm
             onSuccess={() => {
               setShowAddForm(false);
               loadMovies();
             }}
             onCancel={() => setShowAddForm(false)}
-          />
+          />{' '}
         </div>
       )}
       {selectedMovie && !showAddForm && (
@@ -234,13 +228,12 @@ const ManageMoviesPage: React.FC = () => {
           ) : error ? (
             <p className="text-danger text-center mt-4">{error}</p>
           ) : movies.length === 0 ? (
-            <p className="text-center mt-4"> No movies found. </p> // Simplified message
+            <p className="text-center mt-4"> No movies found. </p>
           ) : (
             /* Render Table or Netflix View */
             <>
               {netflixView /* Netflix View */ ? (
                 <div className="space-y-8">
-                  {/* This uses groupByGenre - make sure its logic matches movie structure */}
                   {Object.entries(groupByGenre()).map(
                     ([genre, genreMovies]) => (
                       <MovieRow
@@ -269,7 +262,7 @@ const ManageMoviesPage: React.FC = () => {
                         <th style={{ width: '160px' }}>Actions</th>
                       </tr>
                     </thead>
-                    {/* Ensure filteredAndSortedMovies is used here */}
+                    {/* Use filteredAndSortedMovies here */}
                     <tbody>
                       {filteredAndSortedMovies.map((movie) => (
                         <tr key={movie.showId}>
