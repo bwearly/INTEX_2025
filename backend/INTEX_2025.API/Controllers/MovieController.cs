@@ -1,4 +1,5 @@
-﻿using INTEX_2025.API.Data;
+﻿using System.Security.Claims;
+using INTEX_2025.API.Data;
 using INTEX_2025.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -285,6 +286,36 @@ namespace INTEX_2025.API.Controllers
 
             return Ok(new { Movies = matched });
         }
+
+        [HttpGet("UserProfile")]
+        [Authorize]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized(new { message = "User email not found in token." });
+            }
+
+            var movieUser = await _context.MoviesUsers
+                .FirstOrDefaultAsync(mu => mu.Email.ToLower() == email.ToLower());
+
+            if (movieUser == null)
+            {
+                return NotFound(new { message = "Movie user not found." });
+            }
+
+            var userProfileDto = new MovieUserDto
+            {
+                Name = movieUser.Name,
+                Age = (int)movieUser.Age,
+                Email = movieUser.Email,
+                Gender = movieUser.Gender,
+                City = movieUser.City
+            };
+
+            return Ok(userProfileDto);
+        }
     }
 
     [ApiController]
@@ -296,5 +327,14 @@ namespace INTEX_2025.API.Controllers
         {
             return Ok("CineNiche API is running 🚀");
         }
+    }
+
+    public class MovieUserDto
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }  // Adjust type if necessary
+        public string Email { get; set; }
+        public string Gender { get; set; }
+        public string City { get; set; }
     }
 }
