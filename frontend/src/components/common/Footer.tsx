@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.8)',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -53,7 +53,7 @@ const Footer: React.FC = () => {
         >
           <div
             style={{
-              backgroundColor: '#111827',
+              backgroundColor: '#111827', // dark mode panel
               color: '#f9fafb',
               padding: '2rem',
               borderRadius: '16px',
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
               maxHeight: '85vh',
               overflowY: 'auto',
               position: 'relative',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.7)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
             }}
           >
             <button
@@ -87,6 +87,7 @@ const Footer: React.FC = () => {
               Privacy Policy
             </h2>
             <p style={{ marginBottom: '1rem' }}>Effective Date: April 2025</p>
+
             <p>
               At <strong>CineNiche</strong>, your privacy is important to us.
               This Privacy Policy explains how we collect, use, and protect your
@@ -95,6 +96,9 @@ const Footer: React.FC = () => {
             </p>
 
             <h3>1. Information We Collect</h3>
+            <p>
+              When you use CineNiche, we may collect the following information:
+            </p>
             <ul>
               <li>Your name and email address when you register an account</li>
               <li>
