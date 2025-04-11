@@ -45,11 +45,11 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
         style={{
           position: 'absolute',
           bottom: '2rem',
-          left: '2rem',
+          left: 0,
+          right: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           padding: '1rem',
           borderRadius: '8px',
-          maxWidth: '90%',
         }}
       >
         <h1 style={{ fontWeight: 'bold', fontSize: '2rem' }}>
