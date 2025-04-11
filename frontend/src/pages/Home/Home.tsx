@@ -70,7 +70,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const res = await fetchMovies(100, 1, []);
+        const res = await fetchMovies(300, 1, []);
 
         setAllMovies(res.movies);
 
