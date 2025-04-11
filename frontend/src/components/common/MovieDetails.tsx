@@ -9,6 +9,7 @@ import {
   fetchShowRecommendationsById,
 } from '../../api/RecommenderAPI';
 import { Movie } from '../../types/Movie';
+import '../common/HorizontalScroll.css';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -64,14 +65,14 @@ const MovieDetailsPage = () => {
         top: 0,
         left: 0,
         width: '100vw',
-        height: '100vh',
+        minHeight: '100vh',
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         zIndex: 999,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'start',
         overflowY: 'auto',
-        paddingTop: '16vh',
+        paddingTop: '90px', // Gives space below fixed Navbar
         backdropFilter: 'blur(3px)',
         flexDirection: 'column',
       }}
@@ -87,6 +88,7 @@ const MovieDetailsPage = () => {
           boxShadow: '0 0 20px rgba(0,0,0,0.6)',
           position: 'relative',
           margin: '0 auto',
+          marginBottom: '3rem',
         }}
       >
         {/* Close Button */}
@@ -110,12 +112,12 @@ const MovieDetailsPage = () => {
         </button>
 
         {/* Poster + Info */}
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {/* Poster or Trailer */}
-          <div style={{ width: '400px', minWidth: '400px' }}>
+          <div style={{ width: '400px', minWidth: '300px' }}>
             {trailerId ? (
               <iframe
-                width="400"
+                width="100%"
                 height="600"
                 src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0`}
                 title="YouTube trailer"
@@ -127,7 +129,7 @@ const MovieDetailsPage = () => {
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
-                style={{ width: '400px', borderRadius: '8px' }}
+                style={{ width: '100%', borderRadius: '8px' }}
                 onError={(e) =>
                   ((e.target as HTMLImageElement).src = '/poster1.png')
                 }
@@ -136,7 +138,7 @@ const MovieDetailsPage = () => {
           </div>
 
           {/* Movie Info */}
-          <div>
+          <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
               {movie.title}
             </h1>
@@ -175,9 +177,9 @@ const MovieDetailsPage = () => {
           </div>
         </div>
 
-        {/* Moved here — OUTSIDE the flex container */}
+        {/* Recommendations */}
         {recommended.length > 0 && (
-          <div className="w-full mb-2 px-6" style={{ marginTop: '2rem' }}>
+          <div className="movie-row-wrapper" style={{ marginTop: '2.5rem' }}>
             <MovieRow
               title="Shows Like This"
               movies={recommended}

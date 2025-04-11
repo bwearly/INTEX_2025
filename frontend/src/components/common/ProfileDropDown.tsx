@@ -26,7 +26,7 @@ const ProfileDropdown = () => {
   }, []);
 
   const handleLogout = () => {
-    navigate('/login');
+    navigate('/');
   };
 
   return (

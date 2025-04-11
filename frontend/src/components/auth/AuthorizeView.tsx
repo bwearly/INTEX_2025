@@ -43,10 +43,13 @@ function AuthorizeView(props: { children: React.ReactNode }) {
       }
     }
 
-    fetchWithRetry('https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/pingauth', {
-      method: 'GET',
-      credentials: 'include',
-    });
+    fetchWithRetry(
+      'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/pingauth',
+      {
+        method: 'GET',
+        credentials: 'include',
+      }
+    );
   }, []);
 
   if (loading) {
@@ -59,7 +62,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
     );
   }
 
-  return <Navigate to="/login" />;
+  return <Navigate to="/" />;
 }
 
 export function AuthorizedUser(props: { value: string }) {
