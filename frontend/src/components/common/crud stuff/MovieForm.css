@@ -1,5 +1,4 @@
-/* MovieForm.css - Full code with Themed Toggle and Table */
-
+/* Modal Layout */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -16,8 +15,9 @@
   backdrop-filter: blur(3px);
 }
 
+/* Form Container */
 .movie-form {
-  background-color: #6c9cb0; /* bg-slate-800 equivalent */
+  background-color: #6c9cb0;
   border-radius: 12px;
   padding: 2rem;
   color: white;
@@ -36,12 +36,13 @@
   text-align: center;
 }
 
+/* Inputs */
 .movie-form input,
 .movie-form textarea,
 .movie-form select {
-  background-color: #232527; /* Dark input background */
+  background-color: #232527;
   color: white;
-  border: 1px solid #5c6065; /* Input border */
+  border: 1px solid #5c6065;
   border-radius: 6px;
   padding: 0.5rem;
   width: 100%;
@@ -64,9 +65,10 @@
 }
 
 .movie-form .genre-select {
-  height: 200px; /* Assuming this was for a multi-select */
+  height: 200px;
 }
 
+/* Buttons */
 .movie-form .form-actions {
   display: flex;
   gap: 1rem;
@@ -83,22 +85,15 @@
   transition: background-color 0.2s ease;
 }
 
-.movie-form .btn-submit {
-  background-color: #232527; /* Submit button background */
-  color: white;
-}
-
-.movie-form .btn-submit:hover {
-  background-color: #6b7280; /* Submit button hover */
-}
-
+.movie-form .btn-submit,
 .movie-form .btn-cancel {
-  background-color: #232527; /* Cancel button background */
+  background-color: #232527;
   color: white;
 }
 
+.movie-form .btn-submit:hover,
 .movie-form .btn-cancel:hover {
-  background-color: #6b7280; /* Cancel button hover */
+  background-color: #6b7280;
 }
 
 .movie-form .btn-close {
@@ -112,15 +107,12 @@
   cursor: pointer;
 }
 
-/* --- >>> Themed Toggle Switch Styles Start <<< --- */
-
-/* Base style for the switch track */
+/* Toggle Switch Styling */
 .form-check-input {
-  background-color: #ccc; /* Neutral background when off */
-  border: 1px solid #aaa; /* Neutral border when off */
+  background-color: #ccc;
+  border: 1px solid #aaa;
   cursor: pointer;
-  /* Keep Bootstrap's size/shape or customize */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23aaa'/%3e%3c/svg%3e"); /* Default knob color */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23aaa'/%3e%3c/svg%3e");
   transition:
     background-color 0.2s ease-in-out,
     border-color 0.2s ease-in-out,
@@ -128,41 +120,28 @@
     background-image 0.2s ease-in-out;
 }
 
-/* Style when the switch is checked (ON) */
 .form-check-input:checked {
-  background-color: #6c9cb0 !important; /* Theme blue-grey */
-  border-color: #6c9cb0 !important; /* Match background */
-  /* Change knob color to light theme color */
+  background-color: #6c9cb0 !important;
+  border-color: #6c9cb0 !important;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23f5e6d3'/%3e%3c/svg%3e");
 }
 
-/* Focus style (applies in both checked and unchecked state) */
 .form-check-input:focus {
-  border-color: #6c9cb0; /* Theme blue-grey border on focus */
+  border-color: #6c9cb0;
   outline: 0;
-  /* Focus ring using the light theme color */
   box-shadow: 0 0 0 0.25rem rgba(245, 230, 211, 0.5) !important;
 }
 
-/* Style for the label next to the switch */
 .form-check-label {
-  color: white; /* Keep white as page background is dark */
+  color: white;
   cursor: pointer;
-  margin-left: 0.5em; /* Adjust spacing */
+  margin-left: 0.5em;
 }
 
-/* Remove the uk-switch focus style if not needed */
-/* .uk-switch:focus {
-  box-shadow: 0 0 0 0.25rem rgba(186, 12, 47, 0.25);
-} */
-
-/* --- >>> Themed Toggle Switch Styles End <<< --- */
-
-/* Custom Button Styles */
+/* Custom Buttons */
 .btn-uk-custom {
-  /* Assuming this class is still relevant */
   background-color: white;
-  color: white; /* This might need adjustment if background is white */
+  color: white;
   border: none;
   font-weight: 600;
 }
@@ -170,11 +149,10 @@
   background-color: grey;
 }
 
-/* Delete Button (Inverse Style) */
 .btn-delete-custom {
-  background-color: #6c9cb0; /* Inverse background */
-  color: white; /* Inverse text color */
-  border: none; /* No border */
+  background-color: #6c9cb0;
+  color: white;
+  border: none;
   font-weight: 600;
   padding: 0.5rem 1.25rem;
   border-radius: 6px;
@@ -185,21 +163,20 @@
     color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
 }
-/* Hover and Focus states for delete button */
+
 .btn-delete-custom:hover,
 .btn-delete-custom:focus {
-  background-color: #f5e6d3; /* Inverse hover/focus background */
-  color: black; /* Inverse hover/focus text color */
-  border: none; /* Ensure no border */
-  box-shadow: none; /* Ensure no shadow */
-  outline: none; /* Remove default outline */
+  background-color: #f5e6d3;
+  color: black;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
-/* Add/Edit Button (Theme Style) */
 .btn-generic-yellow {
-  background-color: #f5e6d3; /* Theme background */
-  color: black; /* Theme text color */
-  border: none; /* No border */
+  background-color: #f5e6d3;
+  color: black;
+  border: none;
   font-weight: bold;
   padding: 0.5rem 1.25rem;
   border-radius: 6px;
@@ -210,99 +187,88 @@
     color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
 }
-/* Hover and Focus states for Add/Edit button */
+
 .btn-generic-yellow:hover,
 .btn-generic-yellow:focus {
-  background-color: #6c9cb0; /* Theme hover/focus background */
-  color: white; /* Text color for dark background */
-  border: none; /* Ensure no border */
-  box-shadow: none; /* Ensure no shadow */
-  outline: none; /* Remove default outline */
+  background-color: #6c9cb0;
+  color: white;
+  border: none;
+  box-shadow: none;
+  outline: none;
 }
 
-/* --- >>> Themed Custom Admin Table Styles Start <<< --- */
+/* Admin Table */
 .table-admin {
-  border-collapse: separate; /* Keep separate for border-radius */
+  border-collapse: separate;
   border-spacing: 0;
   width: 100%;
-  background-color: #3e5f70; /* Darker, desaturated version of panel blue */
-  border: 2px solid #6c9cb0; /* Use panel blue for main border */
+  background-color: #3e5f70;
+  border: 2px solid #6c9cb0;
   border-radius: 12px;
-  overflow: hidden; /* Clip content to rounded corners */
+  overflow: hidden;
   font-size: 0.95rem;
-  color: #f5e6d3; /* Default text color: light beige */
+  color: #f5e6d3;
 }
 
-/* Header Row */
 .table-admin thead th {
-  background-color: #6c9cb0; /* Panel blue for header */
-  color: white; /* White text for header */
+  background-color: #6c9cb0;
+  color: white;
   font-weight: 700;
   padding: 0.75rem 1rem;
-  /* Use light beige for header border */
   border-bottom: 2px solid #f5e6d3;
   text-align: center;
   vertical-align: middle;
 }
 
-/* Data Rows */
 .table-admin tbody td {
   padding: 0.75rem 1rem;
-  /* Use slightly lighter accent beige for row separator */
   border-bottom: 1px solid #f1d2a8;
-  color: #f5e6d3; /* Light beige text for cells */
+  color: #f5e6d3;
   vertical-align: middle;
   text-align: center;
-  transition: background-color 0.15s ease-in-out; /* Smooth hover */
+  transition: background-color 0.15s ease-in-out;
 }
 
-/* Remove bottom border on the very last row */
 .table-admin tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Hover effect */
 .table-admin tbody tr:hover {
-  background-color: #5a8396; /* Slightly lighter blue-grey on hover */
-  color: white; /* Ensure text stays readable on hover */
+  background-color: #5a8396;
+  color: white;
 }
 
-/* Rounded corners */
 .table-admin thead th:first-child {
   border-top-left-radius: 10px;
-} /* Adjusted for border */
+}
 .table-admin thead th:last-child {
   border-top-right-radius: 10px;
-} /* Adjusted for border */
+}
 .table-admin tbody tr:last-child td:first-child {
   border-bottom-left-radius: 10px;
-} /* Adjusted for border */
+}
 .table-admin tbody tr:last-child td:last-child {
   border-bottom-right-radius: 10px;
-} /* Adjusted for border */
-/* --- >>> Themed Custom Admin Table Styles End <<< --- */
+}
 
-/* --- Sort Button Styling (ManageMoviesPage) --- */
-/* NOTE: This selector is based on current structure and might break if structure changes. */
-/* Consider adding a specific class (e.g., "sort-button") to the button in TSX for robustness. */
+/* Sort Button Styling */
 .d-flex.align-items-center.gap-3 > .btn.btn-light {
-  background-color: #f5e6d3; /* Requested background */
-  color: black; /* Requested text color */
-  border: none; /* No border */
-  font-weight: bold; /* Make text bold like filter button */
-  padding: 0.4rem 0.8rem; /* Consistent padding with Filter button */
-  border-radius: 4px; /* Consistent radius */
+  background-color: #f5e6d3;
+  color: black;
+  border: none;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
   transition:
     background-color 0.2s ease-in-out,
     color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out; /* Smooth transition */
+    box-shadow 0.2s ease-in-out;
 }
-/* Hover and Focus */
+
 .d-flex.align-items-center.gap-3 > .btn.btn-light:hover,
 .d-flex.align-items-center.gap-3 > .btn.btn-light:focus {
-  background-color: #6c9cb0; /* Requested hover/focus background */
-  color: white; /* Text color for dark background */
-  border: none; /* Ensure no border on hover/focus */
-  /* Removed box-shadow from here as requested earlier */
-  outline: none; /* Remove default outline */
+  background-color: #6c9cb0;
+  color: white;
+  border: none;
+  outline: none;
 }

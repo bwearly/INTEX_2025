@@ -1,3 +1,4 @@
+// Fetch the YouTube trailer video ID for a given movie title
 export const fetchYoutubeTrailer = async (
   title: string
 ): Promise<string | null> => {
@@ -11,6 +12,7 @@ export const fetchYoutubeTrailer = async (
 
     if (!response.ok) throw new Error('Failed to fetch trailer');
 
+    // Return trimmed video ID from response
     const videoId = await response.text();
     return videoId.trim();
   } catch (err) {

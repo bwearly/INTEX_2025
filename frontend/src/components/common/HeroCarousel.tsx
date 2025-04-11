@@ -10,7 +10,7 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
 
-  // Rotate every 5 seconds
+  // Automatically cycle through movies every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % movies.length);
@@ -40,6 +40,7 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
         alignItems: 'flex-end',
       }}
     >
+      {/* Overlay content */}
       <div
         style={{
           position: 'absolute',

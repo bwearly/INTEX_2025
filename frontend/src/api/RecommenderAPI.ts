@@ -8,6 +8,7 @@ const API_URL =
 
 const AZURE_BLOB_URL = 'https://cinanicheposters.blob.core.windows.net/posters';
 
+// Fetch a list of recommended movie IDs for a given showId from a specific endpoint
 export async function fetchRecommendationIds(
   endpoint: string,
   showId: string
@@ -23,17 +24,18 @@ export async function fetchRecommendationIds(
 
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`❌ HTTP ${res.status}: ${text}`);
+      throw new Error(`HTTP ${res.status}: ${text}`);
     }
 
     const data = await res.json();
     return data.recommendations ?? [];
   } catch (error) {
-    console.error(`❌ Failed to fetch ${endpoint} recommendations:`, error);
+    console.error(`Failed to fetch ${endpoint} recommendations:`, error);
     return [];
   }
 }
 
+// Fetch detailed movie data for a list of show IDs
 export const fetchMoviesByIds = async (ids: string[]): Promise<Movie[]> => {
   try {
     const res = await fetch(`${API_URL}/ByIds`, {
@@ -53,23 +55,22 @@ export const fetchMoviesByIds = async (ids: string[]): Promise<Movie[]> => {
 
     const data = await res.json();
 
-    // ✅ Add poster URL using blob path
+    // Attach poster URLs for each movie
     return (data.movies ?? []).map((movie: Movie) => ({
       ...movie,
       posterUrl: `${AZURE_BLOB_URL}/${encodeURIComponent(movie.title)}.jpg`,
     }));
   } catch (err) {
-    console.error('❌ Failed to fetch movie details by IDs:', err);
+    console.error('Failed to fetch movie details by IDs:', err);
     return [];
   }
 };
 
-// Map using normalized keys (already lowercase, no "movies", "tvshows", etc.)
+// Maps genre keys to the appropriate recommendation endpoint
 export const recommenderMapByColumn: Record<
   string,
   (id: string) => Promise<string[]>
 > = {
-  // 🎬 Movies
   action: (id) => fetchRecommendationIds('GetMovieAction', id),
   adventure: (id) => fetchRecommendationIds('GetMovieAdventure', id),
   children: (id) => fetchRecommendationIds('GetMovieChildren', id),
@@ -92,7 +93,6 @@ export const recommenderMapByColumn: Record<
   spirituality: (id) => fetchRecommendationIds('GetMovieSpirituality', id),
   thrillers: (id) => fetchRecommendationIds('GetMovieThrillers', id),
 
-  // 📺 TV Shows
   tvshowaction: (id) => fetchRecommendationIds('GetTvShowAction', id),
   tvshowadventure: (id) => fetchRecommendationIds('GetTvShowAdventure', id),
   animeinternational: (id) =>
@@ -112,6 +112,7 @@ export const recommenderMapByColumn: Record<
   thriller: (id) => fetchRecommendationIds('GetTvShowThriller', id),
 };
 
+// Fetch all show-level recommendations for a single showId
 export async function fetchShowRecommendationsById(
   showId: string
 ): Promise<string[]> {
@@ -126,18 +127,19 @@ export async function fetchShowRecommendationsById(
 
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`❌ HTTP ${res.status}: ${text}`);
+      throw new Error(`HTTP ${res.status}: ${text}`);
     }
 
     const data = await res.json();
 
+    // Extract all keys starting with 'recommendation'
     const recKeys = Object.keys(data).filter((key) =>
       key.toLowerCase().startsWith('recommendation')
     );
 
     return recKeys.map((key) => data[key]).filter(Boolean);
   } catch (err) {
-    console.error('❌ Failed to fetch show recommendations:', err);
+    console.error('Failed to fetch show recommendations:', err);
     return [];
   }
 }

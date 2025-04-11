@@ -11,7 +11,7 @@ function Logout(props: { children: React.ReactNode }) {
         'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/logout',
         {
           method: 'POST',
-          credentials: 'include', // Ensure cookies are sent
+          credentials: 'include', // Include cookies for session
           headers: {
             'Content-Type': 'application/json',
           },
@@ -19,7 +19,7 @@ function Logout(props: { children: React.ReactNode }) {
       );
 
       if (response.ok) {
-        navigate('/');
+        navigate('/'); // Redirect to home after logout
       } else {
         console.error('Logout failed:', response.status);
       }

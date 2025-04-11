@@ -17,19 +17,17 @@ interface FilterDropdownProps {
   >;
 }
 
-// --- Helper function for text truncation ---
+// Truncate long display strings
 const truncateText = (
   text: string | null | undefined,
   maxLength: number
 ): string => {
   if (!text) return '';
-  if (text.length <= maxLength) {
-    return text;
-  }
+  if (text.length <= maxLength) return text;
   return text.substring(0, maxLength).trimEnd() + '...';
 };
 
-// --- Genre Formatting (Keep your existing functions) ---
+// Custom display labels for some genre keys
 const genreAliases: Record<string, string> = {
   animeseriesinternationaltvshows: 'Anime Series (Intl)',
   britishtvshowsdocuseriesinternationaltvshows: 'British TV Docuseries (Intl)',
@@ -47,16 +45,16 @@ const genreAliases: Record<string, string> = {
   documentariesinternationalmovies: 'International Documentaries',
 };
 
+// Format genre strings into readable labels
 const formatGenreLabel = (genre: string): string => {
-  if (!genre || typeof genre !== 'string' || genre.trim() === '') {
-    return 'Unknown Genre';
-  }
   const key = genre.replace(/[^a-zA-Z]/g, '').toLowerCase();
   if (!key) return 'Unknown Genre';
+
   const aliasMatch = Object.keys(genreAliases).find(
     (alias) => alias.toLowerCase() === key
   );
   if (aliasMatch) return genreAliases[aliasMatch];
+
   const wordBank = [
     'anime',
     'series',
@@ -85,8 +83,10 @@ const formatGenreLabel = (genre: string): string => {
     'reality',
     'spirituality',
   ];
+
   let remaining = key;
   const words: string[] = [];
+
   while (remaining.length > 0) {
     let match = '';
     wordBank.sort((a, b) => b.length - a.length);
@@ -100,19 +100,13 @@ const formatGenreLabel = (genre: string): string => {
       words.push(match.charAt(0).toUpperCase() + match.slice(1));
       remaining = remaining.slice(match.length);
     } else {
-      if (remaining.length > 0) {
-        words.push(remaining.charAt(0).toUpperCase() + remaining.slice(1));
-      }
-
+      words.push(remaining.charAt(0).toUpperCase() + remaining.slice(1));
       break;
     }
   }
-  if (words.length === 0) {
-    return genre.charAt(0).toUpperCase() + genre.slice(1);
-  }
-  return words.join(' • ');
+
+  return words.length > 0 ? words.join(' • ') : genre;
 };
-// --- End Genre Formatting ---
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({
   allMovies,
@@ -138,60 +132,38 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const TRUNCATE_LENGTH = 35;
 
   useEffect(() => {
-    // --- Fetch Genres ---
     const fetchGenres = async () => {
-      console.log('Attempting to fetch genres...');
       try {
-        // --- Make Fetch Request ---
-
         const res = await fetch(
           'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres',
-          {
-            method: 'GET',
-            credentials: 'include',
-          }
+          { method: 'GET', credentials: 'include' }
         );
 
-        console.log(`Genre fetch response status: ${res.status}`);
-
-        if (!res.ok) {
-          if (res.status === 401) {
-            console.error(
-              "Received 401 Unauthorized even with credentials: 'include'. The API likely requires an Authorization header or cookie/CORS setup is preventing cookie sending."
-            );
-          }
-          throw new Error(
-            `HTTP error! status: ${res.status} ${res.statusText}`
-          );
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
 
         const genresData = await res.json();
-        console.log('Genres fetched successfully:', genresData);
 
         if (Array.isArray(genresData)) {
-          const processedGenres = genresData
+          const processed = genresData
             .map((g: unknown) => String(g || '').toLowerCase())
-            .filter((g) => g !== '');
-          processedGenres.sort((a, b) => a.localeCompare(b));
-          setGenreOptions(processedGenres);
+            .filter((g) => g !== '')
+            .sort((a, b) => a.localeCompare(b));
+          setGenreOptions(processed);
         } else {
-          console.error('Genre data received is not an array:', genresData);
-          setGenreOptions([]);
+          console.error('Genre data is not an array:', genresData);
         }
       } catch (err) {
-        console.error('Failed to load genres (fetch error/catch block):', err);
-        setGenreOptions([]);
+        console.error('Genre fetch error:', err);
       }
     };
+
     fetchGenres();
 
-    // --- Extract Directors (Keep existing logic) ---
     const uniqueDirectors = Array.from(
       new Set(allMovies.map((m) => m.director).filter(Boolean))
     );
     setDirectors(['No Director', ...uniqueDirectors.sort()]);
 
-    // --- Click Outside Handler ---
     const clickOutside = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -204,7 +176,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     return () => document.removeEventListener('mousedown', clickOutside);
   }, [allMovies]);
 
-  // --- JSX Rendering ---
   return (
     <div className="position-relative genre-dropdown" ref={dropdownRef}>
       <button
@@ -218,7 +189,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
       {isOpen && (
         <div className="genre-dropdown-menu show p-3">
-          {/* Title Filter */}
+          {/* Title */}
           <div className="mb-3">
             <label htmlFor="title-filter" className="form-label text-white">
               Title
@@ -234,7 +205,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* Genres Filter */}
+          {/* Genres */}
           <div className="mb-3">
             <label htmlFor="genre-filter" className="form-label text-white">
               Genres
@@ -251,74 +222,48 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               }
             >
               <option value="">All</option>
-              {genreOptions.length === 0 && (
-                <option disabled>Loading genres...</option>
-              )}
-              {genreOptions.map((genreValue) => {
-                let displayLabel = 'Error';
-                try {
-                  displayLabel = formatGenreLabel(genreValue);
-                } catch (e) {
-                  console.error(`Error formatting genre "${genreValue}":`, e);
-                }
-                return (
-                  <option key={genreValue} value={genreValue}>
-                    {displayLabel}
-                  </option>
-                );
-              })}
+              {genreOptions.map((genre) => (
+                <option key={genre} value={genre}>
+                  {formatGenreLabel(genre)}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Director Filter */}
+          {/* Director */}
           <div className="mb-3">
             <label htmlFor="director-filter" className="form-label text-white">
               Director
             </label>
             <select
               id="director-filter"
-              name="director-filter"
-              className="form-select director-select"
+              className="form-select"
               value={truncateText(filters.director, TRUNCATE_LENGTH)}
               onChange={(e) => {
-                const selectedDisplayValue = e.target.value;
-                let actualDirector: string | null = null;
-                if (selectedDisplayValue === '') {
-                  actualDirector = null;
-                } else if (selectedDisplayValue === 'No Director') {
-                  actualDirector = 'No Director';
-                } else {
-                  actualDirector =
-                    directors.find(
-                      (d) =>
-                        truncateText(d, TRUNCATE_LENGTH) ===
-                        selectedDisplayValue
-                    ) || null;
-                  if (!actualDirector && selectedDisplayValue) {
-                    console.warn(
-                      'Could not map truncated director back:',
-                      selectedDisplayValue
-                    );
-                    actualDirector = null;
-                  }
-                }
-                setFilters((prev) => ({ ...prev, director: actualDirector }));
+                const selected = e.target.value;
+                const actual =
+                  selected === 'No Director'
+                    ? 'No Director'
+                    : directors.find(
+                        (d) => truncateText(d, TRUNCATE_LENGTH) === selected
+                      ) || null;
+                setFilters((prev) => ({ ...prev, director: actual }));
               }}
               title={filters.director || 'All Directors'}
             >
               <option value="">All</option>
-              {directors.map((d, i) => {
-                const displayDirector = truncateText(d, TRUNCATE_LENGTH);
-                return (
-                  <option key={`${d}-${i}`} value={displayDirector} title={d}>
-                    {displayDirector}
-                  </option>
-                );
-              })}
+              {directors.map((d, i) => (
+                <option
+                  key={`${d}-${i}`}
+                  value={truncateText(d, TRUNCATE_LENGTH)}
+                >
+                  {truncateText(d, TRUNCATE_LENGTH)}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Type Filter */}
+          {/* Type */}
           <div className="mb-3">
             <label htmlFor="type-filter" className="form-label text-white">
               Type
@@ -343,7 +288,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             </select>
           </div>
 
-          {/* Year Filter */}
+          {/* Year */}
           <div className="mb-3">
             <label htmlFor="year-filter" className="form-label text-white">
               Year
@@ -357,13 +302,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               onChange={(e) =>
                 setFilters((prev) => ({
                   ...prev,
-                  year: e.target.value ? e.target.value : null,
+                  year: e.target.value || null,
                 }))
               }
             />
           </div>
 
-          {/* Rating Filter */}
+          {/* Rating */}
           <div className="mb-3">
             <label htmlFor="rating-filter" className="form-label text-white">
               Rating

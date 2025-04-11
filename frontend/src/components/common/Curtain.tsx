@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Navbar } from 'react-bootstrap';
+
 const Curtain = ({ children }: { children: React.ReactNode }) => {
   const [showCurtain, setShowCurtain] = useState(true);
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [revealContent, setRevealContent] = useState(false);
+
   useEffect(() => {
     const curtainTimer = setTimeout(() => setShowCurtain(false), 3000);
     const spotlightTimer = setTimeout(() => setShowSpotlight(true), 3000);
     const contentTimer = setTimeout(() => setRevealContent(true), 4000);
     const spotlightEndTimer = setTimeout(() => setShowSpotlight(false), 6000);
-    const spotlighttest = 1;
+
     return () => {
       clearTimeout(curtainTimer);
       clearTimeout(spotlightTimer);
@@ -18,6 +20,7 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
       clearTimeout(spotlightEndTimer);
     };
   }, []);
+
   return (
     <div
       style={{
@@ -28,7 +31,7 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
         overflow: showCurtain ? 'hidden' : 'visible',
       }}
     >
-      {/* Curtains */}
+      {/* Animated Curtain Transition */}
       {showCurtain && (
         <>
           <motion.div
@@ -77,7 +80,8 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
           />
         </>
       )}
-      {/* Spotlight */}
+
+      {/* Spotlight Effect */}
       {showSpotlight && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -97,7 +101,8 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
           }}
         />
       )}
-      {/* Navbar */}
+
+      {/* Navbar Reveal */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: revealContent ? 1 : 0 }}
@@ -106,7 +111,8 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
       >
         <Navbar />
       </motion.div>
-      {/* Main Content */}
+
+      {/* Main Page Content */}
       <div
         style={{
           position: 'relative',
@@ -120,4 +126,5 @@ const Curtain = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
 export default Curtain;

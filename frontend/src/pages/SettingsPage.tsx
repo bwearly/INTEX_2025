@@ -3,22 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../api/MoviesAPI';
 
 const SettingsPage = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false); // Tracks if the current user has admin privileges
+  const navigate = useNavigate(); // React Router navigation function
 
+  // On mount, check the current user's role
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const data = await getCurrentUser();
-        setIsAdmin(data.role === 'admin');
+        const data = await getCurrentUser(); // Fetch current user info from API
+        setIsAdmin(data.role === 'admin'); // Set admin state if applicable
       } catch (err) {
-        console.error('Could not fetch user:', err);
+        console.error('Could not fetch user:', err); // Log fetch errors
       }
     };
 
     fetchUser();
   }, []);
 
+  // Base card styling for each settings option
   const cardStyle: React.CSSProperties = {
     backgroundColor: '#111',
     borderRadius: '12px',
@@ -30,6 +32,7 @@ const SettingsPage = () => {
     transition: 'background 0.2s ease-in-out',
   };
 
+  // Hover state styling (used dynamically with Object.assign)
   const cardHoverStyle: React.CSSProperties = {
     backgroundColor: '#222',
   };
@@ -39,7 +42,7 @@ const SettingsPage = () => {
       style={{
         minHeight: '100vh',
         backgroundColor: '#000',
-        paddingTop: '80px',
+        paddingTop: '80px', // Leave room for fixed navbar
         paddingLeft: '1rem',
         paddingRight: '1rem',
         display: 'flex',
@@ -48,12 +51,14 @@ const SettingsPage = () => {
       }}
     >
       <div style={{ maxWidth: '500px', width: '100%' }}>
+        {/* Settings Header */}
         <h2
           style={{ color: '#fff', marginBottom: '2rem', textAlign: 'center' }}
         >
           Settings
         </h2>
 
+        {/* Privacy Policy Link Card */}
         <div
           style={cardStyle}
           onMouseEnter={(e) =>
@@ -65,6 +70,7 @@ const SettingsPage = () => {
           Privacy Policy
         </div>
 
+        {/* Admin Panel Link Card (only shown to admins) */}
         {isAdmin && (
           <div
             style={cardStyle}

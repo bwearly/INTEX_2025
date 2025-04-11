@@ -1,20 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '/logo1.png';
+
 function Register() {
+  // State for form inputs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // Handle input changes and update corresponding state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === 'email') setEmail(value);
     if (name === 'password') setPassword(value);
     if (name === 'confirmPassword') setConfirmPassword(value);
   };
+
+  // Handle form submission and perform basic client-side validation
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate input fields
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields.');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -23,6 +31,8 @@ function Register() {
       setError('Passwords do not match.');
     } else {
       setError('');
+
+      // Attempt registration API call
       fetch(
         'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/register',
         {
@@ -32,8 +42,11 @@ function Register() {
         }
       )
         .then((data) => {
-          if (data.ok) setError('Successful registration. Please log in.');
-          else setError('Error registering.');
+          if (data.ok) {
+            setError('Successful registration. Please log in.');
+          } else {
+            setError('Error registering.');
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -41,8 +54,10 @@ function Register() {
         });
     }
   };
+
   return (
     <>
+      {/* Custom placeholder color override */}
       <style>
         {`
           input::placeholder {
@@ -51,6 +66,8 @@ function Register() {
           }
         `}
       </style>
+
+      {/* Full page background and centered content */}
       <div
         className="register-page"
         style={{
@@ -91,7 +108,8 @@ function Register() {
             CINENICHE
           </span>
         </div>
-        {/* Register Card */}
+
+        {/* Registration Form Card */}
         <div
           style={{
             backgroundColor: 'rgba(245, 230, 211, 0.9)',
@@ -104,6 +122,7 @@ function Register() {
         >
           <h3 className="mb-4 text-center">Register</h3>
           <form onSubmit={handleSubmit}>
+            {/* Email Input */}
             <div style={{ marginBottom: '1rem' }}>
               <input
                 className="form-control"
@@ -120,6 +139,8 @@ function Register() {
                 }}
               />
             </div>
+
+            {/* Password Input */}
             <div style={{ marginBottom: '1rem' }}>
               <input
                 className="form-control"
@@ -136,6 +157,8 @@ function Register() {
                 }}
               />
             </div>
+
+            {/* Confirm Password Input */}
             <div style={{ marginBottom: '1rem' }}>
               <input
                 className="form-control"
@@ -152,6 +175,8 @@ function Register() {
                 }}
               />
             </div>
+
+            {/* Submit Button */}
             <div className="d-grid mb-2">
               <button
                 className="btn btn-primary"
@@ -167,6 +192,8 @@ function Register() {
                 Register
               </button>
             </div>
+
+            {/* Navigation to Login */}
             <div className="d-grid mb-2">
               <button
                 type="button"
@@ -182,6 +209,8 @@ function Register() {
                 Go to Login
               </button>
             </div>
+
+            {/* Display any validation or error messages */}
             {error && (
               <p
                 style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}
@@ -195,4 +224,5 @@ function Register() {
     </>
   );
 }
+
 export default Register;
