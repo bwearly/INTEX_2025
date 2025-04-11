@@ -11,3 +11,5 @@ secrets.json
 # Ignore test result folders and coverage reports
 TestResults/
 coverage/
+
+appsettings.json
