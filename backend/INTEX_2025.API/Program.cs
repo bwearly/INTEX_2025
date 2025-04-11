@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 // Add databases
 builder.Services.AddDbContext<MoviesDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CompetitionConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
