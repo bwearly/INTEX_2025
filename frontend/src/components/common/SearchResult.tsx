@@ -10,7 +10,7 @@ const SearchResult = () => {
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(8); // 👈 8 results per page
+  const [pageSize] = useState(8);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const SearchResult = () => {
       try {
         const result = await searchMovies(query);
         setMovies(result);
-        setCurrentPage(1); // reset to first page on new search
+        setCurrentPage(1);
         setError('');
       } catch (err) {
         setError('Search failed');

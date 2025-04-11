@@ -30,10 +30,10 @@ const HeroCarousel = ({ movies }: HeroCarouselProps) => {
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center top',
-        backgroundSize: 'contain', // <— key line to shrink
+        backgroundSize: 'contain',
         height: '70vh',
         width: '100%',
-        backgroundColor: '#000', // fallback for letterboxing
+        backgroundColor: '#000',
         position: 'relative',
         padding: '2rem',
         display: 'flex',

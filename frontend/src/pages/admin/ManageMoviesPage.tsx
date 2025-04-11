@@ -296,7 +296,6 @@ const ManageMoviesPage: React.FC = () => {
                   </table>
                 </div>
               )}
-              {/* No lazy loading indicators */}
             </>
           )}
         </>

@@ -181,7 +181,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
           {genreOptions.map((genre) => (
             <option key={genre} value={genre}>
               {genre
-                .replace(/([A-Z])/g, ' $1') // add space before capital letters
+                .replace(/([A-Z])/g, ' $1')
                 .replace(/^./, (char) => char.toUpperCase())}{' '}
             </option>
           ))}

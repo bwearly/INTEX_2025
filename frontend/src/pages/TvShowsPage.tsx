@@ -9,10 +9,8 @@ const TvShowsPage = () => {
   const [loading, setLoading] = useState(true);
   const [genres, setGenres] = useState<string[]>([]);
 
-  // Properly type genreRefs as a record of genre to HTMLDivElement references
   const genreRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Initial guess of genres — we'll correct this after we log a real movie
   const tvGenres = [
     'fantasy',
     'tvComedies',

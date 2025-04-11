@@ -97,7 +97,7 @@ const Home: React.FC = () => {
               }
             } catch (err) {
               console.error(
-                `❌ Failed to get ${rawGenre} recs for ${showId}:`,
+                `Failed to get ${rawGenre} recs for ${showId}:`,
                 err
               );
             }
@@ -105,7 +105,7 @@ const Home: React.FC = () => {
 
           if (!found) {
             console.warn(
-              `⚠️ Skipped ${rawGenre}: No recommendations from any watched show`
+              `Skipped ${rawGenre}: No recommendations from any watched show`
             );
           }
         }

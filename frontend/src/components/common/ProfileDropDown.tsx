@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
-import { getCurrentUser } from '../../api/MoviesAPI'; // path may vary
-
+import { getCurrentUser } from '../../api/MoviesAPI';
 const ProfileDropdown = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);

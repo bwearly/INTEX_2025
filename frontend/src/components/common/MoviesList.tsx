@@ -1,4 +1,3 @@
-// src/components/common/MoviesList.tsx
 import React from 'react';
 import { Movie } from '../../types/Movie';
 import MovieRow from './MovieRow';
