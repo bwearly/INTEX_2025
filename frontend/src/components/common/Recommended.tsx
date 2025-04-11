@@ -1,4 +1,3 @@
-// src/components/common/Recommended.tsx
 import React, { useEffect, useState } from 'react';
 import { Movie } from '../../types/Movie';
 import MovieRow from './MovieRow';

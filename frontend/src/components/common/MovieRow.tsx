@@ -51,9 +51,6 @@ const MovieRow: React.FC<MovieRowProps> = ({
         left: dir === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
       });
-      // Note: scrollBy doesn't trigger 'scroll' event immediately after finishing
-      // We might need to manually update buttons after a short delay if needed
-      // setTimeout(updateScrollButtons, 350); // Optional: update after scroll animation (adjust delay)
     }
   };
 
@@ -68,9 +65,6 @@ const MovieRow: React.FC<MovieRowProps> = ({
     el.addEventListener('scroll', updateScrollButtons, { passive: true }); // Use passive listener for scroll perf
     window.addEventListener('resize', updateScrollButtons);
 
-    // --- Observer for content changes (More Advanced) ---
-    // If cards load lazily or content changes dynamically *after* initial mount,
-    // a ResizeObserver might be needed for perfect accuracy.
     let observer: ResizeObserver | null = null;
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(updateScrollButtons);
@@ -91,9 +85,6 @@ const MovieRow: React.FC<MovieRowProps> = ({
         observer.disconnect();
       }
     };
-    // updateScrollButtons is memoized with useCallback, safe to include
-    // If title/movies could change and affect layout, they might need adding,
-    // but often rows are relatively static once rendered.
   }, [updateScrollButtons]);
 
   // Render null if no movies
@@ -165,13 +156,7 @@ const MovieRow: React.FC<MovieRowProps> = ({
             )}
 
             {/* Scrollable Container */}
-            <div
-              className="horizontal-scroll-container"
-              ref={rowRef}
-              // Add role for accessibility if appropriate
-              // role="region"
-              // aria-label={`${title} movies`}
-            >
+            <div className="horizontal-scroll-container" ref={rowRef}>
               {movies.map((movie) => (
                 <div key={movie.showId} className="movie-card snap-start">
                   <MovieCard

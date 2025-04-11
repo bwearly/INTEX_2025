@@ -27,11 +27,11 @@ const MoviesPage = () => {
       try {
         const res = await fetchMovies(200, 1, []);
 
-        // ✅ Only keep items where type is "Movie"
+        // Only keep items where type is "Movie"
         const filteredMovies = res.movies.filter((m) => m.type === 'Movie');
         setMovieOnlyList(filteredMovies);
 
-        // ✅ Build genre list from filtered movies only
+        // Build genre list from filtered movies only
         const genreSet = new Set<string>();
         filteredMovies.forEach((movie) => {
           Object.keys(movie).forEach((key) => {

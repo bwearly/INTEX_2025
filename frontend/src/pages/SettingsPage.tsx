@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentUser } from '../api/MoviesAPI'; // adjust path if needed
+import { getCurrentUser } from '../api/MoviesAPI';
 
 const SettingsPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);

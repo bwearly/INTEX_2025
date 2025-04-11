@@ -1,8 +1,6 @@
-// GenreFilter.tsx - Modified to include credentials: 'include' for fetch
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Movie } from '../../types/Movie'; // Adjust path as needed
-import './GenreFilter.css'; // Ensure CSS file is correctly linked
+import { Movie } from '../../types/Movie';
+import './GenreFilter.css';
 
 interface FilterDropdownProps {
   allMovies: Movie[];
@@ -51,7 +49,6 @@ const genreAliases: Record<string, string> = {
 
 const formatGenreLabel = (genre: string): string => {
   if (!genre || typeof genre !== 'string' || genre.trim() === '') {
-    // console.warn(`formatGenreLabel received invalid genre input: "${genre}"`); // Optional log
     return 'Unknown Genre';
   }
   const key = genre.replace(/[^a-zA-Z]/g, '').toLowerCase();
@@ -106,12 +103,11 @@ const formatGenreLabel = (genre: string): string => {
       if (remaining.length > 0) {
         words.push(remaining.charAt(0).toUpperCase() + remaining.slice(1));
       }
-      // console.warn(`formatGenreLabel word segmentation stopped unexpectedly for key: "${key}", remaining: "${remaining}"`); // Optional log
+
       break;
     }
   }
   if (words.length === 0) {
-    // console.warn(`formatGenreLabel could not segment key: "${key}", returning capitalized original.`); // Optional log
     return genre.charAt(0).toUpperCase() + genre.slice(1);
   }
   return words.join(' • ');
@@ -147,25 +143,18 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       console.log('Attempting to fetch genres...');
       try {
         // --- Make Fetch Request ---
-        // NOTE: No Authorization header added here. Trying credentials include instead.
+
         const res = await fetch(
           'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres',
           {
             method: 'GET',
-            credentials: 'include', // <--- ADDED THIS LINE
-            // If your API needs specific headers like Accept, add them:
-            // headers: {
-            //   'Accept': 'application/json',
-            // },
+            credentials: 'include',
           }
         );
 
         console.log(`Genre fetch response status: ${res.status}`);
 
         if (!res.ok) {
-          // If status is 401 even with credentials: 'include',
-          // it likely means the API *requires* an Authorization header,
-          // or the cookie setup/CORS is preventing it.
           if (res.status === 401) {
             console.error(
               "Received 401 Unauthorized even with credentials: 'include'. The API likely requires an Authorization header or cookie/CORS setup is preventing cookie sending."

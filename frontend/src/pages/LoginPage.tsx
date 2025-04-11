@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '/logo1.png'; // Make sure this exists in /public
-
+import logo from '/logo1.png';
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
