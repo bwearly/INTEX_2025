@@ -8,11 +8,18 @@ import AuthorizeView from '../auth/AuthorizeView';
 import ProfileDropdown from './ProfileDropDown';
 import SearchBar from './Searchbar';
 
+// Main navigation bar used throughout the app
+// Displays logo, navigation links, search input, and profile dropdown
 const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   const navigate = useNavigate();
+
+  // Controls whether the search bar is visible
   const [showSearch, setShowSearch] = useState(false);
+
+  // Used to detect clicks outside of the search bar
   const searchRef = useRef<HTMLDivElement>(null);
 
+  // Hide search bar if user clicks outside of it
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -24,8 +31,9 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Styles applied to navigation text links (e.g., TV Shows, Movies)
   const navItemStyle: React.CSSProperties = {
-    color: '#6C9CB0', // changed to retro blue
+    color: '#6C9CB0', // Retro blue accent
     cursor: 'pointer',
     marginRight: '16px',
     fontWeight: 400,
@@ -34,23 +42,25 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
   };
 
   return (
+    // Protects this view so it's only rendered for authenticated users
     <AuthorizeView>
       <BootstrapNavbar
         expand="lg"
         fixed="top"
         className="px-4 py-2"
         style={{
-          backgroundColor: '#000000', // back to black
-          borderBottom: '2px solid #6C9CB0', // keep retro blue line
-          zIndex: 1000,
+          backgroundColor: '#000000', // Black background for modern look
+          borderBottom: '2px solid #6C9CB0', // Blue accent underline
+          zIndex: 1000, // Keeps navbar on top of other content
         }}
       >
         <Container
           fluid
           className="d-flex justify-content-between align-items-center"
         >
-          {/* Logo */}
+          {/* Left Section: Logo and optional nav links */}
           <div className="d-flex align-items-center">
+            {/* CineNiche Logo - navigates to home page */}
             <BootstrapNavbar.Brand
               onClick={() => navigate('/home')}
               style={{
@@ -72,10 +82,9 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
                   border: 'none',
                 }}
               />
-
               <span
                 style={{
-                  color: '#6C9CB0', // retro blue accent
+                  color: '#6C9CB0', // Matches blue theme
                   fontWeight: 'bold',
                   fontSize: '20px',
                   letterSpacing: '1px',
@@ -85,7 +94,7 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
               </span>
             </BootstrapNavbar.Brand>
 
-            {/* Nav Links */}
+            {/* Conditionally show TV Shows / Movies links unless in minimal mode */}
             {!minimal && (
               <div className="d-flex align-items-center ms-4 gap-4">
                 <span style={navItemStyle} onClick={() => navigate('/tv')}>
@@ -98,8 +107,9 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
             )}
           </div>
 
-          {/* Search + Logout */}
+          {/* Right Section: Search, profile dropdown */}
           <div className="d-flex align-items-center gap-3" ref={searchRef}>
+            {/* Search icon toggles the input field */}
             <FaSearch
               style={{
                 color: '#FFFFFF',
@@ -109,12 +119,14 @@ const CustomNavbar = ({ minimal = false }: { minimal?: boolean }) => {
               onClick={() => setShowSearch((prev) => !prev)}
             />
 
+            {/* Conditionally show search input when icon is clicked */}
             {showSearch && (
               <div style={{ width: '200px', marginLeft: '8px' }}>
                 <SearchBar />
               </div>
             )}
 
+            {/* Profile icon or dropdown - handles logout and user actions */}
             <ProfileDropdown />
           </div>
         </Container>

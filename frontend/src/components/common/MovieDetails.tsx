@@ -20,6 +20,7 @@ const MovieDetailsPage = () => {
   const [rating, setRating] = useState<number>(0);
   const [recommended, setRecommended] = useState<Movie[]>([]);
 
+  // Get rating from cookies if available
   useEffect(() => {
     if (id) {
       const match = document.cookie.match(
@@ -31,6 +32,7 @@ const MovieDetailsPage = () => {
     }
   }, [id]);
 
+  // Fetch movie data, trailer, and recommendations
   useEffect(() => {
     if (!id) return;
 
@@ -39,11 +41,13 @@ const MovieDetailsPage = () => {
         const data = await fetchMovieById(id);
         setMovie(data);
 
+        // Delay trailer fetch to let poster load first
         setTimeout(async () => {
           const trailer = await fetchYoutubeTrailer(data.title);
           if (trailer) setTrailerId(trailer);
         }, 2000);
 
+        // Get related recommendations
         const recIds = await fetchShowRecommendationsById(data.showId);
         const recs = await fetchMoviesByIds(recIds);
         const filtered = recs.filter((m) => m.showId !== data.showId);
@@ -61,12 +65,12 @@ const MovieDetailsPage = () => {
   return (
     <div
       style={{
-        position: 'relative', // changed from fixed
+        position: 'relative',
         width: '100vw',
         minHeight: '100vh',
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         zIndex: 999,
-        paddingTop: '90px', // navbar spacing
+        paddingTop: '90px',
         paddingBottom: '4rem',
         backdropFilter: 'blur(3px)',
       }}
@@ -85,7 +89,7 @@ const MovieDetailsPage = () => {
           marginBottom: '3rem',
         }}
       >
-        {/* Close Button */}
+        {/* Back button to exit detail view */}
         <button
           onClick={() => navigate('/home')}
           style={{
@@ -105,9 +109,8 @@ const MovieDetailsPage = () => {
           &times;
         </button>
 
-        {/* Poster + Info */}
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-          {/* Poster or Trailer */}
+          {/* Trailer if available, otherwise show poster */}
           <div style={{ width: '360px', minWidth: '300px' }}>
             {trailerId ? (
               <iframe
@@ -131,7 +134,7 @@ const MovieDetailsPage = () => {
             )}
           </div>
 
-          {/* Movie Info */}
+          {/* Movie info section */}
           <div style={{ flex: 1 }}>
             <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>
               {movie.title}
@@ -171,14 +174,9 @@ const MovieDetailsPage = () => {
           </div>
         </div>
 
-        {/* Recommendations */}
+        {/* Horizontal row of similar recommendations */}
         {recommended.length > 0 && (
-          <div
-            className="movie-row-wrapper"
-            style={{
-              marginTop: '2.5rem',
-            }}
-          >
+          <div className="movie-row-wrapper" style={{ marginTop: '2.5rem' }}>
             <MovieRow
               title="Shows Like This"
               movies={recommended}

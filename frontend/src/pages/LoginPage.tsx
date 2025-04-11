@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '/logo1.png';
+
 function LoginPage() {
+  // --- State for form fields and error handling ---
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberme, setRememberme] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // --- Handle changes to input fields ---
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, type, checked, value } = e.target;
     if (type === 'checkbox') setRememberme(checked);
@@ -15,6 +18,7 @@ function LoginPage() {
     else if (name === 'password') setPassword(value);
   };
 
+  // --- Handle login form submission ---
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -24,6 +28,7 @@ function LoginPage() {
       return;
     }
 
+    // Determine login endpoint based on remember me checkbox
     const loginUrl = rememberme
       ? 'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/login?useCookies=true&useSessionCookies=false'
       : 'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/login?useSessionCookies=true&useCookies=false';
@@ -31,15 +36,14 @@ function LoginPage() {
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) throw new Error('Invalid email or password.');
 
+      // Save email locally and navigate to the home page
       localStorage.setItem('email', email);
       navigate('/home');
     } catch (error: any) {
@@ -50,6 +54,7 @@ function LoginPage() {
 
   return (
     <>
+      {/* Custom input placeholder color override */}
       <style>
         {`
           input::placeholder {
@@ -59,6 +64,7 @@ function LoginPage() {
         `}
       </style>
 
+      {/* --- Background Layout --- */}
       <div
         className="login-page"
         style={{
@@ -74,7 +80,7 @@ function LoginPage() {
           gap: '1rem',
         }}
       >
-        {/* LOGO + TITLE */}
+        {/* --- Logo and App Name --- */}
         <div
           style={{
             display: 'flex',
@@ -86,11 +92,7 @@ function LoginPage() {
           <img
             src={logo}
             alt="CineNiche Logo"
-            style={{
-              height: '36px',
-              width: '36px',
-              objectFit: 'contain',
-            }}
+            style={{ height: '36px', width: '36px', objectFit: 'contain' }}
           />
           <span
             style={{
@@ -104,7 +106,7 @@ function LoginPage() {
           </span>
         </div>
 
-        {/* LOGIN CARD */}
+        {/* --- Login Form Card --- */}
         <div
           style={{
             backgroundColor: 'rgba(245, 230, 211, 0.9)',
@@ -116,6 +118,8 @@ function LoginPage() {
           }}
         >
           <h3 className="mb-4 text-center">Sign In</h3>
+
+          {/* --- Login Form --- */}
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: '1rem' }}>
               <input
@@ -149,6 +153,8 @@ function LoginPage() {
                 }}
               />
             </div>
+
+            {/* --- Remember Me Checkbox --- */}
             <div className="form-check mb-3">
               <input
                 className="form-check-input"
@@ -162,6 +168,8 @@ function LoginPage() {
                 Remember password
               </label>
             </div>
+
+            {/* --- Login Button --- */}
             <div className="d-grid mb-2">
               <button
                 className="btn btn-primary"
@@ -177,6 +185,8 @@ function LoginPage() {
                 Sign in
               </button>
             </div>
+
+            {/* --- Navigate to Register --- */}
             <div className="d-grid mb-2">
               <button
                 type="button"
@@ -192,6 +202,8 @@ function LoginPage() {
                 Register
               </button>
             </div>
+
+            {/* --- Error Message --- */}
             {error && (
               <p
                 style={{ color: 'red', fontSize: '0.85rem', marginTop: '1rem' }}

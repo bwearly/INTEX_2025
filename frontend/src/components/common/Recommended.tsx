@@ -7,6 +7,7 @@ interface RecommendedProps {
   onDelete?: (id: string) => void;
 }
 
+// Maps each showId to an array of recommended movies
 type RecommendationMap = {
   [showId: string]: Movie[];
 };
@@ -22,6 +23,7 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
         const email = localStorage.getItem('email');
         if (!email) return;
 
+        // Fetch personalized recommendations from the backend
         const response = await fetch(
           `https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/api/Recommendations/GetUserRecommendations?email=${encodeURIComponent(email)}`,
           {
@@ -44,6 +46,7 @@ const Recommended: React.FC<RecommendedProps> = ({ onClick, onDelete }) => {
 
   return (
     <div className="space-y-8 p-4">
+      {/* Render one MovieRow per show ID’s recommendation list */}
       {Object.entries(recommendedMovies).map(([showId, movies]) => (
         <MovieRow
           key={showId}

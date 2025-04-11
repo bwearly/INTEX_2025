@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 const Footer: React.FC = () => {
   const location = useLocation();
 
-  // Only hide footer on routes like 404 if needed, otherwise show everywhere
+  // Footer is shown on all routes by default
   return (
     <footer
       className="footer"

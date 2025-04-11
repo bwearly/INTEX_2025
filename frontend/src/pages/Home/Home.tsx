@@ -81,7 +81,7 @@ const Home: React.FC = () => {
           const normalizedKey = normalizeGenreKey(rawGenre);
 
           if (!recommenderMapByColumn[normalizedKey]) {
-            console.warn(`⚠️ No recommender API mapped for: ${normalizedKey}`);
+            console.warn(`No recommender API mapped for: ${normalizedKey}`);
             continue;
           }
 
@@ -155,7 +155,6 @@ const Home: React.FC = () => {
             </select>
           </div>
 
-          {/* Recommended Genres */}
           {genresWithRecs.map((genre) => {
             const recs = recommendationsByGenre[genre];
             return (
@@ -198,7 +197,6 @@ const Home: React.FC = () => {
             );
           })}
 
-          {/* Fallback Genres (non-recommended) */}
           {genresWithoutRecs.map((genre) => {
             const fallbackMovies = allMovies.filter(
               (movie) => (movie as any)[genre] === 1

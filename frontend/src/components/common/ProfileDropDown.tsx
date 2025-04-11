@@ -2,15 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { getCurrentUser } from '../../api/MoviesAPI';
+
 const ProfileDropdown = () => {
+  // UI states for hover/click behavior
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+
+  // Track admin role (could be used for conditional rendering in future)
   const [isAdmin, setIsAdmin] = useState(false);
+
   const navigate = useNavigate();
 
+  // Dropdown is visible if either hovered or clicked
   const isOpen = isHovered || isClicked;
 
   useEffect(() => {
+    // Fetch user info to check if the current user is an admin
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
@@ -19,10 +26,10 @@ const ProfileDropdown = () => {
         console.error('Could not fetch user:', err);
       }
     };
-
     fetchUser();
   }, []);
 
+  // Log out logic — navigates to login/home
   const handleLogout = () => {
     navigate('/');
   };
@@ -33,11 +40,13 @@ const ProfileDropdown = () => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Profile Icon (clickable) */}
       <FaUserCircle
         style={{ fontSize: '1.8rem', color: 'white', cursor: 'pointer' }}
         onClick={() => setIsClicked((prev) => !prev)}
       />
 
+      {/* Dropdown Menu */}
       <div
         style={{
           position: 'absolute',
@@ -53,6 +62,7 @@ const ProfileDropdown = () => {
           transition: 'opacity 0.2s ease-in-out',
         }}
       >
+        {/* Settings Option */}
         <div
           style={{
             padding: '8px 16px',
@@ -66,6 +76,8 @@ const ProfileDropdown = () => {
         >
           Settings
         </div>
+
+        {/* Logout Option */}
         <div
           style={{
             padding: '8px 16px',

@@ -1,9 +1,9 @@
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-  onPageChange: (newPage: number) => void;
-  onPageSizeChange: (newSize: number) => void;
+  currentPage: number; // Currently selected page
+  totalPages: number; // Total number of pages available
+  pageSize: number; // Number of results shown per page
+  onPageChange: (newPage: number) => void; // Called when user navigates to a different page
+  onPageSizeChange: (newSize: number) => void; // Called when user selects a different page size
 }
 
 const Pagination = ({
@@ -15,6 +15,7 @@ const Pagination = ({
 }: PaginationProps) => {
   return (
     <div className="flex item-center justify-center mt-4">
+      {/* Previous Button */}
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
@@ -22,6 +23,8 @@ const Pagination = ({
       >
         Previous
       </button>
+
+      {/* Numbered Page Buttons */}
       {[...Array(totalPages)].map((_, index) => (
         <button
           key={index + 1}
@@ -32,6 +35,8 @@ const Pagination = ({
           {index + 1}
         </button>
       ))}
+
+      {/* Next Button */}
       <button
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
@@ -39,14 +44,17 @@ const Pagination = ({
       >
         Next
       </button>
+
       <br />
+
+      {/* Page Size Selector */}
       <label>
         Results per page:
         <select
           value={pageSize}
-          onChange={(p) => {
-            onPageSizeChange(Number(p.target.value));
-            onPageChange(1);
+          onChange={(e) => {
+            onPageSizeChange(Number(e.target.value)); // Apply new size
+            onPageChange(1); // Reset to first page
           }}
           className="form-control"
         >
