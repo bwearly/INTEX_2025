@@ -24,7 +24,11 @@ const Footer: React.FC = () => {
         <p>&copy; 2025 CineNiche</p>
         <a
           onClick={handlePrivacyClick}
-          style={{ color: '#5dade2', textDecoration: 'underline' }}
+          style={{
+            color: '#5dade2',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          }}
         >
           Privacy Policy
         </a>
