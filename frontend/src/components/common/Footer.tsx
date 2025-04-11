@@ -5,14 +5,9 @@ const Footer: React.FC = () => {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
 
-  const isLoginPage =
-    location.pathname === '/' || location.pathname === '/login';
-
   const handlePrivacyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isLoginPage) {
-      e.preventDefault();
-      setShowModal(true);
-    }
+    e.preventDefault();
+    setShowModal(true);
   };
 
   return (
@@ -27,13 +22,6 @@ const Footer: React.FC = () => {
         }}
       >
         <p>&copy; 2025 CineNiche</p>
-        <a
-          href="/privacy"
-          onClick={handlePrivacyClick}
-          style={{ color: '#5dade2', textDecoration: 'underline' }}
-        >
-          Privacy Policy
-        </a>
       </footer>
 
       {/* Modal */}
