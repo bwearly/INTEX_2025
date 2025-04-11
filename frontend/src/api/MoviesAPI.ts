@@ -277,3 +277,26 @@ export const fetchMovieById = async (id: string): Promise<Movie> => {
     throw error;
   }
 };
+
+export interface UserProfile {
+  name: string;
+  age: number;
+  email: string;
+  gender: string;
+  city: string;
+}
+
+export async function fetchUserProfile(): Promise<UserProfile> {
+  try {
+    const response = await fetch(`${API_URL}/UserProfile`, {
+      credentials: 'include',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    throw error;
+  }
+}
