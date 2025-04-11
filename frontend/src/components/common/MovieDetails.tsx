@@ -61,20 +61,14 @@ const MovieDetailsPage = () => {
   return (
     <div
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
+        position: 'relative', // changed from fixed
         width: '100vw',
         minHeight: '100vh',
         backgroundColor: 'rgba(0, 0, 0, 0.85)',
         zIndex: 999,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'start',
-        overflowY: 'auto',
-        paddingTop: '90px', // Gives space below fixed Navbar
+        paddingTop: '90px', // navbar spacing
+        paddingBottom: '4rem',
         backdropFilter: 'blur(3px)',
-        flexDirection: 'column',
       }}
     >
       <div
@@ -114,7 +108,7 @@ const MovieDetailsPage = () => {
         {/* Poster + Info */}
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
           {/* Poster or Trailer */}
-          <div style={{ width: '400px', minWidth: '300px' }}>
+          <div style={{ width: '360px', minWidth: '300px' }}>
             {trailerId ? (
               <iframe
                 width="100%"
@@ -179,7 +173,12 @@ const MovieDetailsPage = () => {
 
         {/* Recommendations */}
         {recommended.length > 0 && (
-          <div className="movie-row-wrapper" style={{ marginTop: '2.5rem' }}>
+          <div
+            className="movie-row-wrapper"
+            style={{
+              marginTop: '2.5rem',
+            }}
+          >
             <MovieRow
               title="Shows Like This"
               movies={recommended}
