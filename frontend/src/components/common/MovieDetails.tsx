@@ -9,7 +9,7 @@ import {
   fetchShowRecommendationsById,
 } from '../../api/RecommenderAPI';
 import { Movie } from '../../types/Movie';
-import '../../styles/HorizontalScroll.css'; // make sure path matches your project structure
+import '../common/HorizontalScroll.css';
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
