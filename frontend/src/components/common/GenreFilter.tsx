@@ -1,3 +1,5 @@
+// GenreFilter.tsx - Potential Fix includes detailed logging in render map
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Movie } from '../../types/Movie'; // Adjust path as needed
 import './GenreFilter.css'; // Ensure CSS file is correctly linked
@@ -26,11 +28,11 @@ const truncateText = (
   if (text.length <= maxLength) {
     return text;
   }
-  // Trim potentially trailing space before adding ellipsis
   return text.substring(0, maxLength).trimEnd() + '...';
 };
 // --- End Helper function ---
 
+// --- Genre Formatting ---
 const genreAliases: Record<string, string> = {
   animeseriesinternationaltvshows: 'Anime Series (Intl)',
   britishtvshowsdocuseriesinternationaltvshows: 'British TV Docuseries (Intl)',
@@ -46,15 +48,25 @@ const genreAliases: Record<string, string> = {
   documentariesseries: 'Documentary Series',
   comediesinternationalmovies: 'International Comedies',
   documentariesinternationalmovies: 'International Documentaries',
+  // Add other aliases as needed
 };
 
-const formatGenreLabel = (genre: string) => {
+const formatGenreLabel = (genre: string): string => {
+  // Added defensive check for empty string input
+  if (!genre || typeof genre !== 'string' || genre.trim() === '') {
+    console.warn(`formatGenreLabel received invalid genre input: "${genre}"`);
+    return 'Unknown Genre'; // Return a specific string, not 'All'
+  }
+
   const key = genre.replace(/[^a-zA-Z]/g, '').toLowerCase();
+  if (!key) return 'Unknown Genre'; // Handle case where genre becomes empty after replacing non-letters
+
   const aliasMatch = Object.keys(genreAliases).find(
     (alias) => alias.toLowerCase() === key
   );
   if (aliasMatch) return genreAliases[aliasMatch];
 
+  // Word bank logic (keep as is unless proven problematic by logs)
   const wordBank = [
     'anime',
     'series',
@@ -79,6 +91,9 @@ const formatGenreLabel = (genre: string) => {
     'adventure',
     'fantasy',
     'talk',
+    'british',
+    'reality',
+    'spirituality' /* Added more words */,
   ];
 
   let remaining = key;
@@ -86,9 +101,12 @@ const formatGenreLabel = (genre: string) => {
 
   while (remaining.length > 0) {
     let match = '';
+    // Find longest matching word first
+    wordBank.sort((a, b) => b.length - a.length);
     for (const word of wordBank) {
-      if (remaining.startsWith(word) && word.length > match.length) {
+      if (remaining.startsWith(word)) {
         match = word;
+        break; // Found the longest match
       }
     }
 
@@ -96,17 +114,30 @@ const formatGenreLabel = (genre: string) => {
       words.push(match.charAt(0).toUpperCase() + match.slice(1));
       remaining = remaining.slice(match.length);
     } else {
-      // If no word matches at the start, return the original formatted genre
-      // or break if some words were already found (avoids infinite loop on weird input)
-      if (words.length === 0) {
-        return genre.charAt(0).toUpperCase() + genre.slice(1);
+      // If no word matches, append the rest (or first char) and break
+      // to avoid infinite loops on unexpected input
+      if (remaining.length > 0) {
+        // Fallback: Capitalize the first letter of the remaining part
+        words.push(remaining.charAt(0).toUpperCase() + remaining.slice(1));
       }
+      console.warn(
+        `formatGenreLabel word segmentation stopped unexpectedly for key: "${key}", remaining: "${remaining}"`
+      );
       break;
     }
   }
 
+  if (words.length === 0) {
+    // Fallback if no words could be segmented at all
+    console.warn(
+      `formatGenreLabel could not segment key: "${key}", returning capitalized original.`
+    );
+    return genre.charAt(0).toUpperCase() + genre.slice(1);
+  }
+
   return words.join(' • ');
 };
+// --- End Genre Formatting ---
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({
   allMovies,
@@ -116,7 +147,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [genreOptions, setGenreOptions] = useState<string[]>([]);
-  // Store the *full* director names here
   const [directors, setDirectors] = useState<string[]>([]);
   const types = ['Movie', 'TV Show'];
   const ratings = [
@@ -130,41 +160,53 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     'TV-MA',
     'R',
   ];
-  const TRUNCATE_LENGTH = 35; // Define truncation length here
+  const TRUNCATE_LENGTH = 35;
 
   useEffect(() => {
+    // --- Fetch Genres ---
     const fetchGenres = async () => {
       try {
-        // Make sure this endpoint is correct and accessible
         const res = await fetch(
           'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres'
         );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-        const genres = await res.json();
-        // Ensure genres is an array of strings before mapping
-        if (Array.isArray(genres)) {
-          setGenreOptions(genres.map((g: unknown) => String(g).toLowerCase()));
+        const genresData = await res.json();
+        // console.log('API Response (Genres raw):', genresData); // Optional: Keep for debugging if needed
+
+        if (Array.isArray(genresData)) {
+          const processedGenres = genresData
+            .map((g: unknown) => String(g || '').toLowerCase()) // Ensure conversion handles potential null/undefined
+            .filter((g) => g !== ''); // Filter out empty strings AFTER potential conversion issues
+
+          // console.log('Processed Genres for State:', processedGenres); // Optional: Keep for debugging
+
+          // Sort alphabetically for better UX
+          processedGenres.sort((a, b) => a.localeCompare(b));
+
+          setGenreOptions(processedGenres);
         } else {
-          console.error('Failed to load genres: API did not return an array.');
+          console.error(
+            'Failed to load genres: API did not return an array.',
+            genresData
+          );
           setGenreOptions([]);
         }
       } catch (err) {
-        console.error('Failed to load genres:', err);
+        console.error('Failed to load genres (fetch error):', err);
         setGenreOptions([]); // Set empty on error
       }
     };
     fetchGenres();
 
-    // Extract unique, non-empty director names
+    // --- Extract Directors ---
     const uniqueDirectors = Array.from(
-      new Set(allMovies.map((m) => m.director).filter(Boolean)) // filter(Boolean) removes null/undefined/empty strings
+      new Set(allMovies.map((m) => m.director).filter(Boolean))
     );
-    // Add "No Director" option if desired, store full names
-    setDirectors(['No Director', ...uniqueDirectors]);
+    setDirectors(['No Director', ...uniqueDirectors.sort()]); // Sort directors too
 
-    // Click outside handler
+    // --- Click Outside Handler ---
     const clickOutside = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -175,14 +217,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
     document.addEventListener('mousedown', clickOutside);
     return () => document.removeEventListener('mousedown', clickOutside);
-  }, [allMovies]); // Dependency array
+  }, [allMovies]); // Dependency only on allMovies (for directors)
 
   return (
     <div className="position-relative genre-dropdown" ref={dropdownRef}>
       <button
-        className="btn btn-outline-light dropdown-toggle"
+        className="btn btn-outline-light dropdown-toggle" // Consider matching theme: btn-generic-yellow?
         onClick={() => setIsOpen(!isOpen)}
-        // Add aria attributes for accessibility
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
@@ -191,7 +232,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
       {isOpen && (
         <div className="genre-dropdown-menu show p-3">
-          {/* Title Filter */}
+          {/* --- Title Filter --- */}
           <div className="mb-3">
             <label htmlFor="title-filter" className="form-label text-white">
               Title
@@ -207,7 +248,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* Genres Filter */}
+          {/* --- Genres Filter --- */}
           <div className="mb-3">
             <label htmlFor="genre-filter" className="form-label text-white">
               Genres
@@ -215,83 +256,94 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             <select
               id="genre-filter"
               className="form-select"
-              value={filters.genres[0] || ''}
+              value={filters.genres[0] || ''} // Expecting only one selection
               onChange={(e) =>
                 setFilters((prev) => ({
                   ...prev,
+                  // If user selects "All" (value=""), set genres to empty array
+                  // Otherwise, set genres to an array containing the selected value
                   genres: e.target.value ? [e.target.value] : [],
                 }))
               }
             >
               <option value="">All</option>
-              {genreOptions.map((genre) => (
-                <option key={genre} value={genre}>
-                  {formatGenreLabel(genre)}
-                </option>
-              ))}
+              {genreOptions.length === 0 && (
+                <option disabled>Loading genres...</option>
+              )}
+              {genreOptions.map((genreValue) => {
+                // --- Diagnostic Logging ---
+                console.log(`Rendering Option -> Input Value: "${genreValue}"`);
+                let displayLabel = 'Formatting Error'; // Default
+                try {
+                  displayLabel = formatGenreLabel(genreValue); // Call formatting function
+                  console.log(
+                    `                 -> Output Label: "${displayLabel}"`
+                  );
+                } catch (e) {
+                  console.error(`Error formatting genre "${genreValue}":`, e);
+                }
+                // Check if the generated label is problematic
+                if (displayLabel.trim() === '' || displayLabel === 'All') {
+                  console.warn(
+                    `Label for "${genreValue}" became empty or "All"!`
+                  );
+                  // Fallback display if label generation fails badly
+                  displayLabel =
+                    genreValue.charAt(0).toUpperCase() + genreValue.slice(1); // Simple capitalize as fallback
+                }
+                // --- End Logging ---
+
+                return (
+                  <option key={genreValue} value={genreValue}>
+                    {displayLabel} {/* Use the potentially fixed label */}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
-          {/* Director Filter - WITH TRUNCATION */}
+          {/* --- Director Filter (Keep existing logic) --- */}
           <div className="mb-3">
             <label htmlFor="director-filter" className="form-label text-white">
               Director
             </label>
             <select
               id="director-filter"
-              name="director-filter" // Name attribute can be useful
-              className="form-select director-select" // Use specific class if needed for CSS
-              // The value shown in the closed select box should be the truncated one
+              name="director-filter"
+              className="form-select director-select"
               value={truncateText(filters.director, TRUNCATE_LENGTH)}
               onChange={(e) => {
-                const selectedValue = e.target.value; // This is the truncated value
+                const selectedDisplayValue = e.target.value;
                 let actualDirector: string | null = null;
-
-                if (selectedValue === '') {
-                  actualDirector = null; // "All" selected
-                } else if (selectedValue === 'No Director') {
-                  // Decide if "No Director" should be null or a specific string in state
-                  actualDirector = null; // Example: Treat "No Director" as null filter
+                if (selectedDisplayValue === '') {
+                  actualDirector = null;
+                } else if (selectedDisplayValue === 'No Director') {
+                  actualDirector = 'No Director'; // Store specific string if needed for filtering
                 } else {
-                  // Find the original director name based on the truncated value
                   actualDirector =
                     directors.find(
-                      (d) => truncateText(d, TRUNCATE_LENGTH) === selectedValue
+                      (d) =>
+                        truncateText(d, TRUNCATE_LENGTH) ===
+                        selectedDisplayValue
                     ) || null;
-                  // Basic fallback if somehow not found (might happen if directors list changes)
-                  if (!actualDirector) {
+                  if (!actualDirector && selectedDisplayValue) {
+                    // Handle case where find fails
                     console.warn(
-                      'Could not map truncated director back to original:',
-                      selectedValue
+                      'Could not map truncated director back:',
+                      selectedDisplayValue
                     );
-                    // Decide fallback behavior: use selectedValue? set to null?
-                    actualDirector = null;
+                    actualDirector = null; // Fallback to null filter
                   }
                 }
-
-                setFilters((prev) => ({
-                  ...prev,
-                  // Store the *full* director name (or null) in filters state
-                  director: actualDirector,
-                }));
+                setFilters((prev) => ({ ...prev, director: actualDirector }));
               }}
-              // Add title attribute to show full selected name on hover
               title={filters.director || 'All Directors'}
             >
               <option value="">All</option>
-              {/* Map over the full director names */}
               {directors.map((d, i) => {
-                // Get the truncated version for display and value
                 const displayDirector = truncateText(d, TRUNCATE_LENGTH);
                 return (
-                  <option
-                    key={`${d}-${i}`} // Use a more unique key if names aren't unique
-                    // The value of the option *must* match what you check in onChange
-                    value={displayDirector}
-                    // Show the full name on hover
-                    title={d}
-                  >
-                    {/* Display the truncated name */}
+                  <option key={`${d}-${i}`} value={displayDirector} title={d}>
                     {displayDirector}
                   </option>
                 );
@@ -299,7 +351,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             </select>
           </div>
 
-          {/* Type Filter */}
+          {/* --- Type Filter --- */}
           <div className="mb-3">
             <label htmlFor="type-filter" className="form-label text-white">
               Type
@@ -319,12 +371,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               {types.map((t) => (
                 <option key={t} value={t}>
                   {t}
-                </option> // Added value attribute
+                </option>
               ))}
             </select>
           </div>
 
-          {/* Year Filter */}
+          {/* --- Year Filter --- */}
           <div className="mb-3">
             <label htmlFor="year-filter" className="form-label text-white">
               Year
@@ -333,19 +385,18 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               id="year-filter"
               className="form-control"
               type="number"
-              placeholder="e.g. 2023" // Add placeholder
+              placeholder="e.g. 2023"
               value={filters.year || ''}
               onChange={(e) =>
                 setFilters((prev) => ({
                   ...prev,
-                  // Ensure empty input becomes null, otherwise use the string value
                   year: e.target.value ? e.target.value : null,
                 }))
               }
             />
           </div>
 
-          {/* Rating Filter */}
+          {/* --- Rating Filter --- */}
           <div className="mb-3">
             <label htmlFor="rating-filter" className="form-label text-white">
               Rating
@@ -365,13 +416,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               {ratings.map((r) => (
                 <option key={r} value={r}>
                   {r}
-                </option> // Added value attribute
+                </option>
               ))}
             </select>
           </div>
-        </div>
+        </div> // End dropdown-menu
       )}
-    </div>
+    </div> // End wrapper div
   );
 };
 
