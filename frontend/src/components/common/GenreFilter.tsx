@@ -1,4 +1,4 @@
-// GenreFilter.tsx - Potential Fix includes detailed logging in render map
+// GenreFilter.tsx - Modified to include credentials: 'include' for fetch
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Movie } from '../../types/Movie'; // Adjust path as needed
@@ -24,15 +24,14 @@ const truncateText = (
   text: string | null | undefined,
   maxLength: number
 ): string => {
-  if (!text) return ''; // Handle null or undefined input
+  if (!text) return '';
   if (text.length <= maxLength) {
     return text;
   }
   return text.substring(0, maxLength).trimEnd() + '...';
 };
-// --- End Helper function ---
 
-// --- Genre Formatting ---
+// --- Genre Formatting (Keep your existing functions) ---
 const genreAliases: Record<string, string> = {
   animeseriesinternationaltvshows: 'Anime Series (Intl)',
   britishtvshowsdocuseriesinternationaltvshows: 'British TV Docuseries (Intl)',
@@ -48,25 +47,19 @@ const genreAliases: Record<string, string> = {
   documentariesseries: 'Documentary Series',
   comediesinternationalmovies: 'International Comedies',
   documentariesinternationalmovies: 'International Documentaries',
-  // Add other aliases as needed
 };
 
 const formatGenreLabel = (genre: string): string => {
-  // Added defensive check for empty string input
   if (!genre || typeof genre !== 'string' || genre.trim() === '') {
-    console.warn(`formatGenreLabel received invalid genre input: "${genre}"`);
-    return 'Unknown Genre'; // Return a specific string, not 'All'
+    // console.warn(`formatGenreLabel received invalid genre input: "${genre}"`); // Optional log
+    return 'Unknown Genre';
   }
-
   const key = genre.replace(/[^a-zA-Z]/g, '').toLowerCase();
-  if (!key) return 'Unknown Genre'; // Handle case where genre becomes empty after replacing non-letters
-
+  if (!key) return 'Unknown Genre';
   const aliasMatch = Object.keys(genreAliases).find(
     (alias) => alias.toLowerCase() === key
   );
   if (aliasMatch) return genreAliases[aliasMatch];
-
-  // Word bank logic (keep as is unless proven problematic by logs)
   const wordBank = [
     'anime',
     'series',
@@ -93,48 +86,34 @@ const formatGenreLabel = (genre: string): string => {
     'talk',
     'british',
     'reality',
-    'spirituality' /* Added more words */,
+    'spirituality',
   ];
-
   let remaining = key;
   const words: string[] = [];
-
   while (remaining.length > 0) {
     let match = '';
-    // Find longest matching word first
     wordBank.sort((a, b) => b.length - a.length);
     for (const word of wordBank) {
       if (remaining.startsWith(word)) {
         match = word;
-        break; // Found the longest match
+        break;
       }
     }
-
     if (match) {
       words.push(match.charAt(0).toUpperCase() + match.slice(1));
       remaining = remaining.slice(match.length);
     } else {
-      // If no word matches, append the rest (or first char) and break
-      // to avoid infinite loops on unexpected input
       if (remaining.length > 0) {
-        // Fallback: Capitalize the first letter of the remaining part
         words.push(remaining.charAt(0).toUpperCase() + remaining.slice(1));
       }
-      console.warn(
-        `formatGenreLabel word segmentation stopped unexpectedly for key: "${key}", remaining: "${remaining}"`
-      );
+      // console.warn(`formatGenreLabel word segmentation stopped unexpectedly for key: "${key}", remaining: "${remaining}"`); // Optional log
       break;
     }
   }
-
   if (words.length === 0) {
-    // Fallback if no words could be segmented at all
-    console.warn(
-      `formatGenreLabel could not segment key: "${key}", returning capitalized original.`
-    );
+    // console.warn(`formatGenreLabel could not segment key: "${key}", returning capitalized original.`); // Optional log
     return genre.charAt(0).toUpperCase() + genre.slice(1);
   }
-
   return words.join(' • ');
 };
 // --- End Genre Formatting ---
@@ -165,46 +144,63 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   useEffect(() => {
     // --- Fetch Genres ---
     const fetchGenres = async () => {
+      console.log('Attempting to fetch genres...');
       try {
+        // --- Make Fetch Request ---
+        // NOTE: No Authorization header added here. Trying credentials include instead.
         const res = await fetch(
-          'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres'
+          'https://cineniche2-5-hpdrgkerdmfbahcd.eastus-01.azurewebsites.net/Movie/GetGenres',
+          {
+            method: 'GET',
+            credentials: 'include', // <--- ADDED THIS LINE
+            // If your API needs specific headers like Accept, add them:
+            // headers: {
+            //   'Accept': 'application/json',
+            // },
+          }
         );
+
+        console.log(`Genre fetch response status: ${res.status}`);
+
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          // If status is 401 even with credentials: 'include',
+          // it likely means the API *requires* an Authorization header,
+          // or the cookie setup/CORS is preventing it.
+          if (res.status === 401) {
+            console.error(
+              "Received 401 Unauthorized even with credentials: 'include'. The API likely requires an Authorization header or cookie/CORS setup is preventing cookie sending."
+            );
+          }
+          throw new Error(
+            `HTTP error! status: ${res.status} ${res.statusText}`
+          );
         }
+
         const genresData = await res.json();
-        // console.log('API Response (Genres raw):', genresData); // Optional: Keep for debugging if needed
+        console.log('Genres fetched successfully:', genresData);
 
         if (Array.isArray(genresData)) {
           const processedGenres = genresData
-            .map((g: unknown) => String(g || '').toLowerCase()) // Ensure conversion handles potential null/undefined
-            .filter((g) => g !== ''); // Filter out empty strings AFTER potential conversion issues
-
-          // console.log('Processed Genres for State:', processedGenres); // Optional: Keep for debugging
-
-          // Sort alphabetically for better UX
+            .map((g: unknown) => String(g || '').toLowerCase())
+            .filter((g) => g !== '');
           processedGenres.sort((a, b) => a.localeCompare(b));
-
           setGenreOptions(processedGenres);
         } else {
-          console.error(
-            'Failed to load genres: API did not return an array.',
-            genresData
-          );
+          console.error('Genre data received is not an array:', genresData);
           setGenreOptions([]);
         }
       } catch (err) {
-        console.error('Failed to load genres (fetch error):', err);
-        setGenreOptions([]); // Set empty on error
+        console.error('Failed to load genres (fetch error/catch block):', err);
+        setGenreOptions([]);
       }
     };
     fetchGenres();
 
-    // --- Extract Directors ---
+    // --- Extract Directors (Keep existing logic) ---
     const uniqueDirectors = Array.from(
       new Set(allMovies.map((m) => m.director).filter(Boolean))
     );
-    setDirectors(['No Director', ...uniqueDirectors.sort()]); // Sort directors too
+    setDirectors(['No Director', ...uniqueDirectors.sort()]);
 
     // --- Click Outside Handler ---
     const clickOutside = (e: MouseEvent) => {
@@ -217,12 +213,13 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     };
     document.addEventListener('mousedown', clickOutside);
     return () => document.removeEventListener('mousedown', clickOutside);
-  }, [allMovies]); // Dependency only on allMovies (for directors)
+  }, [allMovies]);
 
+  // --- JSX Rendering ---
   return (
     <div className="position-relative genre-dropdown" ref={dropdownRef}>
       <button
-        className="btn btn-outline-light dropdown-toggle" // Consider matching theme: btn-generic-yellow?
+        className="btn btn-outline-light dropdown-toggle"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -232,7 +229,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
 
       {isOpen && (
         <div className="genre-dropdown-menu show p-3">
-          {/* --- Title Filter --- */}
+          {/* Title Filter */}
           <div className="mb-3">
             <label htmlFor="title-filter" className="form-label text-white">
               Title
@@ -248,7 +245,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* --- Genres Filter --- */}
+          {/* Genres Filter */}
           <div className="mb-3">
             <label htmlFor="genre-filter" className="form-label text-white">
               Genres
@@ -256,12 +253,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             <select
               id="genre-filter"
               className="form-select"
-              value={filters.genres[0] || ''} // Expecting only one selection
+              value={filters.genres[0] || ''}
               onChange={(e) =>
                 setFilters((prev) => ({
                   ...prev,
-                  // If user selects "All" (value=""), set genres to empty array
-                  // Otherwise, set genres to an array containing the selected value
                   genres: e.target.value ? [e.target.value] : [],
                 }))
               }
@@ -271,38 +266,22 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                 <option disabled>Loading genres...</option>
               )}
               {genreOptions.map((genreValue) => {
-                // --- Diagnostic Logging ---
-                console.log(`Rendering Option -> Input Value: "${genreValue}"`);
-                let displayLabel = 'Formatting Error'; // Default
+                let displayLabel = 'Error';
                 try {
-                  displayLabel = formatGenreLabel(genreValue); // Call formatting function
-                  console.log(
-                    `                 -> Output Label: "${displayLabel}"`
-                  );
+                  displayLabel = formatGenreLabel(genreValue);
                 } catch (e) {
                   console.error(`Error formatting genre "${genreValue}":`, e);
                 }
-                // Check if the generated label is problematic
-                if (displayLabel.trim() === '' || displayLabel === 'All') {
-                  console.warn(
-                    `Label for "${genreValue}" became empty or "All"!`
-                  );
-                  // Fallback display if label generation fails badly
-                  displayLabel =
-                    genreValue.charAt(0).toUpperCase() + genreValue.slice(1); // Simple capitalize as fallback
-                }
-                // --- End Logging ---
-
                 return (
                   <option key={genreValue} value={genreValue}>
-                    {displayLabel} {/* Use the potentially fixed label */}
+                    {displayLabel}
                   </option>
                 );
               })}
             </select>
           </div>
 
-          {/* --- Director Filter (Keep existing logic) --- */}
+          {/* Director Filter */}
           <div className="mb-3">
             <label htmlFor="director-filter" className="form-label text-white">
               Director
@@ -318,7 +297,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                 if (selectedDisplayValue === '') {
                   actualDirector = null;
                 } else if (selectedDisplayValue === 'No Director') {
-                  actualDirector = 'No Director'; // Store specific string if needed for filtering
+                  actualDirector = 'No Director';
                 } else {
                   actualDirector =
                     directors.find(
@@ -327,12 +306,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                         selectedDisplayValue
                     ) || null;
                   if (!actualDirector && selectedDisplayValue) {
-                    // Handle case where find fails
                     console.warn(
                       'Could not map truncated director back:',
                       selectedDisplayValue
                     );
-                    actualDirector = null; // Fallback to null filter
+                    actualDirector = null;
                   }
                 }
                 setFilters((prev) => ({ ...prev, director: actualDirector }));
@@ -351,7 +329,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             </select>
           </div>
 
-          {/* --- Type Filter --- */}
+          {/* Type Filter */}
           <div className="mb-3">
             <label htmlFor="type-filter" className="form-label text-white">
               Type
@@ -376,7 +354,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             </select>
           </div>
 
-          {/* --- Year Filter --- */}
+          {/* Year Filter */}
           <div className="mb-3">
             <label htmlFor="year-filter" className="form-label text-white">
               Year
@@ -396,7 +374,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             />
           </div>
 
-          {/* --- Rating Filter --- */}
+          {/* Rating Filter */}
           <div className="mb-3">
             <label htmlFor="rating-filter" className="form-label text-white">
               Rating
@@ -420,9 +398,9 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
               ))}
             </select>
           </div>
-        </div> // End dropdown-menu
+        </div>
       )}
-    </div> // End wrapper div
+    </div>
   );
 };
 
