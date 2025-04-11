@@ -1,36 +1,14 @@
-/* --- Sticky Footer Layout Essentials --- */
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-}
-
-.app-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-/* --- Your Dark Theme and UI Styling --- */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
-
   --background: #111827;
   --accent: #5DADE2;
   --text-light: rgba(255, 255, 255, 0.87);
   --text-muted: rgba(255, 255, 255, 0.6);
   --hover: #2D3748;
 }
-
 body {
   margin: 0;
   background-color: var(--background);
@@ -39,7 +17,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
 a {
   color: var(--accent);
   text-decoration: none;
@@ -47,13 +24,11 @@ a {
 a:hover {
   color: #91CFFF;
 }
-
 .navbar-brand span {
   font-size: 1.5rem;
   font-weight: bold;
   color: red;
 }
-
 .movie-row {
   display: flex;
   overflow-x: auto;
@@ -61,7 +36,6 @@ a:hover {
   gap: 1rem;
   scroll-snap-type: x mandatory;
 }
-
 .movie-row::-webkit-scrollbar {
   height: 8px;
 }
@@ -69,7 +43,6 @@ a:hover {
   background-color: #444;
   border-radius: 4px;
 }
-
 .movie-row img {
   scroll-snap-align: start;
   transition: transform 0.3s ease;
@@ -77,38 +50,31 @@ a:hover {
 .movie-row img:hover {
   transform: scale(1.05);
 }
-
 h4 {
   margin-left: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
-
 .carousel-inner img {
   max-height: 400px;
   object-fit: cover;
 }
-
 /* Responsive image container */
 @media (max-width: 768px) {
   .movie-row {
     gap: 0.5rem;
     padding-left: 0.5rem;
   }
-
   .navbar-brand span {
     font-size: 1.2rem;
   }
-
   .movie-row img {
     width: 120px;
     height: 180px;
   }
-
   .carousel-inner img {
     height: 300px;
   }
-
   .login-page {
     background-color: transparent !important;
   }
