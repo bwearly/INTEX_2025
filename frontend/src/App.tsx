@@ -8,7 +8,7 @@ import MoviesPage from './pages/MoviesPage';
 import TvShowsPage from './pages/TvShowsPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
-import AccountPage from './pages/AccountPage'; // ✅ NEW
+import AccountPage from './pages/AccountPage'; 
 
 // --- Common Components ---
 import Navbar from './components/common/Navbar';
@@ -43,22 +43,25 @@ function App() {
       {/* --- Conditionally Render Navbar --- */}
       {!hideNavbar && <Navbar />}
 
-      {/* --- Authenticated View Wrapper --- */}
-      <AuthorizeView>
-        <Routes>
-          {/* --- Authenticated Routes --- */}
-          <Route path="/home" element={<Home />} />
-          <Route path="/admin/movies" element={<ManageMoviesPage />} />
-          <Route path="/search" element={<SearchResult />} />
-          <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/tv" element={<TvShowsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/recommended" element={<Recommended />} />
-          <Route path="/Movie/:id" element={<MovieDetailsPage />} />
-          <Route path="/account" element={<AccountPage />} /> {/* ✅ Account Page */}
-        </Routes>
-      </AuthorizeView>
+      {/* --- Main Layout --- */}
+      <main>
+        <div className="app-container">
+          <AuthorizeView>
+            <Routes>
+              <Route path="/home" element={<Home />} />
+              <Route path="/admin/movies" element={<ManageMoviesPage />} />
+              <Route path="/search" element={<SearchResult />} />
+              <Route path="/movies" element={<MoviesPage />} />
+              <Route path="/tv" element={<TvShowsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/recommended" element={<Recommended />} />
+              <Route path="/Movie/:id" element={<MovieDetailsPage />} />
+              <Route path="/account" element={<AccountPage />} />
+            </Routes>
+          </AuthorizeView>
+        </div>
+      </main>
 
       {/* --- Always Rendered Footer --- */}
       <Footer />

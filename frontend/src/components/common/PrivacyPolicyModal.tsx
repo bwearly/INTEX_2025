@@ -1,28 +1,59 @@
 import React from 'react';
 
 interface Props {
-  show: boolean;
   onClose: () => void;
 }
 
-const PrivacyPolicyModal: React.FC<Props> = ({ show, onClose }) => {
-  if (!show) return null;
-
+const PrivacyPolicyModal: React.FC<Props> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="bg-white p-6 rounded-md relative max-w-2xl max-h-[80vh] overflow-y-auto">
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000,
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: '#fff',
+          padding: '2rem',
+          borderRadius: '12px',
+          width: '90%',
+          maxWidth: '600px',
+          position: 'relative',
+          color: '#000',
+          maxHeight: '80vh',
+          overflowY: 'auto',
+        }}
+      >
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            right: '1rem',
+            background: 'none',
+            border: 'none',
+            fontSize: '1.5rem',
+            cursor: 'pointer',
+          }}
         >
-          ✕
+          ×
         </button>
-        <h1 className="text-xl font-bold mb-2">Privacy Policy</h1>
+
+        <h2>Privacy Policy</h2>
+        <p>Effective Date: April 2025</p>
         <p>
-          <strong>Effective Date:</strong> April 2025
+          At <strong>CineNiche</strong>, your privacy is important to us...
         </p>
-        <p>At CineNiche, your privacy is important to us...</p>
-        {/* add your full privacy text here */}
+        {/* Add full privacy policy text here */}
       </div>
     </div>
   );
