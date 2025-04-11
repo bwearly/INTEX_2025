@@ -26,7 +26,6 @@ export default function AccountPage() {
           <li className="list-group-item bg-dark text-light">Email: {user.email}</li>
           <li className="list-group-item bg-dark text-light">Age: {user.age}</li>
           <li className="list-group-item bg-dark text-light">Gender: {user.gender}</li>
-          <li className="list-group-item bg-dark text-light">Admin: {user.role === 'admin' ? 'Yes' : 'No'}</li>
         </ul>
       ) : (
         <p>Loading...</p>
