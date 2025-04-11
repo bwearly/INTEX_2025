@@ -89,7 +89,6 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
         ...formData,
         ...genrePayload,
       } as Movie);
-      console.log('New movie added:', createdMovie);
       onSuccess();
     } catch (err) {
       console.error('Error adding movie:', err);

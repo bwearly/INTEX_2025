@@ -140,7 +140,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   useEffect(() => {
     // --- Fetch Genres ---
     const fetchGenres = async () => {
-      console.log('Attempting to fetch genres...');
       try {
         // --- Make Fetch Request ---
 
@@ -151,8 +150,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
             credentials: 'include',
           }
         );
-
-        console.log(`Genre fetch response status: ${res.status}`);
 
         if (!res.ok) {
           if (res.status === 401) {
@@ -166,7 +163,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
         }
 
         const genresData = await res.json();
-        console.log('Genres fetched successfully:', genresData);
 
         if (Array.isArray(genresData)) {
           const processedGenres = genresData

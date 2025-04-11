@@ -14,7 +14,6 @@ const ProfileDropdown = () => {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
-        console.log('User fetched:', data);
         setIsAdmin(data.role === 'admin');
       } catch (err) {
         console.error('Could not fetch user:', err);

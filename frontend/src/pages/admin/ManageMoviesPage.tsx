@@ -111,11 +111,6 @@ const ManageMoviesPage: React.FC = () => {
         .toLowerCase()
         .includes(filters.title.toLowerCase());
 
-      // Optional: Log filtering for debugging
-      // if (selectedGenreLower) { // Log only when a genre is selected
-      //     console.log(`Filtering "${movie.title}": Selected='${selectedGenreLower}', MovieHasFlag=${(movie as any)[selectedGenreLower] === 1}, Matches=${matchesGenres}`);
-      // }
-
       return (
         matchesGenres &&
         matchesDirector &&

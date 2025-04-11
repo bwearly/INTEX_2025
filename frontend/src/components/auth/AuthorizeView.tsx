@@ -19,7 +19,6 @@ function AuthorizeView(props: { children: React.ReactNode }) {
     async function fetchWithRetry(url: string, options: any) {
       try {
         const response = await fetch(url, options);
-        //console.log('AuthorizeView: Raw Response:', response);
 
         const contentType = response.headers.get('content-type');
 
