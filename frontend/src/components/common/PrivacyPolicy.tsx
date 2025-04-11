@@ -1,6 +1,9 @@
 import React from 'react';
 
 const PrivacyPolicy: React.FC = () => {
+  const isLoggedIn =
+    document.cookie.includes('session=') || localStorage.getItem('token');
+
   return (
     <div
       className="privacy-policy"
@@ -10,8 +13,29 @@ const PrivacyPolicy: React.FC = () => {
         color: '#fff',
         backgroundColor: '#000',
         minHeight: '100vh',
+        position: 'relative',
       }}
     >
+      {!isLoggedIn && (
+        <button
+          onClick={() => (window.location.href = '/')}
+          style={{
+            position: 'absolute',
+            top: '1rem',
+            left: '1rem',
+            backgroundColor: '#6C9CB0',
+            color: '#fff',
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+          }}
+        >
+          ← Back to Login
+        </button>
+      )}
+
       <h1>Privacy Policy</h1>
       <p>Effective Date: April 2025</p>
 
@@ -54,9 +78,9 @@ const PrivacyPolicy: React.FC = () => {
 
       <h2>4. Data Sharing and Storage</h2>
       <p>
-        We do not sell or share your personal data with third parties. Your
-        data is stored securely and only accessible to authorized members of
-        the CineNiche team. Some external services, such as YouTube’s API, may
+        We do not sell or share your personal data with third parties. Your data
+        is stored securely and only accessible to authorized members of the
+        CineNiche team. Some external services, such as YouTube’s API, may
         process your requests (e.g., trailer lookups), but we do not send your
         personal data to them.
       </p>
