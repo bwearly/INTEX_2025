@@ -8,6 +8,7 @@ import MoviesPage from './pages/MoviesPage';
 import TvShowsPage from './pages/TvShowsPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
+import AccountPage from './pages/AccountPage'; // ✅ NEW
 
 // --- Common Components ---
 import Navbar from './components/common/Navbar';
@@ -55,6 +56,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/recommended" element={<Recommended />} />
           <Route path="/Movie/:id" element={<MovieDetailsPage />} />
+          <Route path="/account" element={<AccountPage />} /> {/* ✅ Account Page */}
         </Routes>
       </AuthorizeView>
 
