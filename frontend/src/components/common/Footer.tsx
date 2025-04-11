@@ -5,14 +5,9 @@ const Footer: React.FC = () => {
   const location = useLocation();
   const [showModal, setShowModal] = useState(false);
 
-  const isLoginPage =
-    location.pathname === '/' || location.pathname === '/login';
-
   const handlePrivacyClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isLoginPage) {
-      e.preventDefault();
-      setShowModal(true);
-    }
+    e.preventDefault();
+    setShowModal(true);
   };
 
   return (
@@ -28,14 +23,18 @@ const Footer: React.FC = () => {
       >
         <p>&copy; 2025 CineNiche</p>
         <a
-          href="/privacy"
           onClick={handlePrivacyClick}
-          style={{ color: '#5dade2', textDecoration: 'underline' }}
+          style={{
+            color: '#5dade2',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          }}
         >
           Privacy Policy
         </a>
       </footer>
 
+      {/* Modal */}
       {showModal && (
         <div
           style={{
@@ -44,7 +43,7 @@ const Footer: React.FC = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.8)',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -53,15 +52,16 @@ const Footer: React.FC = () => {
         >
           <div
             style={{
-              backgroundColor: '#fff',
+              backgroundColor: '#000000', // true black
+              color: '#f9fafb',
               padding: '2rem',
-              borderRadius: '12px',
-              width: '95%',
+              borderRadius: '16px',
+              width: '90%',
               maxWidth: '800px',
-              maxHeight: '90vh',
+              maxHeight: '85vh',
               overflowY: 'auto',
               position: 'relative',
-              color: '#000',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
             }}
           >
             <button
@@ -73,18 +73,16 @@ const Footer: React.FC = () => {
                 background: 'none',
                 border: 'none',
                 fontSize: '1.5rem',
-                fontWeight: 'bold',
+                color: '#f9fafb',
                 cursor: 'pointer',
-                color: '#000',
               }}
-              aria-label="Close Privacy Policy"
             >
               ×
             </button>
 
+            {/* Privacy Policy Content */}
             <h2>Privacy Policy</h2>
             <p>Effective Date: April 2025</p>
-
             <p>
               At <strong>CineNiche</strong>, your privacy is important to us.
               This Privacy Policy explains how we collect, use, and protect your

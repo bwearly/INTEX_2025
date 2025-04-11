@@ -17,27 +17,6 @@ const PrivacyPolicy: React.FC = () => {
         position: 'relative',
       }}
     >
-      {/* Show back button if user is not logged in */}
-      {!isLoggedIn && (
-        <button
-          onClick={() => (window.location.href = '/')}
-          style={{
-            position: 'absolute',
-            top: '1rem',
-            left: '1rem',
-            backgroundColor: '#6C9CB0',
-            color: '#fff',
-            border: 'none',
-            padding: '0.5rem 1rem',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-          }}
-        >
-          ← Back to Login
-        </button>
-      )}
-
       {/* Privacy Policy Content */}
       <h1>Privacy Policy</h1>
       <p>Effective Date: April 2025</p>
